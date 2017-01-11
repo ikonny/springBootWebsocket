@@ -25,27 +25,27 @@
 
 		<!-- !!!! Database Configurations !!!! -->
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://192.168.4.152:3306/LTS_China" userId="tqt001"
-			password="tqt001" />
+			connectionURL="jdbc:mysql://192.168.4.71:3306/LTS_China" userId="tqt001"
+			password="tqt002" />
 		<javaTypeResolver>
 			<property name="forceBigDecimals" value="false" />
 		</javaTypeResolver>
 
 		<!-- !!!! Model Configurations !!!! -->
-		<javaModelGenerator targetPackage="cn.hkfdt.webserver.im.xiaot.model"
+		<javaModelGenerator targetPackage="cn.hkfdt.xiaot.mybatis.model"
 			targetProject="src/main/java">
 			<property name="enableSubPackages" value="false" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 
 		<!-- !!!! Mapper XML Configurations !!!! -->
-		<sqlMapGenerator targetPackage="mapper.xiaot"
+		<sqlMapGenerator targetPackage="mapper"
 			targetProject="src/main/resources">
 			<property name="enableSubPackages" value="false" />
 		</sqlMapGenerator>
 
 		<!-- !!!! Mapper Interface Configurations !!!! -->
-		<javaClientGenerator targetPackage="cn.hkfdt.webserver.im.xiaot.mapper"
+		<javaClientGenerator targetPackage="cn.hkfdt.xiaot.mybatis.mapper"
 			targetProject="src/main/java" type="XMLMAPPER">
 			<property name="enableSubPackages" value="false" />
 		</javaClientGenerator>
@@ -69,11 +69,7 @@
 		</table>
 		-->
 
-		<table tableName="xiaot_record" enableCountByExample="false"
-			enableDeleteByExample="false" enableSelectByExample="false"
-			enableUpdateByExample="false" domainObjectName="TRecord">
-			<property name="useActualColumnNames" value="true" />
-		</table>
+		<table tableName="xiaot_record"  domainObjectName="TRecord"></table>
 
 	</context>
 </generatorConfiguration>

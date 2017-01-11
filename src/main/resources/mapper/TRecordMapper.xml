@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hkfdt.xiaot.mybatis.mapper.TRecordMapper" >
+  <resultMap id="BaseResultMap" type="cn.hkfdt.xiaot.mybatis.model.TRecord" >
+    <id column="recordId" property="recordid" jdbcType="INTEGER" />
+    <result column="symbol" property="symbol" jdbcType="VARCHAR" />
+    <result column="fdtId" property="fdtid" jdbcType="VARCHAR" />
+    <result column="tradeTime" property="tradetime" jdbcType="VARCHAR" />
+    <result column="returnRate" property="returnrate" jdbcType="REAL" />
+    <result column="volatility" property="volatility" jdbcType="REAL" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="createTime" property="createtime" jdbcType="BIGINT" />
+    <result column="score" property="score" jdbcType="DOUBLE" />
+    <result column="questionKey" property="questionkey" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="cn.hkfdt.xiaot.mybatis.model.TRecord" extends="BaseResultMap" >
+    <result column="actions" property="actions" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    recordId, symbol, fdtId, tradeTime, returnRate, volatility, type, createTime, score, 
+    questionKey
+  </sql>
+  <sql id="Blob_Column_List" >
+    actions
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="cn.hkfdt.xiaot.mybatis.model.TRecordExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from xiaot_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.hkfdt.xiaot.mybatis.model.TRecordExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from xiaot_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from xiaot_record
+    where recordId = #{recordid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from xiaot_record
+    where recordId = #{recordid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.hkfdt.xiaot.mybatis.model.TRecordExample" >
+    delete from xiaot_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.hkfdt.xiaot.mybatis.model.TRecord" >
+    insert into xiaot_record (recordId, symbol, fdtId, 
+      tradeTime, returnRate, volatility, 
+      type, createTime, score, 
+      questionKey, actions)
+    values (#{recordid,jdbcType=INTEGER}, #{symbol,jdbcType=VARCHAR}, #{fdtid,jdbcType=VARCHAR}, 
+      #{tradetime,jdbcType=VARCHAR}, #{returnrate,jdbcType=REAL}, #{volatility,jdbcType=REAL}, 
+      #{type,jdbcType=INTEGER}, #{createtime,jdbcType=BIGINT}, #{score,jdbcType=DOUBLE}, 
+      #{questionkey,jdbcType=VARCHAR}, #{actions,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.hkfdt.xiaot.mybatis.model.TRecord" >
+    insert into xiaot_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="recordid != null" >
+        recordId,
+      </if>
+      <if test="symbol != null" >
+        symbol,
+      </if>
+      <if test="fdtid != null" >
+        fdtId,
+      </if>
+      <if test="tradetime != null" >
+        tradeTime,
+      </if>
+      <if test="returnrate != null" >
+        returnRate,
+      </if>
+      <if test="volatility != null" >
+        volatility,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+      <if test="score != null" >
+        score,
+      </if>
+      <if test="questionkey != null" >
+        questionKey,
+      </if>
+      <if test="actions != null" >
+        actions,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="recordid != null" >
+        #{recordid,jdbcType=INTEGER},
+      </if>
+      <if test="symbol != null" >
+        #{symbol,jdbcType=VARCHAR},
+      </if>
+      <if test="fdtid != null" >
+        #{fdtid,jdbcType=VARCHAR},
+      </if>
+      <if test="tradetime != null" >
+        #{tradetime,jdbcType=VARCHAR},
+      </if>
+      <if test="returnrate != null" >
+        #{returnrate,jdbcType=REAL},
+      </if>
+      <if test="volatility != null" >
+        #{volatility,jdbcType=REAL},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=BIGINT},
+      </if>
+      <if test="score != null" >
+        #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="questionkey != null" >
+        #{questionkey,jdbcType=VARCHAR},
+      </if>
+      <if test="actions != null" >
+        #{actions,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.hkfdt.xiaot.mybatis.model.TRecordExample" resultType="java.lang.Integer" >
+    select count(*) from xiaot_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update xiaot_record
+    <set >
+      <if test="record.recordid != null" >
+        recordId = #{record.recordid,jdbcType=INTEGER},
+      </if>
+      <if test="record.symbol != null" >
+        symbol = #{record.symbol,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fdtid != null" >
+        fdtId = #{record.fdtid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tradetime != null" >
+        tradeTime = #{record.tradetime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.returnrate != null" >
+        returnRate = #{record.returnrate,jdbcType=REAL},
+      </if>
+      <if test="record.volatility != null" >
+        volatility = #{record.volatility,jdbcType=REAL},
+      </if>
+      <if test="record.type != null" >
+        type = #{record.type,jdbcType=INTEGER},
+      </if>
+      <if test="record.createtime != null" >
+        createTime = #{record.createtime,jdbcType=BIGINT},
+      </if>
+      <if test="record.score != null" >
+        score = #{record.score,jdbcType=DOUBLE},
+      </if>
+      <if test="record.questionkey != null" >
+        questionKey = #{record.questionkey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.actions != null" >
+        actions = #{record.actions,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update xiaot_record
+    set recordId = #{record.recordid,jdbcType=INTEGER},
+      symbol = #{record.symbol,jdbcType=VARCHAR},
+      fdtId = #{record.fdtid,jdbcType=VARCHAR},
+      tradeTime = #{record.tradetime,jdbcType=VARCHAR},
+      returnRate = #{record.returnrate,jdbcType=REAL},
+      volatility = #{record.volatility,jdbcType=REAL},
+      type = #{record.type,jdbcType=INTEGER},
+      createTime = #{record.createtime,jdbcType=BIGINT},
+      score = #{record.score,jdbcType=DOUBLE},
+      questionKey = #{record.questionkey,jdbcType=VARCHAR},
+      actions = #{record.actions,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update xiaot_record
+    set recordId = #{record.recordid,jdbcType=INTEGER},
+      symbol = #{record.symbol,jdbcType=VARCHAR},
+      fdtId = #{record.fdtid,jdbcType=VARCHAR},
+      tradeTime = #{record.tradetime,jdbcType=VARCHAR},
+      returnRate = #{record.returnrate,jdbcType=REAL},
+      volatility = #{record.volatility,jdbcType=REAL},
+      type = #{record.type,jdbcType=INTEGER},
+      createTime = #{record.createtime,jdbcType=BIGINT},
+      score = #{record.score,jdbcType=DOUBLE},
+      questionKey = #{record.questionkey,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.hkfdt.xiaot.mybatis.model.TRecord" >
+    update xiaot_record
+    <set >
+      <if test="symbol != null" >
+        symbol = #{symbol,jdbcType=VARCHAR},
+      </if>
+      <if test="fdtid != null" >
+        fdtId = #{fdtid,jdbcType=VARCHAR},
+      </if>
+      <if test="tradetime != null" >
+        tradeTime = #{tradetime,jdbcType=VARCHAR},
+      </if>
+      <if test="returnrate != null" >
+        returnRate = #{returnrate,jdbcType=REAL},
+      </if>
+      <if test="volatility != null" >
+        volatility = #{volatility,jdbcType=REAL},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=BIGINT},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="questionkey != null" >
+        questionKey = #{questionkey,jdbcType=VARCHAR},
+      </if>
+      <if test="actions != null" >
+        actions = #{actions,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where recordId = #{recordid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.hkfdt.xiaot.mybatis.model.TRecord" >
+    update xiaot_record
+    set symbol = #{symbol,jdbcType=VARCHAR},
+      fdtId = #{fdtid,jdbcType=VARCHAR},
+      tradeTime = #{tradetime,jdbcType=VARCHAR},
+      returnRate = #{returnrate,jdbcType=REAL},
+      volatility = #{volatility,jdbcType=REAL},
+      type = #{type,jdbcType=INTEGER},
+      createTime = #{createtime,jdbcType=BIGINT},
+      score = #{score,jdbcType=DOUBLE},
+      questionKey = #{questionkey,jdbcType=VARCHAR},
+      actions = #{actions,jdbcType=LONGVARCHAR}
+    where recordId = #{recordid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.hkfdt.xiaot.mybatis.model.TRecord" >
+    update xiaot_record
+    set symbol = #{symbol,jdbcType=VARCHAR},
+      fdtId = #{fdtid,jdbcType=VARCHAR},
+      tradeTime = #{tradetime,jdbcType=VARCHAR},
+      returnRate = #{returnrate,jdbcType=REAL},
+      volatility = #{volatility,jdbcType=REAL},
+      type = #{type,jdbcType=INTEGER},
+      createTime = #{createtime,jdbcType=BIGINT},
+      score = #{score,jdbcType=DOUBLE},
+      questionKey = #{questionkey,jdbcType=VARCHAR}
+    where recordId = #{recordid,jdbcType=INTEGER}
+  </update>
+</mapper>
