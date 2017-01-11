@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration
+		PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+		"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+	<!-- 自动生成代码，只加了mybatis2个包和plugin,再加上这个文件的配置就行，不依赖其他信息 mybatis-generator:generate -->
+	<!-- !!!! Driver Class Path !!!! -->
+	<classPathEntry
+		location="E:\.m2\repository\mysql\mysql-connector-java\5.1.27\mysql-connector-java-5.1.27.jar" />
+
+	<context id="context" defaultModelType="flat" targetRuntime="MyBatis3">
+
+		<property name="javaFileEncoding" value="UTF-8"/>
+		
+		<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin" />
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+		
+		<commentGenerator
+			type="cn.hkfdt.mybatis.comment.generator.HkfdtCommentGenerator">
+			<property name="javaFileEncoding" value="UTF-8" />
+			<property name="suppressAllComments" value="true" />
+			<property name="suppressDate" value="true" />
+		</commentGenerator>
+
+		<!-- !!!! Database Configurations !!!! -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://192.168.4.152:3306/LTS_China" userId="tqt001"
+			password="tqt001" />
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- !!!! Model Configurations !!!! -->
+		<javaModelGenerator targetPackage="cn.hkfdt.webserver.im.xiaot.model"
+			targetProject="src/main/java">
+			<property name="enableSubPackages" value="false" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<!-- !!!! Mapper XML Configurations !!!! -->
+		<sqlMapGenerator targetPackage="mapper.xiaot"
+			targetProject="src/main/resources">
+			<property name="enableSubPackages" value="false" />
+		</sqlMapGenerator>
+
+		<!-- !!!! Mapper Interface Configurations !!!! -->
+		<javaClientGenerator targetPackage="cn.hkfdt.webserver.im.xiaot.mapper"
+			targetProject="src/main/java" type="XMLMAPPER">
+			<property name="enableSubPackages" value="false" />
+		</javaClientGenerator>
+
+		<!-- !!!! Table Configurations !!!! <table tableName="social_qrurl" enableCountByExample="false" 
+			enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"> 
+			<property name="useActualColumnNames" value="true"/> </table> <table tableName="social_qrurl" 
+			enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" 
+			enableUpdateByExample="false" domainObjectName="QrUrl"></table> 
+
+		<table tableName="xiaot_questions" enableCountByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			enableUpdateByExample="false" domainObjectName="TQuestions">
+			<property name="useActualColumnNames" value="true" />
+		</table>
+
+		<table tableName="xiaot_force_analysis" enableCountByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			enableUpdateByExample="false" domainObjectName="ForceAnalysis">
+			<property name="useActualColumnNames" value="true" />
+		</table>
+		-->
+
+		<table tableName="xiaot_record" enableCountByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			enableUpdateByExample="false" domainObjectName="TRecord">
+			<property name="useActualColumnNames" value="true" />
+		</table>
+
+	</context>
+</generatorConfiguration>
