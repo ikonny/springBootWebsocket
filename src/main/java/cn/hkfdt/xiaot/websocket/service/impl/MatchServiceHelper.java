@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,20 +12,22 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 import cn.hkfdt.xiaot.websocket.utils.HttpUtils;
 
 public class MatchServiceHelper {
 	/**
-	 * matchId 为key 
+	 * 主要的比赛对象，需要定时回收matchId 为key 
 	 * matchJson,num,matchPeople(map),createTime,readyTime,rankList(最新的排序成绩)
-	 * matchPeople : fdtId为key : {curIdx, yieldRate, tradeCount, markAreaData, fdtId,nickName}
+	 * matchPeople : fdtId为key : {curIdx, yieldRate, tradeCount, drawOption, fdtId,nickName}
 	 * rankList : listMap 对matchPeople 中的排序
 	 */
-	public static ConcurrentHashMap<String, Map<String, Object>> mapMatchInfo = new ConcurrentHashMap<>(36);
+	public static ConcurrentHashMap<String, Map<String, Object>> mapMatchInfo = new ConcurrentHashMap<>(66);
 	public static final String xiaotTrainingUrl = "https://prod.forexmaster.cn/im/xiaotTraining";
 	public static ExecutorService executorService = Executors.newCachedThreadPool();
 	public static LinkedBlockingQueue<String>  rankQueue = new LinkedBlockingQueue<>(87);
 	public static volatile Map<String, Object> rankMapHelper = new HashMap<String, Object>(100);
+	public static XiaoTMatchTopics xiaoTMatchTopics = null;//被动注入的
 	/**
 	 * @param args
 	 * author:xumin 
@@ -63,18 +66,27 @@ public class MatchServiceHelper {
 					try {
 						String matchId = rankQueue.take();
 						rankMapHelper.remove(matchId);//消费一个排序
-						System.err.println("消费消息"+matchId);
+//						System.err.println("消费消息"+matchId);
 						Map<String, Object>  mapItem = mapMatchInfo.get(matchId);
 						//进行排序---------------------------
 						Map<String, Object> matchPeople = (Map<String, Object>) mapItem.get("matchPeople");
 						//rankList
 						List<Map<String, Object>> rankList = new ArrayList<Map<String,Object>>(matchPeople.size());
-						for(String key : matchPeople.keySet()){
-							Map<String, Object> paraMap = (Map<String, Object>) matchPeople.get(key);
-							rankList.add(paraMap);
+						Iterator<String> iterator = matchPeople.keySet().iterator();
+						while(iterator.hasNext()){
+							String key = iterator.next();
+//							System.out.println("key:"+key);
+//							System.out.println("value:"+matchPeople.get(key));
+							Object obTemp = matchPeople.get(key);
+							if(obTemp instanceof HashMap<?, ?>){
+								Map<String, Object> paraMap = (Map<String, Object>) matchPeople.get(key);
+								rankList.add(paraMap);
+							}
 						}
 						sort(rankList);
-//						mapItem.put(key, value);
+						mapItem.put("rankList", rankList);//排序完成
+						//-----排序完成广播+用户数据全部更新事件----------
+						sendToClientRankEvent(mapItem,rankList);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -84,6 +96,32 @@ public class MatchServiceHelper {
 		Thread td = new Thread(run);
 		td.setName("游戏排行线程");
 		td.start();
+	}
+	/**
+	 * 定时器调用这个方法来回收比赛时间
+	 * createTime,readyTime ()
+	 * author:xumin 
+	 * 2017-1-11 下午7:06:03
+	 */
+	public static void recoverMatchInfo() {
+		long now = System.currentTimeMillis();
+		for(String key : mapMatchInfo.keySet()){
+			Map<String, Object> mapMatch = mapMatchInfo.get(key);
+			if(mapMatch.containsKey("readyTime")){
+				long readyTime = (long) mapMatch.get("readyTime");
+				if((now-readyTime)>1000*60*7){
+					//如果比赛开始，7分钟后的统一回收
+					mapMatchInfo.remove(key);
+				}
+			}else{
+				long createTime = (long) mapMatch.get("createTime");
+				if((now-createTime)>1000*60*18){
+					//如果比赛创建，18分钟后的统一回收
+					mapMatchInfo.remove(key);
+				}
+			}
+			
+		}
 	}
 	//==============================================================
 	/**
@@ -95,7 +133,6 @@ public class MatchServiceHelper {
 	 */
 	public static void getMatch(Map<String, Object> paraMap, Map<String, Object> mapRsp) {
 		String matchId = paraMap.get("matchId").toString();
-//		String sessionId = paraMap.get("sessionId").toString();
 		int num = Integer.parseInt(paraMap.get("num").toString());
 		Map<String, Object>  mapItem = mapMatchInfo.get(matchId);
 		if(mapItem==null){
@@ -142,8 +179,8 @@ public class MatchServiceHelper {
 	 */
 	@SuppressWarnings("unchecked")
 	public static int ready(Map<String, Object> paraMap) {
-		String matchId = paraMap.get("paraMap").toString();
-		String sessionId = paraMap.get("sessionId").toString();
+		String matchId = paraMap.get("matchId").toString();
+		String fdtId = paraMap.get("fdtId").toString();
 		Map<String, Object>  mapItem = mapMatchInfo.get(matchId);
 		if(mapItem==null)
 			return -2;
@@ -153,7 +190,7 @@ public class MatchServiceHelper {
 			//比赛已经开始，人数已经满了
 			return -1;
 		}
-		matchPeople.put(sessionId, 1);//准备一个，入队列
+		matchPeople.put(fdtId, 1);//准备一个，入队列
 		if(matchPeople.size()==numP){
 			//start
 			mapItem.put("readyTime", System.currentTimeMillis());
@@ -162,18 +199,17 @@ public class MatchServiceHelper {
 		return 0;
 	}
 	public static void rankList(Map<String, Object> paraMap) {
-		// TODO Auto-generated method stub
 		String matchId = paraMap.get("matchId").toString();
-		String sessionId = paraMap.get("sessionId").toString();
+		String fdtId = paraMap.get("fdtId").toString();
 		Map<String, Object>  mapItem = mapMatchInfo.get(matchId);
 		if(mapItem==null){
 			System.err.println("获取不到比赛");
 			return;
 		}
 		Map<String, Object> matchPeople = (Map<String, Object>) mapItem.get("matchPeople");
-		Map<String, Object> mapPeople = new HashMap<String, Object>(6);
+		Map<String, Object> mapPeople = new HashMap<String, Object>(16);
 		setInfoForPerson(mapPeople,paraMap);
-		matchPeople.put(sessionId, mapPeople);//准备一个，入队列
+		matchPeople.put(fdtId, mapPeople);//准备一个，入队列
 		
 		if(!rankMapHelper.containsKey(matchId)){
 			rankMapHelper.put(matchId, 1);
@@ -182,12 +218,31 @@ public class MatchServiceHelper {
 	}
 	private static void setInfoForPerson(Map<String, Object> mapPeople,
 			Map<String, Object> paraMap) {
-		// TODO Auto-generated method stub
 		mapPeople.put("yieldRate", paraMap.get("yieldRate"));//收益率
 		mapPeople.put("curIdx", paraMap.get("curIdx"));//交易点
 		mapPeople.put("tradeCount", paraMap.get("tradeCount"));//交易次数
-		mapPeople.put("markAreaData", paraMap.get("markAreaData"));
+		mapPeople.put("drawOption", paraMap.get("drawOption"));
+		mapPeople.put("fdtId", paraMap.get("fdtId"));//fdtId
+		mapPeople.put("nickName", paraMap.get("fdtId"));//昵称
 		
+		mapPeople.put("preClosePrice", paraMap.get("preClosePrice"));//fdtId
+		mapPeople.put("curClosePrice", paraMap.get("curClosePrice"));//fdtId
+		mapPeople.put("curMa", paraMap.get("curMa"));//fdtId
+		mapPeople.put("curVolume", paraMap.get("curVolume"));//fdtId
+	}
+	protected static void sendToClientRankEvent(Map<String, Object> mapItem,
+			final List<Map<String, Object>> rankList) {
+//		Runnable run = new Runnable() {
+//			
+//			@Override
+//			public void run() {
+//				xiaoTMatchTopics.rankList(rankList);
+//				xiaoTMatchTopics.userRealtimeInfo(rankList);
+//			}
+//		};
+//		MatchServiceHelper.executorService.execute(run);
+		xiaoTMatchTopics.rankList(rankList);
+		xiaoTMatchTopics.userRealtimeInfo(rankList);
 	}
 
 }

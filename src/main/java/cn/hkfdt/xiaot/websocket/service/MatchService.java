@@ -21,7 +21,7 @@ public interface MatchService {
 	int ready(Map<String, Object> paraMap);
 	/**
 	 * 
-	 * @param paraMap {curIdx, yieldRate, tradeCount, markAreaData,matchId,directInfo},sessionId
+	 * @param paraMap {curIdx, yieldRate, tradeCount, drawOption,matchId,directInfo},sessionId
 	 * author:xumin 
 	 * 2017-1-11 下午1:00:11
 	 */

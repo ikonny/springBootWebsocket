@@ -11,9 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.hkfdt.xiaot.websocket.conmng.WebSocketConnectionListener;
 import cn.hkfdt.xiaot.websocket.protocol.ProtocolHelper;
 import cn.hkfdt.xiaot.websocket.service.MatchService;
-import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 
 import com.alibaba.fastjson.JSON;
@@ -41,34 +41,44 @@ public class XiaoTMatchController {
 		return message+"sdf";
 	}
 
+	@SuppressWarnings("unchecked")
 	@MessageMapping("/match/getMatch") //这个不同于@RequestMapping 是专门用于websoket的
 //	@SendTo("/queue/xiaot/match/getMatch")  //广播
 	@SendToUser("/queue/match/getMatch")    //需要订阅的时候前面加个
 	public String getMatch(SimpMessageHeaderAccessor headerAccessor,String msg) {
 		
-		String sessionId = headerAccessor.getSessionId(); // Session ID
-		System.out.println("getMatch message: " + msg+"  sessionId:"+sessionId);
-		Map<String, Object>  paraMap = getParaMap(msg);
-		paraMap.put("sessionId", sessionId);
+		Map<String, Object>  paraMap = getParaMap(headerAccessor,msg);
 		String jsonRsp = matchService.getMatch(paraMap);
+		Map<String, Object>  mapTar = JSON.parseObject(jsonRsp, paraMap.getClass());
+		mapTar.put("fdtId", paraMap.get("fdtId"));
 //		simpMessagingTemplate.convertAndSend("/topic/entries", message);
 //		simpMessagingTemplate.convertAndSendToUser(user, destination, payload)
-		return jsonRsp;
+		return JSON.toJSONString(mapTar);
 	}
-	
+	/**
+	 * 把jaon转化成map 并增加sessionId,fdtId
+	 * @param headerAccessor
+	 * @param msg
+	 * @return
+	 * author:xumin 
+	 * 2017-1-11 下午3:42:36
+	 */
 	@SuppressWarnings("unchecked")
-	public static HashMap<String, Object> getParaMap(String msg) {
-		return JSON.parseObject(msg, HashMap.class);
+	public static HashMap<String, Object> getParaMap(SimpMessageHeaderAccessor headerAccessor, String msg) {
+		HashMap<String, Object> tar = JSON.parseObject(msg, HashMap.class);
+		String sessionId = headerAccessor.getSessionId(); // Session ID
+		String fdtId = WebSocketConnectionListener.mapSession2FdtId.get(sessionId);
+		tar.put("sessionId", sessionId);
+		tar.put("fdtId", fdtId);
+//		System.out.println(tar);
+		return tar;
 	}
 
 	@MessageMapping("/match/ready")
 	@SendToUser("/queue/match/ready")
 	public String ready(SimpMessageHeaderAccessor headerAccessor,String msg) {
-		String sessionId = headerAccessor.getSessionId(); // Session ID
-		System.out.println("ready message: " + msg+"  sessionId:"+sessionId);
-		Map<String, Object>  paraMap = getParaMap(msg);
-		paraMap.put("sessionId", sessionId);
-		int flag = 0;//matchService.ready(paraMap);
+		Map<String, Object>  paraMap = getParaMap(headerAccessor, msg);
+		int flag = matchService.ready(paraMap);
 		String msg2 ="";
 		int rspCode = 200;
 		if(flag==-2){
@@ -80,33 +90,13 @@ public class XiaoTMatchController {
 			msg2 = "比赛人数已满";
 		}
 		String str = ProtocolHelper.getCommonJson(rspCode,msg2);
-		
-		//---------下面是测试数据------------------
-		final String matchId = paraMap.get("matchId").toString();
-		Runnable run = new Runnable() {
-			
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				xiaoTMatchTopics.start(matchId);
-			}
-		};
-		MatchServiceHelper.executorService.execute(run);
-		//--------------------------
 		return str;
 	}
 	
 	
 	@MessageMapping("/match/sendClientMatchInfo")
 	public void sendClientMatchInfo(SimpMessageHeaderAccessor headerAccessor,String msg) {
-		String sessionId = headerAccessor.getSessionId(); // Session ID
-		System.out.println("sendClientMatchInfo message: " + msg+"  sessionId:"+sessionId);
-		Map<String, Object>  paraMap = getParaMap(msg);
-		paraMap.put("sessionId", sessionId);
+		Map<String, Object>  paraMap = getParaMap(headerAccessor, msg);
 		matchService.sendClientMatchInfo(paraMap);
 	}
 

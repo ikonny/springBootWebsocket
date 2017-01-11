@@ -1,6 +1,9 @@
 package cn.hkfdt.xiaot.websocket.conmng;
 
 import java.security.interfaces.RSAPrivateKey;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.context.ApplicationEvent;
@@ -10,6 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+
+import com.alibaba.fastjson.JSON;
 
 import cn.hkfdt.xiaot.websocket.utils.RSAUtil;
 
@@ -23,6 +28,7 @@ public class WebSocketConnectionListener implements
 	
 	private static final String FDT_KEY = "fdt-key"; 
     private static final String SIMP_SESSION_ID = "simpSessionId";
+    public static Map<String, Object> mapTemp = new HashMap<String, Object>(1);
     public static ConcurrentHashMap<String, String> mapSession2FdtId = new ConcurrentHashMap<>(500);
     public static ConcurrentHashMap<String, String> mapFdtId2Session = new ConcurrentHashMap<>(500);
     
@@ -54,6 +60,11 @@ public class WebSocketConnectionListener implements
             "IY3tmqCVGTumj/4GkzAJeA8AP/wBF8QXkyxU3IDl4SwkGY25Ms4BS9HiOJmvvRtO\n" +
             "e88F2PuMFZamJ1zeaeDCoRPc\n" +
             "-----END PRIVATE KEY-----";
+    public static String tokenTest ="O7+f4S3OUrioKD/JnRZz86W2Pi+9l4L4E36oQzJbkpvwSG7w+rocKAhsXi6P0J" +
+            "ykE5O9cUW5oS5dTDGBQOvURAywWx3XJuHZO70o6zNhc14H+15P66ikibJiPnGDXNoWw" +
+            "YH8YAnURm8fvMtwRtYx3qBM6o4XoQfZXefw1wzum/0Vm/t2nskLkUDlvXAxwRjl+rO1g6JfI" +
+            "v1+H3ez9Db56QUg75mp1U/bfV+yceBy+WLHtYsLyWXyQqZDV3uG6tPZquhenw8jtGPprpU1XESf" +
+            "Qkzago2izYKtFNEFdfe+N2p+kJ3+SzcGbhYDaVuNYg28YEs2ZYAOXlNdSU4J4Hto3w==";
     private static RSAPrivateKey key;
     static{
     	try {
@@ -72,28 +83,29 @@ public class WebSocketConnectionListener implements
 		} else if (event instanceof SessionDisconnectEvent) {
 			handleSessionDisconnect((SessionDisconnectEvent) event);
 		}
-		System.err.println(event.toString());
+//		System.err.println(event.toString());
 	}
 	// SessionDisconnectEvent[sessionId=8v_ueimg, CloseStatus[code=1000, reason=null]]
 	private void handleSessionDisconnect(SessionDisconnectEvent event) {
 		SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
 		String sessionId = (String) headers.getHeader(SIMP_SESSION_ID);
 		removeUserId(sessionId);
-		System.err.println("handleSessionDisconnect");
+//		System.err.println("handleSessionDisconnect");
 	}
 	//[stompCommand=CONNECT, null, null, null, nativeHeaders={fdt-id=[123], accept-version=[1.1,1.0], 
 	//heart-beat=[10000,10000]}, simpMessageType=CONNECT,
 	//null, null, null, null, null, null, simpHeartbeat=[J@5c7d82d, simpSessionId=nhdw6oj_, null, null]
 	private void handleSessionConnected(SessionConnectEvent event) {
-		// TODO Auto-generated method stub
 		SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
 		String sessionId = (String) headers.getHeader(SIMP_SESSION_ID);
-		String fdtId = sessionId;//headers.getNativeHeader(FDT_KEY).get(0);
-//		fdtId = getFdtId(fdtId);
-		
+		String fdtId = sessionId;
+		List<String> fdtKeyList = headers.getNativeHeader(FDT_KEY);
+		if(fdtKeyList!=null){
+			String fdtKey = fdtKeyList.get(0);
+			fdtId = getFdtId(fdtKey,sessionId);
+		}
 		setUserIds(fdtId,sessionId);
-		System.err.println("handleSessionConnected");
-//		System.err.println("fdtId:"+fdtId+"    sessionId:"+sessionId);
+//		System.err.println("handleSessionConnected");
 	}
 	
 	private void setUserIds(String fdtId, String sessionId) {
@@ -109,14 +121,22 @@ public class WebSocketConnectionListener implements
 			System.out.println("--------id"+fdtId+"___"+sessionId);
 		}
 	}
-	private String getFdtId(String fdtKey) {
-		// TODO Auto-generated method stub
+	private static String getFdtId(String fdtKey, String sessionId) {
 		try {
+			//{"exp":1476859144613,"phone":"8613675841954","market":"SC","email":"jie.ding@hkfdt.cn",
+			//"Id":"mb000000003","language":"CN","utype":90,"country":"CN"}
 			String verifyJson = RSAUtil.decodeTokenByKey(key, fdtKey);
+			Map<String, Object> map = (Map<String, Object>) JSON.parseObject(verifyJson, mapTemp.getClass());
+			String fdtId = map.get("Id").toString();
+			return fdtId;
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println("token出错");
 		}
-		return null;
+		return sessionId;
 	}
-
+	//=============================================
+	public static void main(String[] args){
+		System.out.println(getFdtId("sd","sdfssssssssssssss"));
+		
+	}
 }

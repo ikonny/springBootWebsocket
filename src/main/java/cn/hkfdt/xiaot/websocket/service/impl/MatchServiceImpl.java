@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.hkfdt.xiaot.websocket.service.MatchService;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 
@@ -14,16 +16,8 @@ public class MatchServiceImpl implements MatchService{
 
 	@Autowired
 	XiaoTMatchTopics xiaoTMatchTopics;
-	/**
-	 * @param args
-	 * author:xumin 
-	 * 2017-1-10 下午10:15:54
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-
+	//==================================================================
+	
 	@Override
 	public String getMatch(Map<String, Object> paraMap) {
 		String matchId = paraMap.get("matchId").toString();
@@ -36,7 +30,7 @@ public class MatchServiceImpl implements MatchService{
 	}
 	@Override
 	public int ready(Map<String, Object> paraMap) {
-		final String matchId = paraMap.get("paraMap").toString();
+		final String matchId = paraMap.get("matchId").toString();
 		int flag = 0;
 		synchronized(matchId){
 			flag = MatchServiceHelper.ready(paraMap);
@@ -62,10 +56,7 @@ public class MatchServiceImpl implements MatchService{
 
 	@Override
 	public void sendClientMatchInfo(Map<String, Object> paraMap) {
-		// TODO Auto-generated method stub
 		MatchServiceHelper.rankList(paraMap);
-//		xiaoTMatchTopics.rankList(message);
-//		xiaoTMatchTopics.userRealtimeInfo(message);
 	}
 
 }
