@@ -78,6 +78,22 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+						</manifest>
+						<manifestEntries>
+							<Main-Class>cn.hkfdt.xiaot.Application</Main-Class>
+							<packageName>cn.hkfdt.xiaot</packageName>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
