@@ -76,10 +76,9 @@ public class WebSocketConnectionListener implements
 	}
 	// SessionDisconnectEvent[sessionId=8v_ueimg, CloseStatus[code=1000, reason=null]]
 	private void handleSessionDisconnect(SessionDisconnectEvent event) {
-		// TODO Auto-generated method stub
-//		SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
-//		String sessionId = (String) headers.getHeader(SIMP_SESSION_ID);
-//		removeUserId(sessionId);
+		SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
+		String sessionId = (String) headers.getHeader(SIMP_SESSION_ID);
+		removeUserId(sessionId);
 		System.err.println("handleSessionDisconnect");
 	}
 	//[stompCommand=CONNECT, null, null, null, nativeHeaders={fdt-id=[123], accept-version=[1.1,1.0], 
@@ -88,10 +87,11 @@ public class WebSocketConnectionListener implements
 	private void handleSessionConnected(SessionConnectEvent event) {
 		// TODO Auto-generated method stub
 		SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
-//		String fdtId = "ssss";//headers.getNativeHeader(FDT_KEY).get(0);
+		String sessionId = (String) headers.getHeader(SIMP_SESSION_ID);
+		String fdtId = sessionId;//headers.getNativeHeader(FDT_KEY).get(0);
 //		fdtId = getFdtId(fdtId);
-//		String sessionId = (String) headers.getHeader(SIMP_SESSION_ID);
-//		setUserIds(fdtId,sessionId);
+		
+		setUserIds(fdtId,sessionId);
 		System.err.println("handleSessionConnected");
 //		System.err.println("fdtId:"+fdtId+"    sessionId:"+sessionId);
 	}
@@ -99,12 +99,14 @@ public class WebSocketConnectionListener implements
 	private void setUserIds(String fdtId, String sessionId) {
 		mapSession2FdtId.put(sessionId, fdtId);
 		mapFdtId2Session.put(fdtId, sessionId);
+		System.out.println("连理连接对接id"+fdtId+"___"+sessionId);
 	}
 	private void removeUserId(String sessionId) {
 		String fdtId = mapSession2FdtId.get(sessionId);
 		if(!StringUtils.isEmpty(fdtId)){
 			mapSession2FdtId.remove(sessionId);
 			mapFdtId2Session.remove(fdtId);
+			System.out.println("--------id"+fdtId+"___"+sessionId);
 		}
 	}
 	private String getFdtId(String fdtKey) {

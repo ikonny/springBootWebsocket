@@ -1,5 +1,8 @@
 package cn.hkfdt.xiaot.websocket.topic;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -7,11 +10,23 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Component;
 
+import com.alibaba.fastjson.JSON;
+
+import cn.hkfdt.xiaot.websocket.protocol.ProtocolHelper;
+import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
+
 @Component
 public class XiaoTMatchTopics {
 
 	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
+	public static String matchGo;
+	static{
+		Map<String, Object> map = new HashMap<String, Object>(2);
+		map.put("rspCode", 200);
+		map.put("action", "go");
+		matchGo = JSON.toJSONString(map);
+	}
 	/**
 	 * @param args
 	 * author:xumin 
@@ -21,7 +36,7 @@ public class XiaoTMatchTopics {
 		// TODO Auto-generated method stub
 
 	}
-	//================================================
+	//==================================================================== 
 	/**
 	 * 通知本次比赛参加人开始比赛
 	 * @param message
@@ -29,12 +44,18 @@ public class XiaoTMatchTopics {
 	 * author:xumin 
 	 * 2017-1-10 下午5:23:07
 	 */
-	@SendTo("/topic/match/start")  //广播
-	public String start(String message) {
-		System.out.println("Received message: " + message);
-//		simpMessagingTemplate.convertAndSend("/topic/entries", message);
+//	@SendTo("/topic/match/start")  //广播
+	public String start(String matchId) {
+		System.out.println("Received message: " + matchId);
+		final String destination = "/topic/match/start";
+		Map<String, Object> mapMatch = MatchServiceHelper.mapMatchInfo.get(matchId);
+		Map<String, Object> matchPeople = (Map<String, Object>) mapMatch.get("matchPeople");
+		for(String key : matchPeople.keySet()){
+			simpMessagingTemplate.convertAndSendToUser(key, destination, matchGo);
+		}
+		simpMessagingTemplate.convertAndSend("/topic/match/start", matchGo);
 //		simpMessagingTemplate.convertAndSendToUser(user, destination, payload)
-		return message+"徐岷";
+		return matchGo;
 	}
 	/**
 	 * 某比赛选手成绩更新后触发
@@ -60,7 +81,7 @@ public class XiaoTMatchTopics {
 	@SendTo("/topic/match/userRealtimeInfo")  //广播
 	public String userRealtimeInfo(String message) {
 		System.out.println("Received message: " + message);
-		return message+"徐岷";
+		return message;
 	}
 
 }
