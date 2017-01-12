@@ -3,6 +3,7 @@ package cn.hkfdt.xiaot.websocket.controllers.match;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -25,6 +26,7 @@ public class XiaoTMatchController {
 	MatchService matchService;
 	@Autowired
 	XiaoTMatchTopics xiaoTMatchTopics;
+	private static Logger logger = Logger.getLogger(WebSocketConnectionListener.class);
 	
 	public static void main(String[] args){
 		Map<String, Object>  map = new HashMap<String, Object>();
@@ -90,6 +92,7 @@ public class XiaoTMatchController {
 			msg2 = "比赛人数已满";
 		}
 		String str = ProtocolHelper.getCommonJson(rspCode,msg2);
+		logger.info("ready:"+str);
 		return str;
 	}
 	

@@ -9,8 +9,8 @@ public class InboundChannelIntercepter implements ChannelInterceptor{
 	@Override
 	public Message<?> preSend(Message<?> message, MessageChannel channel) {
 		// TODO Auto-generated method stub
-		System.err.println("preSend");
-		return null;
+		System.err.println(message);
+		return message;
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 
+import cn.hkfdt.xiaot.websocket.conmng.WebSocketConnectionListener;
 import cn.hkfdt.xiaot.websocket.protocol.ProtocolHelper;
 import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
 
@@ -24,6 +26,7 @@ public class XiaoTMatchTopics {
 
 	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
+	private static Logger logger = Logger.getLogger(WebSocketConnectionListener.class);
 	public static String matchGo;
 	static{
 		Map<String, Object> map = new HashMap<String, Object>(2);
@@ -54,15 +57,15 @@ public class XiaoTMatchTopics {
 	 */
 //	@SendTo("/topic/match/start")  //广播
 	public String start(String matchId) {
-		System.out.println("Received message: " + matchId);
-//		final String destination = "/topic/match/start";
+		final String destination = "/topic/match/start";
 //		Map<String, Object> mapMatch = MatchServiceHelper.mapMatchInfo.get(matchId);
 //		Map<String, Object> matchPeople = (Map<String, Object>) mapMatch.get("matchPeople");
+//		List<String> fdtIdList = new ArrayList<String>(matchPeople.size());
 //		for(String key : matchPeople.keySet()){
-//			simpMessagingTemplate.convertAndSendToUser(key, destination, matchGo);
+//			fdtIdList.add(key);
 //		}
-		simpMessagingTemplate.convertAndSend("/topic/match/start", matchGo);
-//		simpMessagingTemplate.convertAndSendToUser(user, destination, payload)
+		simpMessagingTemplate.convertAndSend(destination, matchGo);
+//		simpMessagingTemplate.convertAndSendToUser(user, "/topic/match/start", matchGo);
 		return matchGo;
 	}
 	/**

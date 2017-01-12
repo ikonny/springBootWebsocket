@@ -12,6 +12,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.apache.log4j.Logger;
+
+import cn.hkfdt.xiaot.websocket.conmng.WebSocketConnectionListener;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 import cn.hkfdt.xiaot.websocket.utils.HttpUtils;
 
@@ -28,6 +31,7 @@ public class MatchServiceHelper {
 	public static LinkedBlockingQueue<String>  rankQueue = new LinkedBlockingQueue<>(87);
 	public static volatile Map<String, Object> rankMapHelper = new HashMap<String, Object>(100);
 	public static XiaoTMatchTopics xiaoTMatchTopics = null;//被动注入的
+	private static Logger logger = Logger.getLogger(WebSocketConnectionListener.class);
 	/**
 	 * @param args
 	 * author:xumin 
@@ -150,6 +154,8 @@ public class MatchServiceHelper {
 			mapMatch.put("createTime", System.currentTimeMillis());
 			
 			mapRsp.put("matchJson", matchJson);
+			
+			logger.info("创建比赛_num:"+num+"matchId:"+matchId);
 		}else{
 			String matchJson = mapItem.get("matchJson").toString();
 			mapRsp.put("matchJson", matchJson);
@@ -191,8 +197,10 @@ public class MatchServiceHelper {
 			return -1;
 		}
 		matchPeople.put(fdtId, 1);//准备一个，入队列
+		logger.info("比赛matchId:"+matchId+"_num:"+numP+"__加入一人fdtId:"+fdtId);
 		if(matchPeople.size()==numP){
 			//start
+			logger.info("比赛matchId:"+matchId+"_num:"+numP+"__人齐了");
 			mapItem.put("readyTime", System.currentTimeMillis());
 			return 1;
 		}

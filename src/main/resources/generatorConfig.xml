@@ -50,25 +50,15 @@
 			<property name="enableSubPackages" value="false" />
 		</javaClientGenerator>
 
-		<!-- !!!! Table Configurations !!!! <table tableName="social_qrurl" enableCountByExample="false" 
-			enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"> 
-			<property name="useActualColumnNames" value="true"/> </table> <table tableName="social_qrurl" 
-			enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" 
-			enableUpdateByExample="false" domainObjectName="QrUrl"></table> 
-
-		<table tableName="xiaot_questions" enableCountByExample="false"
-			enableDeleteByExample="false" enableSelectByExample="false"
-			enableUpdateByExample="false" domainObjectName="TQuestions">
-			<property name="useActualColumnNames" value="true" />
-		</table>
-
+		<!-- !!!! Table Configurations !!!! 
 		<table tableName="xiaot_force_analysis" enableCountByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
 			enableUpdateByExample="false" domainObjectName="ForceAnalysis">
 			<property name="useActualColumnNames" value="true" />
 		</table>
+		
+		<table tableName="xiaot_record"  domainObjectName="TRecord"></table>
 		-->
-
 		<table tableName="xiaot_record"  domainObjectName="TRecord"></table>
 
 	</context>

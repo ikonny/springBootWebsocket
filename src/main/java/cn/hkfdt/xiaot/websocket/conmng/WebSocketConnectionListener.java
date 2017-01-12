@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -16,6 +17,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import com.alibaba.fastjson.JSON;
 
+import cn.hkfdt.xiaot.Application;
 import cn.hkfdt.xiaot.websocket.utils.RSAUtil;
 
 
@@ -26,6 +28,7 @@ import cn.hkfdt.xiaot.websocket.utils.RSAUtil;
 public class WebSocketConnectionListener implements
 		ApplicationListener<ApplicationEvent> {
 	
+	private static Logger logger = Logger.getLogger(WebSocketConnectionListener.class);
 	private static final String FDT_KEY = "fdt-key"; 
     private static final String SIMP_SESSION_ID = "simpSessionId";
     public static Map<String, Object> mapTemp = new HashMap<String, Object>(1);
@@ -111,14 +114,14 @@ public class WebSocketConnectionListener implements
 	private void setUserIds(String fdtId, String sessionId) {
 		mapSession2FdtId.put(sessionId, fdtId);
 		mapFdtId2Session.put(fdtId, sessionId);
-		System.out.println("连理连接对接id"+fdtId+"___"+sessionId);
+		logger.info("设置连接:fdtId "+fdtId);
 	}
 	private void removeUserId(String sessionId) {
 		String fdtId = mapSession2FdtId.get(sessionId);
 		if(!StringUtils.isEmpty(fdtId)){
 			mapSession2FdtId.remove(sessionId);
 			mapFdtId2Session.remove(fdtId);
-			System.out.println("--------id"+fdtId+"___"+sessionId);
+			logger.info("-------断开:fdtId "+fdtId);
 		}
 	}
 	private static String getFdtId(String fdtKey, String sessionId) {
@@ -130,7 +133,7 @@ public class WebSocketConnectionListener implements
 			String fdtId = map.get("Id").toString();
 			return fdtId;
 		} catch (Exception e) {
-			System.err.println("token出错");
+			logger.info("token出错");
 		}
 		return sessionId;
 	}
