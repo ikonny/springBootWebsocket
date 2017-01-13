@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -28,7 +29,7 @@ import cn.hkfdt.xiaot.websocket.utils.RSAUtil;
 public class WebSocketConnectionListener implements
 		ApplicationListener<ApplicationEvent> {
 	
-	private static Logger logger = Logger.getLogger(WebSocketConnectionListener.class);
+	private static Logger logger = LoggerFactory.getLogger(WebSocketConnectionListener.class);
 	private static final String FDT_KEY = "fdt-key"; 
     private static final String SIMP_SESSION_ID = "simpSessionId";
     public static Map<String, Object> mapTemp = new HashMap<String, Object>(1);

@@ -3,7 +3,7 @@ package cn.hkfdt.xiaot.websocket.controllers.match;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -26,7 +26,7 @@ public class XiaoTMatchController {
 	MatchService matchService;
 	@Autowired
 	XiaoTMatchTopics xiaoTMatchTopics;
-	private static Logger logger = Logger.getLogger(WebSocketConnectionListener.class);
+	private static org.slf4j.Logger logger = LoggerFactory.getLogger(XiaoTMatchController.class);
 	
 	public static void main(String[] args){
 		Map<String, Object>  map = new HashMap<String, Object>();

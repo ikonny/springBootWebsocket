@@ -24,7 +24,6 @@ public class TaskMatch {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
 	}
 //	@Scheduled(cron="0/10 * *  * * ? ")
 	public void everyDayNight(){

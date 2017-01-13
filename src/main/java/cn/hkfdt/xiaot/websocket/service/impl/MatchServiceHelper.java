@@ -12,11 +12,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.apache.log4j.Logger;
 
 import cn.hkfdt.xiaot.websocket.conmng.WebSocketConnectionListener;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 import cn.hkfdt.xiaot.websocket.utils.HttpUtils;
+import org.slf4j.LoggerFactory;
 
 public class MatchServiceHelper {
 	/**
@@ -31,7 +31,7 @@ public class MatchServiceHelper {
 	public static LinkedBlockingQueue<String>  rankQueue = new LinkedBlockingQueue<>(87);
 	public static volatile Map<String, Object> rankMapHelper = new HashMap<String, Object>(100);
 	public static XiaoTMatchTopics xiaoTMatchTopics = null;//被动注入的
-	private static Logger logger = Logger.getLogger(WebSocketConnectionListener.class);
+	private static org.slf4j.Logger logger = LoggerFactory.getLogger(MatchServiceHelper.class);
 	/**
 	 * @param args
 	 * author:xumin 

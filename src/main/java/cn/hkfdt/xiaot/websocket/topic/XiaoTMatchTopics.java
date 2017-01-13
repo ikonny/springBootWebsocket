@@ -7,7 +7,8 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -26,7 +27,7 @@ public class XiaoTMatchTopics {
 
 	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
-	private static Logger logger = Logger.getLogger(WebSocketConnectionListener.class);
+	private static Logger logger = LoggerFactory.getLogger(XiaoTMatchTopics.class);
 	public static String matchGo;
 	static{
 		Map<String, Object> map = new HashMap<String, Object>(2);
@@ -41,7 +42,7 @@ public class XiaoTMatchTopics {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+		System.err.println("sdf");
 	}
 	//==================================================================== 
 	@PostConstruct
@@ -50,9 +51,9 @@ public class XiaoTMatchTopics {
 	}
 	/**
 	 * 通知本次比赛参加人开始比赛
-	 * @param message
+	 * @param matchId
 	 * @return
-	 * author:xumin 
+	 * author:xumin
 	 * 2017-1-10 下午5:23:07
 	 */
 //	@SendTo("/topic/match/start")  //广播
