@@ -1,22 +1,14 @@
 package cn.hkfdt.xiaot.websocket.service.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
+import cn.hkfdt.xiaot.websocket.utils.HttpUtils;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
-
-
-import cn.hkfdt.xiaot.websocket.conmng.WebSocketConnectionListener;
-import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
-import cn.hkfdt.xiaot.websocket.utils.HttpUtils;
-import org.slf4j.LoggerFactory;
 
 public class MatchServiceHelper {
 	/**
@@ -29,7 +21,7 @@ public class MatchServiceHelper {
 	public static final String xiaotTrainingUrl = "https://prod.forexmaster.cn/im/xiaotTraining";
 	public static ExecutorService executorService = Executors.newCachedThreadPool();
 	public static LinkedBlockingQueue<String>  rankQueue = new LinkedBlockingQueue<>(87);
-	public static volatile Map<String, Object> rankMapHelper = new HashMap<String, Object>(100);
+	public static volatile Map<String, Object> rankMapHelper = new HashMap<>(100);
 	public static XiaoTMatchTopics xiaoTMatchTopics = null;//被动注入的
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(MatchServiceHelper.class);
 	/**
@@ -40,17 +32,17 @@ public class MatchServiceHelper {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		List<Map<String, Object>> rankList = new ArrayList<Map<String,Object>>(3);
-		Map<String, Object> item1 = new HashMap<String, Object>(2);
+		Map<String, Object> item1 = new HashMap<>();
 		item1.put("yieldRate", 1.2);
 		item1.put("ssd", 1334);
 		rankList.add(item1);
 		
-		item1 = new HashMap<String, Object>(2);
+		item1 = new HashMap<>(2);
 		item1.put("yieldRate", 2.2);
 		item1.put("ssd", 11114);
 		rankList.add(item1);
 		
-		item1 = new HashMap<String, Object>(2);
+		item1 = new HashMap<>(2);
 		item1.put("yieldRate", 0.2);
 		item1.put("ssd", 1000);
 		rankList.add(item1);
@@ -76,13 +68,11 @@ public class MatchServiceHelper {
 						Map<String, Object> matchPeople = (Map<String, Object>) mapItem.get("matchPeople");
 						//rankList
 						List<Map<String, Object>> rankList = new ArrayList<Map<String,Object>>(matchPeople.size());
-						Iterator<String> iterator = matchPeople.keySet().iterator();
-						while(iterator.hasNext()){
-							String key = iterator.next();
-//							System.out.println("key:"+key);
+						for (String key : matchPeople.keySet()) {
+							//							System.out.println("key:"+key);
 //							System.out.println("value:"+matchPeople.get(key));
 							Object obTemp = matchPeople.get(key);
-							if(obTemp instanceof HashMap<?, ?>){
+							if (obTemp instanceof HashMap<?, ?>) {
 								Map<String, Object> paraMap = (Map<String, Object>) matchPeople.get(key);
 								rankList.add(paraMap);
 							}
@@ -90,7 +80,7 @@ public class MatchServiceHelper {
 						sort(rankList);
 						mapItem.put("rankList", rankList);//排序完成
 						//-----排序完成广播+用户数据全部更新事件----------
-						sendToClientRankEvent(mapItem,rankList);
+						sendToClientRankEvent(rankList);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -141,14 +131,14 @@ public class MatchServiceHelper {
 		Map<String, Object>  mapItem = mapMatchInfo.get(matchId);
 		if(mapItem==null){
 			//1.如果比赛id没有就内存创建比赛，比赛id为key,后面是比赛信息，包括人数，参加人数，比赛题目。
-			Map<String, Object> mapMatch = new HashMap<String, Object>(8);
+			Map<String, Object> mapMatch = new HashMap<>(8);
 			mapMatchInfo.put(matchId, mapMatch);
 			mapMatch.put("num", num);
 			
 			String matchJson = HttpUtils.postJson(xiaotTrainingUrl, "");
 			mapMatch.put("matchJson", matchJson);
 			
-			Map<String, Object> matchPeople = new HashMap<String, Object>(num);
+			Map<String, Object> matchPeople = new HashMap<>(num);
 			mapMatch.put("matchPeople", matchPeople);
 			
 			mapMatch.put("createTime", System.currentTimeMillis());
@@ -215,7 +205,7 @@ public class MatchServiceHelper {
 			return;
 		}
 		Map<String, Object> matchPeople = (Map<String, Object>) mapItem.get("matchPeople");
-		Map<String, Object> mapPeople = new HashMap<String, Object>(16);
+		Map<String, Object> mapPeople = new HashMap<>(16);
 		setInfoForPerson(mapPeople,paraMap);
 		matchPeople.put(fdtId, mapPeople);//准备一个，入队列
 		
@@ -238,8 +228,7 @@ public class MatchServiceHelper {
 		mapPeople.put("curMa", paraMap.get("curMa"));//fdtId
 		mapPeople.put("curVolume", paraMap.get("curVolume"));//fdtId
 	}
-	protected static void sendToClientRankEvent(Map<String, Object> mapItem,
-			final List<Map<String, Object>> rankList) {
+	protected static void sendToClientRankEvent(final List<Map<String, Object>> rankList) {
 //		Runnable run = new Runnable() {
 //			
 //			@Override

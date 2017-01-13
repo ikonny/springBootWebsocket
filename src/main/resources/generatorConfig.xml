@@ -59,7 +59,7 @@
 		
 		<table tableName="xiaot_record"  domainObjectName="TRecord"></table>
 		-->
-		<table tableName="xiaot_record"  domainObjectName="TRecord"></table>
+		<table tableName="AUTH"  domainObjectName="Auth"></table>
 
 	</context>
 </generatorConfiguration>

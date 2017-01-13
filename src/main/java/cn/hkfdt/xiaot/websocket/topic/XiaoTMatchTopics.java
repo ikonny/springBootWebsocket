@@ -1,26 +1,18 @@
 package cn.hkfdt.xiaot.websocket.topic;
 
+import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
+import com.alibaba.fastjson.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.PostConstruct;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.annotation.SendToUser;
-import org.springframework.stereotype.Component;
-
-import com.alibaba.fastjson.JSON;
-
-import cn.hkfdt.xiaot.websocket.conmng.WebSocketConnectionListener;
-import cn.hkfdt.xiaot.websocket.protocol.ProtocolHelper;
-import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
 
 @Component
 public class XiaoTMatchTopics {
@@ -79,7 +71,7 @@ public class XiaoTMatchTopics {
 	 */
 //	@SendTo("/topic/match/rankList")  //广播
 	public String rankList(List<Map<String, Object>> rankList) {
-		Map<String, Object> mapTar = new HashMap<String, Object>(3);
+		Map<String, Object> mapTar = new HashMap<>(3);
 		mapTar.put("rspCode", 200);
 		List<Map<String, Object>>  listMap = new ArrayList<Map<String,Object>>(rankList.size());
 		for(Map<String, Object> map : rankList){

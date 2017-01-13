@@ -1,18 +1,18 @@
 package cn.hkfdt.xiaot.websocket.task;
 
+import cn.hkfdt.xiaot.mybatis.mapper.AuthMapper;
+import cn.hkfdt.xiaot.mybatis.model.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import cn.hkfdt.xiaot.mybatis.mapper.TRecordMapper;
-import cn.hkfdt.xiaot.mybatis.model.TRecord;
 import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
 
 @Service
 public class TaskMatch {
 
 	@Autowired
-	TRecordMapper tRecordMapper;
+	AuthMapper authMapper;//不加@mapper是不能运行的
 	//=====================================
 	public TaskMatch(){
 //		System.err.println("TaskTest初始化！！！");
@@ -27,13 +27,13 @@ public class TaskMatch {
 	}
 //	@Scheduled(cron="0/10 * *  * * ? ")
 	public void everyDayNight(){
-		TRecord item = tRecordMapper.selectByPrimaryKey(106);
+		Auth item = authMapper.selectByPrimaryKey("123456123456","nsfdbs@qq.kk");
 		System.err.println(item);
 	}
 	@Scheduled(cron="0 0/2 *  * * ? ")
 	public void mapMatchInfoHS(){
 		MatchServiceHelper.recoverMatchInfo();
-//		System.err.println("+++++");
+		System.err.println("+++++");
 	}
 
 }

@@ -1,15 +1,12 @@
 package cn.hkfdt.xiaot.websocket.service.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import cn.hkfdt.xiaot.websocket.service.MatchService;
+import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-
-import cn.hkfdt.xiaot.websocket.service.MatchService;
-import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class MatchServiceImpl implements MatchService{
@@ -21,7 +18,7 @@ public class MatchServiceImpl implements MatchService{
 	@Override
 	public String getMatch(Map<String, Object> paraMap) {
 		String matchId = paraMap.get("matchId").toString();
-		Map<String, Object> mapRsp = new HashMap<String, Object>(6);
+		Map<String, Object> mapRsp = new HashMap<>(6);
 		synchronized(matchId){
 			MatchServiceHelper.getMatch(paraMap,mapRsp);
 		}
@@ -31,7 +28,7 @@ public class MatchServiceImpl implements MatchService{
 	@Override
 	public int ready(Map<String, Object> paraMap) {
 		final String matchId = paraMap.get("matchId").toString();
-		int flag = 0;
+		int flag;
 		synchronized(matchId){
 			flag = MatchServiceHelper.ready(paraMap);
 		}
