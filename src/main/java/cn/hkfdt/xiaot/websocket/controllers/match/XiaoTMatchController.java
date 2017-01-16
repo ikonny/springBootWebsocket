@@ -1,23 +1,19 @@
 package cn.hkfdt.xiaot.websocket.controllers.match;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import cn.hkfdt.xiaot.websocket.conmng.WebSocketConnectionListener;
+import cn.hkfdt.xiaot.websocket.protocol.ProtocolHelper;
+import cn.hkfdt.xiaot.websocket.service.MatchService;
+import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.hkfdt.xiaot.websocket.conmng.WebSocketConnectionListener;
-import cn.hkfdt.xiaot.websocket.protocol.ProtocolHelper;
-import cn.hkfdt.xiaot.websocket.service.MatchService;
-import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
-
-import com.alibaba.fastjson.JSON;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class XiaoTMatchController {
@@ -37,12 +33,6 @@ public class XiaoTMatchController {
 	}
 
 	//==================================================
-	@RequestMapping("/test")
-	@ResponseBody
-	public String http(String message) {
-		return message+"sdf";
-	}
-
 	@SuppressWarnings("unchecked")
 	@MessageMapping("/match/getMatch") //这个不同于@RequestMapping 是专门用于websoket的
 //	@SendTo("/queue/xiaot/match/getMatch")  //广播
