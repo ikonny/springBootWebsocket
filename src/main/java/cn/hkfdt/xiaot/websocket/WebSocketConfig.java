@@ -1,14 +1,12 @@
 package cn.hkfdt.xiaot.websocket;
 
+import cn.hkfdt.xiaot.websocket.interceptors.XiaoTShareInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-
-import cn.hkfdt.xiaot.websocket.interceptors.InboundChannelIntercepter;
-import cn.hkfdt.xiaot.websocket.interceptors.XiaoTShareInterceptor;
 
 /*
  * 1.@EnableWebSocketMessageBroker注解表示开启使用STOMP协议来传输基于代理的消息，Broker就是代理的意思。 
@@ -26,8 +24,8 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
         // use the /topic prefix for outgoing WebSocket communication
     	config.enableSimpleBroker("/queue", "/topic");//我发给客户端，客户端需要订阅的
 
-        // use the /app prefix for others
-        config.setApplicationDestinationPrefixes("/req");//客户端请求过来的
+        //这个可以没有，请求和订阅就是一个url了
+//        config.setApplicationDestinationPrefixes("/req");//客户端请求过来的
     }
 
     @Override

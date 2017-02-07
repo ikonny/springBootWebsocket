@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hkfdt.webserver.im.xiaot.mapper.ForceAnalysisExtendsMapper" >
+  <resultMap id="BaseResultMap" type="cn.hkfdt.webserver.im.xiaot.model.ForceAnalysis" >
+    <id column="forceId" property="forceId" jdbcType="INTEGER" />
+    <result column="fdtScore" property="fdtScore" jdbcType="REAL" />
+    <result column="fdtId" property="fdtId" jdbcType="VARCHAR" />
+    <result column="tradeCount" property="tradeCount" jdbcType="INTEGER" />
+    <result column="winCount" property="winCount" jdbcType="INTEGER" />
+    <result column="maxDrawdown" property="maxDrawdown" jdbcType="REAL" />
+    <result column="sharpeRatio" property="sharpeRatio" jdbcType="REAL" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="BIGINT" />
+    <result column="accumulatedIncome" property="accumulatedIncome" jdbcType="REAL" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    forceId, fdtScore, fdtId, tradeCount, winCount, maxDrawdown, sharpeRatio, type, createTime,
+    accumulatedIncome, version
+  </sql>
+  
+  <select id="selectByFdtId" resultMap="BaseResultMap" parameterType="cn.hkfdt.webserver.im.xiaot.model.ForceAnalysis" >
+    select 
+    <include refid="Base_Column_List" />
+    from xiaot_force_analysis
+    where fdtId = #{fdtId,jdbcType=VARCHAR} and type = #{type,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getXiaotMasterList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from xiaot_force_analysis
+    WHERE type = #{type,jdbcType=INTEGER} ORDER BY accumulatedIncome DESC,fdtScore DESC LIMIT 0,50
+  </select>
+  
+</mapper>

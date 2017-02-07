@@ -22,6 +22,7 @@ public class XiaoTMatchController {
 	MatchService matchService;
 	@Autowired
 	XiaoTMatchTopics xiaoTMatchTopics;
+
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(XiaoTMatchController.class);
 	
 	public static void main(String[] args){
@@ -31,7 +32,6 @@ public class XiaoTMatchController {
 		String str = JSON.toJSONString(map);
 		System.err.println(str);
 	}
-
 	//==================================================
 	@SuppressWarnings("unchecked")
 	@MessageMapping("/match/getMatch") //这个不同于@RequestMapping 是专门用于websoket的

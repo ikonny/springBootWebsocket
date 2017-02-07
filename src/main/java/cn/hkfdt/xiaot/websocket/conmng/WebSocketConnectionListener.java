@@ -1,11 +1,7 @@
 package cn.hkfdt.xiaot.websocket.conmng;
 
-import java.security.interfaces.RSAPrivateKey;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
+import cn.hkfdt.xiaot.websocket.utils.RSAUtil;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEvent;
@@ -16,10 +12,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import com.alibaba.fastjson.JSON;
-
-import cn.hkfdt.xiaot.Application;
-import cn.hkfdt.xiaot.websocket.utils.RSAUtil;
+import java.security.interfaces.RSAPrivateKey;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /*
@@ -107,6 +104,8 @@ public class WebSocketConnectionListener implements
 		if(fdtKeyList!=null){
 			String fdtKey = fdtKeyList.get(0);
 			fdtId = getFdtId(fdtKey,sessionId);
+		}else{
+			logger.info("sessionId: "+sessionId+"__获取不到fdtKey");
 		}
 		setUserIds(fdtId,sessionId);
 //		System.err.println("handleSessionConnected");

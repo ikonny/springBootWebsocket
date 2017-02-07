@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hkfdt.webserver.im.xiaot.mapper.TQuestionsMapper" >
+  <resultMap id="BaseResultMap" type="cn.hkfdt.webserver.im.xiaot.model.TQuestions" >
+    <id column="questionId" property="questionId" jdbcType="INTEGER" />
+    <result column="exchangeCode" property="exchangeCode" jdbcType="VARCHAR" />
+    <result column="shortSymbol" property="shortSymbol" jdbcType="VARCHAR" />
+    <result column="tradeDay" property="tradeDay" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="BIGINT" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="topicType" property="topicType" jdbcType="VARCHAR" />
+    <result column="initType" property="initType" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="cn.hkfdt.webserver.im.xiaot.model.TQuestions" extends="BaseResultMap" >
+    <result column="jsonData" property="jsonData" jdbcType="LONGVARBINARY" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    questionId, exchangeCode, shortSymbol, tradeDay, createTime, type, topicType, initType, 
+    version
+  </sql>
+  <sql id="Blob_Column_List" >
+    jsonData
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from xiaot_questions
+    where questionId = #{questionId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from xiaot_questions
+    where questionId = #{questionId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.hkfdt.webserver.im.xiaot.model.TQuestions" >
+    insert into xiaot_questions (questionId, exchangeCode, shortSymbol, 
+      tradeDay, createTime, type, 
+      topicType, initType, version, 
+      jsonData)
+    values (#{questionId,jdbcType=INTEGER}, #{exchangeCode,jdbcType=VARCHAR}, #{shortSymbol,jdbcType=VARCHAR}, 
+      #{tradeDay,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, 
+      #{topicType,jdbcType=VARCHAR}, #{initType,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}, 
+      #{jsonData,jdbcType=LONGVARBINARY})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.hkfdt.webserver.im.xiaot.model.TQuestions" >
+    insert into xiaot_questions
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="questionId != null" >
+        questionId,
+      </if>
+      <if test="exchangeCode != null" >
+        exchangeCode,
+      </if>
+      <if test="shortSymbol != null" >
+        shortSymbol,
+      </if>
+      <if test="tradeDay != null" >
+        tradeDay,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="topicType != null" >
+        topicType,
+      </if>
+      <if test="initType != null" >
+        initType,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="jsonData != null" >
+        jsonData,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="questionId != null" >
+        #{questionId,jdbcType=INTEGER},
+      </if>
+      <if test="exchangeCode != null" >
+        #{exchangeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shortSymbol != null" >
+        #{shortSymbol,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeDay != null" >
+        #{tradeDay,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="topicType != null" >
+        #{topicType,jdbcType=VARCHAR},
+      </if>
+      <if test="initType != null" >
+        #{initType,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="jsonData != null" >
+        #{jsonData,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.hkfdt.webserver.im.xiaot.model.TQuestions" >
+    update xiaot_questions
+    <set >
+      <if test="exchangeCode != null" >
+        exchangeCode = #{exchangeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shortSymbol != null" >
+        shortSymbol = #{shortSymbol,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeDay != null" >
+        tradeDay = #{tradeDay,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="topicType != null" >
+        topicType = #{topicType,jdbcType=VARCHAR},
+      </if>
+      <if test="initType != null" >
+        initType = #{initType,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="jsonData != null" >
+        jsonData = #{jsonData,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where questionId = #{questionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.hkfdt.webserver.im.xiaot.model.TQuestions" >
+    update xiaot_questions
+    set exchangeCode = #{exchangeCode,jdbcType=VARCHAR},
+      shortSymbol = #{shortSymbol,jdbcType=VARCHAR},
+      tradeDay = #{tradeDay,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=BIGINT},
+      type = #{type,jdbcType=INTEGER},
+      topicType = #{topicType,jdbcType=VARCHAR},
+      initType = #{initType,jdbcType=INTEGER},
+      version = #{version,jdbcType=INTEGER},
+      jsonData = #{jsonData,jdbcType=LONGVARBINARY}
+    where questionId = #{questionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.hkfdt.webserver.im.xiaot.model.TQuestions" >
+    update xiaot_questions
+    set exchangeCode = #{exchangeCode,jdbcType=VARCHAR},
+      shortSymbol = #{shortSymbol,jdbcType=VARCHAR},
+      tradeDay = #{tradeDay,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=BIGINT},
+      type = #{type,jdbcType=INTEGER},
+      topicType = #{topicType,jdbcType=VARCHAR},
+      initType = #{initType,jdbcType=INTEGER},
+      version = #{version,jdbcType=INTEGER}
+    where questionId = #{questionId,jdbcType=INTEGER}
+  </update>
+</mapper>
