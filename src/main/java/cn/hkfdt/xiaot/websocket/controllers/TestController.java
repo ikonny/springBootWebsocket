@@ -1,5 +1,6 @@
 package cn.hkfdt.xiaot.websocket.controllers;
 
+import cn.hkfdt.xiaot.web.xiaot.mapper.TRecordExtendsMapper;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +20,10 @@ import java.util.Map;
 public class TestController {
 
 	@Autowired
+	TRecordExtendsMapper testMapper;
+	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
-	
+
 	private static Logger logger = LoggerFactory.getLogger(TestController.class);
 	
 	public static void main(String[] args){
@@ -31,6 +35,18 @@ public class TestController {
 	}
 
 	//=========================================================
+	@RequestMapping("/test/mybatis")
+    @ResponseBody
+	public Object mybatis(String id) {
+		Map<String,Object> map = new HashMap<>(5);
+		map.put("market",0);
+		map.put("fdtId","mb000000377");
+//		para = testMapper.getByUnionKey(para);
+		int size = testMapper.getXiaotRecordTotal(map);
+		System.out.println(size);
+		return size;
+	}
+
 	@RequestMapping("/ws/test")
 //    @ResponseBody
 	public String http(String message) {

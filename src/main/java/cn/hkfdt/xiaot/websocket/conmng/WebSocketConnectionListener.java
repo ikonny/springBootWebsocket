@@ -124,7 +124,7 @@ public class WebSocketConnectionListener implements
 			logger.info("-------断开:fdtId "+fdtId);
 		}
 	}
-	private static String getFdtId(String fdtKey, String sessionId) {
+	public static String getFdtId(String fdtKey, String sessionId) {
 		try {
 			//{"exp":1476859144613,"phone":"8613675841954","market":"SC","email":"jie.ding@hkfdt.cn",
 			//"Id":"mb000000003","language":"CN","utype":90,"country":"CN"}
