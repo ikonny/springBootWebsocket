@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hkfdt.xiaot.mybatis.mapper.ltschina.SchoolMapper" >
+  <resultMap id="BaseResultMap" type="cn.hkfdt.xiaot.mybatis.model.ltschina.School" >
+    <id column="school_key" property="schoolKey" jdbcType="VARCHAR" />
+    <result column="en_name" property="enName" jdbcType="VARCHAR" />
+    <result column="en_short" property="enShort" jdbcType="VARCHAR" />
+    <result column="sc_name" property="scName" jdbcType="VARCHAR" />
+    <result column="sc_pinyin" property="scPinyin" jdbcType="VARCHAR" />
+    <result column="tc_name" property="tcName" jdbcType="VARCHAR" />
+    <result column="region" property="region" jdbcType="VARCHAR" />
+    <result column="display_en" property="displayEn" jdbcType="BIT" />
+    <result column="display_sc" property="displaySc" jdbcType="BIT" />
+    <result column="display_tc" property="displayTc" jdbcType="BIT" />
+    <result column="domains" property="domains" jdbcType="VARCHAR" />
+    <result column="flag_url" property="flagUrl" jdbcType="VARCHAR" />
+    <result column="oss_flag_url" property="ossFlagUrl" jdbcType="VARCHAR" />
+    <result column="group_id" property="groupId" jdbcType="VARCHAR" />
+    <result column="device_language" property="deviceLanguage" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="BIT" />
+    <result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    school_key, en_name, en_short, sc_name, sc_pinyin, tc_name, region, display_en, display_sc, 
+    display_tc, domains, flag_url, oss_flag_url, group_id, device_language, is_del, publish_time, 
+    last_update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.SchoolExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from school
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from school
+    where school_key = #{schoolKey,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from school
+    where school_key = #{schoolKey,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.SchoolExample" >
+    delete from school
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.School" >
+    insert into school (school_key, en_name, en_short, 
+      sc_name, sc_pinyin, tc_name, 
+      region, display_en, display_sc, 
+      display_tc, domains, flag_url, 
+      oss_flag_url, group_id, device_language, 
+      is_del, publish_time, last_update_time
+      )
+    values (#{schoolKey,jdbcType=VARCHAR}, #{enName,jdbcType=VARCHAR}, #{enShort,jdbcType=VARCHAR}, 
+      #{scName,jdbcType=VARCHAR}, #{scPinyin,jdbcType=VARCHAR}, #{tcName,jdbcType=VARCHAR}, 
+      #{region,jdbcType=VARCHAR}, #{displayEn,jdbcType=BIT}, #{displaySc,jdbcType=BIT}, 
+      #{displayTc,jdbcType=BIT}, #{domains,jdbcType=VARCHAR}, #{flagUrl,jdbcType=VARCHAR}, 
+      #{ossFlagUrl,jdbcType=VARCHAR}, #{groupId,jdbcType=VARCHAR}, #{deviceLanguage,jdbcType=VARCHAR}, 
+      #{isDel,jdbcType=BIT}, #{publishTime,jdbcType=TIMESTAMP}, #{lastUpdateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.School" >
+    insert into school
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="schoolKey != null" >
+        school_key,
+      </if>
+      <if test="enName != null" >
+        en_name,
+      </if>
+      <if test="enShort != null" >
+        en_short,
+      </if>
+      <if test="scName != null" >
+        sc_name,
+      </if>
+      <if test="scPinyin != null" >
+        sc_pinyin,
+      </if>
+      <if test="tcName != null" >
+        tc_name,
+      </if>
+      <if test="region != null" >
+        region,
+      </if>
+      <if test="displayEn != null" >
+        display_en,
+      </if>
+      <if test="displaySc != null" >
+        display_sc,
+      </if>
+      <if test="displayTc != null" >
+        display_tc,
+      </if>
+      <if test="domains != null" >
+        domains,
+      </if>
+      <if test="flagUrl != null" >
+        flag_url,
+      </if>
+      <if test="ossFlagUrl != null" >
+        oss_flag_url,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="deviceLanguage != null" >
+        device_language,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="publishTime != null" >
+        publish_time,
+      </if>
+      <if test="lastUpdateTime != null" >
+        last_update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="schoolKey != null" >
+        #{schoolKey,jdbcType=VARCHAR},
+      </if>
+      <if test="enName != null" >
+        #{enName,jdbcType=VARCHAR},
+      </if>
+      <if test="enShort != null" >
+        #{enShort,jdbcType=VARCHAR},
+      </if>
+      <if test="scName != null" >
+        #{scName,jdbcType=VARCHAR},
+      </if>
+      <if test="scPinyin != null" >
+        #{scPinyin,jdbcType=VARCHAR},
+      </if>
+      <if test="tcName != null" >
+        #{tcName,jdbcType=VARCHAR},
+      </if>
+      <if test="region != null" >
+        #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="displayEn != null" >
+        #{displayEn,jdbcType=BIT},
+      </if>
+      <if test="displaySc != null" >
+        #{displaySc,jdbcType=BIT},
+      </if>
+      <if test="displayTc != null" >
+        #{displayTc,jdbcType=BIT},
+      </if>
+      <if test="domains != null" >
+        #{domains,jdbcType=VARCHAR},
+      </if>
+      <if test="flagUrl != null" >
+        #{flagUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="ossFlagUrl != null" >
+        #{ossFlagUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceLanguage != null" >
+        #{deviceLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=BIT},
+      </if>
+      <if test="publishTime != null" >
+        #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateTime != null" >
+        #{lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.SchoolExample" resultType="java.lang.Integer" >
+    select count(*) from school
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update school
+    <set >
+      <if test="record.schoolKey != null" >
+        school_key = #{record.schoolKey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.enName != null" >
+        en_name = #{record.enName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.enShort != null" >
+        en_short = #{record.enShort,jdbcType=VARCHAR},
+      </if>
+      <if test="record.scName != null" >
+        sc_name = #{record.scName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.scPinyin != null" >
+        sc_pinyin = #{record.scPinyin,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tcName != null" >
+        tc_name = #{record.tcName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.region != null" >
+        region = #{record.region,jdbcType=VARCHAR},
+      </if>
+      <if test="record.displayEn != null" >
+        display_en = #{record.displayEn,jdbcType=BIT},
+      </if>
+      <if test="record.displaySc != null" >
+        display_sc = #{record.displaySc,jdbcType=BIT},
+      </if>
+      <if test="record.displayTc != null" >
+        display_tc = #{record.displayTc,jdbcType=BIT},
+      </if>
+      <if test="record.domains != null" >
+        domains = #{record.domains,jdbcType=VARCHAR},
+      </if>
+      <if test="record.flagUrl != null" >
+        flag_url = #{record.flagUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ossFlagUrl != null" >
+        oss_flag_url = #{record.ossFlagUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.groupId != null" >
+        group_id = #{record.groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deviceLanguage != null" >
+        device_language = #{record.deviceLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isDel != null" >
+        is_del = #{record.isDel,jdbcType=BIT},
+      </if>
+      <if test="record.publishTime != null" >
+        publish_time = #{record.publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lastUpdateTime != null" >
+        last_update_time = #{record.lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update school
+    set school_key = #{record.schoolKey,jdbcType=VARCHAR},
+      en_name = #{record.enName,jdbcType=VARCHAR},
+      en_short = #{record.enShort,jdbcType=VARCHAR},
+      sc_name = #{record.scName,jdbcType=VARCHAR},
+      sc_pinyin = #{record.scPinyin,jdbcType=VARCHAR},
+      tc_name = #{record.tcName,jdbcType=VARCHAR},
+      region = #{record.region,jdbcType=VARCHAR},
+      display_en = #{record.displayEn,jdbcType=BIT},
+      display_sc = #{record.displaySc,jdbcType=BIT},
+      display_tc = #{record.displayTc,jdbcType=BIT},
+      domains = #{record.domains,jdbcType=VARCHAR},
+      flag_url = #{record.flagUrl,jdbcType=VARCHAR},
+      oss_flag_url = #{record.ossFlagUrl,jdbcType=VARCHAR},
+      group_id = #{record.groupId,jdbcType=VARCHAR},
+      device_language = #{record.deviceLanguage,jdbcType=VARCHAR},
+      is_del = #{record.isDel,jdbcType=BIT},
+      publish_time = #{record.publishTime,jdbcType=TIMESTAMP},
+      last_update_time = #{record.lastUpdateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.School" >
+    update school
+    <set >
+      <if test="enName != null" >
+        en_name = #{enName,jdbcType=VARCHAR},
+      </if>
+      <if test="enShort != null" >
+        en_short = #{enShort,jdbcType=VARCHAR},
+      </if>
+      <if test="scName != null" >
+        sc_name = #{scName,jdbcType=VARCHAR},
+      </if>
+      <if test="scPinyin != null" >
+        sc_pinyin = #{scPinyin,jdbcType=VARCHAR},
+      </if>
+      <if test="tcName != null" >
+        tc_name = #{tcName,jdbcType=VARCHAR},
+      </if>
+      <if test="region != null" >
+        region = #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="displayEn != null" >
+        display_en = #{displayEn,jdbcType=BIT},
+      </if>
+      <if test="displaySc != null" >
+        display_sc = #{displaySc,jdbcType=BIT},
+      </if>
+      <if test="displayTc != null" >
+        display_tc = #{displayTc,jdbcType=BIT},
+      </if>
+      <if test="domains != null" >
+        domains = #{domains,jdbcType=VARCHAR},
+      </if>
+      <if test="flagUrl != null" >
+        flag_url = #{flagUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="ossFlagUrl != null" >
+        oss_flag_url = #{ossFlagUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceLanguage != null" >
+        device_language = #{deviceLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=BIT},
+      </if>
+      <if test="publishTime != null" >
+        publish_time = #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateTime != null" >
+        last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where school_key = #{schoolKey,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.School" >
+    update school
+    set en_name = #{enName,jdbcType=VARCHAR},
+      en_short = #{enShort,jdbcType=VARCHAR},
+      sc_name = #{scName,jdbcType=VARCHAR},
+      sc_pinyin = #{scPinyin,jdbcType=VARCHAR},
+      tc_name = #{tcName,jdbcType=VARCHAR},
+      region = #{region,jdbcType=VARCHAR},
+      display_en = #{displayEn,jdbcType=BIT},
+      display_sc = #{displaySc,jdbcType=BIT},
+      display_tc = #{displayTc,jdbcType=BIT},
+      domains = #{domains,jdbcType=VARCHAR},
+      flag_url = #{flagUrl,jdbcType=VARCHAR},
+      oss_flag_url = #{ossFlagUrl,jdbcType=VARCHAR},
+      group_id = #{groupId,jdbcType=VARCHAR},
+      device_language = #{deviceLanguage,jdbcType=VARCHAR},
+      is_del = #{isDel,jdbcType=BIT},
+      publish_time = #{publishTime,jdbcType=TIMESTAMP},
+      last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP}
+    where school_key = #{schoolKey,jdbcType=VARCHAR}
+  </update>
+</mapper>

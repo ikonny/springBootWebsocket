@@ -1,10 +1,21 @@
 package cn.hkfdt.xiaot.web.xiaot.service.impl;
 
-import cn.hkfdt.xiaot.web.xiaot.mapper.ForceAnalysisExtendsMapper;
-import cn.hkfdt.xiaot.web.xiaot.mapper.TQuestionsExtendsMapper;
-import cn.hkfdt.xiaot.web.xiaot.mapper.TRecordExtendsMapper;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.ForceAnalysisExtendsMapper;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.SchoolMapper;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TQuestionsExtendsMapper;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TRecordExtendsMapper;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.*;
+import cn.hkfdt.xiaot.util.ImageUtil;
+import cn.hkfdt.xiaot.web.common.redis.RedisClient;
+import cn.hkfdt.xiaot.web.common.service.AuthService;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTService;
+import cn.hkfdt.xiaot.web.xiaot.service.md.XiaoTJdbcDriver;
 import cn.hkfdt.xiaot.web.xiaot.service.md.XiaoTMDDBHelper;
+import cn.hkfdt.xiaot.web.xiaot.service.md.XiaoTMDHelp;
+import cn.hkfdt.xiaot.web.xiaot.util.XiaoTMarketType;
+import cn.hkfdt.xiaot.web.xiaot.util.YSUtils;
+import com.alibaba.fastjson.JSON;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -15,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -33,9 +45,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 	@Autowired
 	TRecordExtendsMapper tRecordExtendsMapper;
 	@Autowired
-	UserService userService;
-	@Autowired
-    private RedisClient redisClient;
+	AuthService authService;
 	@Autowired
 	SchoolMapper schoolMapper;
 	
@@ -59,7 +69,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 	}
 
 	@Override
-	public ForceAnalysis getXiaotForceAnalysis(String fdtId,int market) {
+	public ForceAnalysis getXiaotForceAnalysis(String fdtId, int market) {
 		ForceAnalysis item = new ForceAnalysis();
 		item.setFdtId(fdtId);
 		item.setType(market);
@@ -104,7 +114,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 	public List<Map<String, Object>> getXiaotMasterList(int market,boolean isflush) {
 		List<Map<String, Object>> listTar = null;
 		String key = "getXiaotMasterList_" + market;
-		listTar = (List<Map<String, Object>>) redisClient.get(key);
+		listTar = (List<Map<String, Object>>) RedisClient.getex(key);
 //		boolean isflush = false;
         if (listTar != null && !isflush)
         	return listTar;
@@ -113,12 +123,11 @@ public class XiaoTServiceImpl implements XiaoTService {
 		if(listFa==null || listFa.isEmpty())
 			return null;
 		//-------------------------
-		String[] ids = new String[listFa.size()]; 
+		List<String> listFdtId = new ArrayList<>(listFa.size());
 		for(int i=0;i<listFa.size();i++){
-			ids[i] = listFa.get(i).getFdtId();
+			listFdtId.add(listFa.get(i).getFdtId());
 		}
-		Map<String, Map<String, String>> usersIdentifyInfo = userService.
-				getUsersIdentifyInfo(ids,"CN");
+		ConcurrentHashMap<String,Map<String, Object>> fdtId2AuthExInfo = authService.getFdtId2AuthExInfo(listFdtId);
 		//-----------------------------
 		
 		listTar = new ArrayList<Map<String,Object>>(listFa.size());
@@ -133,25 +142,22 @@ public class XiaoTServiceImpl implements XiaoTService {
 				mapItem.put("score", fdtScore);
 				mapItem.put("percent", accumulatedIncome);
 				mapItem.put("tradeCount", item.getTradeCount());
-				
-				Auth authItem = userService.getUserInfoFromCache(fdtId);
-				if(authItem==null)
+
+				Map<String,Object> mapInfo = fdtId2AuthExInfo.get(fdtId);
+				if(mapInfo==null)
 					continue;
-				String school = authItem.getSchoolKey();
-				School scO = schoolMapper.selectByPrimaryKey(school);
+				if(!mapInfo.containsKey("auth"))
+					continue;
+				Auth authItem = (Auth) mapInfo.get("auth");
+				String school = "";
+				School scO = (School) mapInfo.get("school");
 				if(scO!=null)
 					school = scO.getScName();
-				else
-					school = "";
 				String username = authItem.getUsername();
 				String servingUrl = authItem.getServingUrl();
 //				servingUrl = DiscoverHelper.operPicURL(servingUrl);
 				servingUrl = ImageUtil.transAndResizeImg(servingUrl,100,100);
-				String vip = usersIdentifyInfo.get(fdtId).get("identify");
-				boolean isvip = false;
-				if(!StringUtils.isBlank(vip) && !vip.equals("01")){
-					isvip = true;
-				}
+				boolean isvip = (boolean) mapInfo.get("vip");
 				mapItem.put("school", school);
 				mapItem.put("name", username);
 				mapItem.put("header_url", servingUrl);
@@ -163,7 +169,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 			}
 		}
 		//-------------------------------------
-		redisClient.set(key, listTar, 60*5);
+		RedisClient.setex(key, listTar, 60*5);
 		return listTar;
 	}
 
@@ -185,7 +191,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 			//获取解压后的真实数据json
 			jsonData = YSUtils.uncompress(jsonData);
 			Map<String, Object> jsonDataMap = new HashMap<String, Object>(6);
-			jsonDataMap = (Map<String, Object>) JsonUtil.JsonToOb(new String(jsonData), jsonDataMap.getClass());
+			jsonDataMap = JSON.parseObject(new String(jsonData));//(Map<String, Object>) JsonUtil.JsonToOb(new String(jsonData), jsonDataMap.getClass());
 			mapTar.put("jsonData",jsonDataMap );
 			
 			mapTar.put("key", XiaoTHelp.getTKey(tQuestions));
@@ -206,7 +212,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 			Map<String, Object> mapTar) {
 		int count=0;
 		Map<String, Object> tempMap = new HashMap<String, Object>(1);
-		tempMap = (Map<String, Object>) JsonUtil.JsonToOb(body, tempMap.getClass());
+		tempMap = JSON.parseObject(body);//(Map<String, Object>) JsonUtil.JsonToOb(body, tempMap.getClass());
 		String[] strs = tempMap.get("key").toString().split("#");
 		tempMap.put("exchangeCode", strs[0]);
 		tempMap.put("symbol", strs[1]);
@@ -216,7 +222,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 		}
 		mapTar.put("status", 200);
 		while(count<=tryNum){
-			Map<String, Object> temp = XiaoTHelp.xiaotDoScore(JsonUtil.ObToJson(tempMap));
+			Map<String, Object> temp = XiaoTHelp.xiaotDoScore(JSON.toJSONString(tempMap));
 			if(temp!=null && !temp.isEmpty()){
 				int code = (int) temp.get("code");
 				if(code==200){
@@ -234,7 +240,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 					record.setQuestionKey(tempMap.get("key").toString());
 					record.setCreateTime(System.currentTimeMillis());
 					record.setScore(score);
-					record.setVersion(XiaoTHelp.version);//新数据需要加上
+					record.setVERSION(XiaoTHelp.version);//新数据需要加上
 					tRecordExtendsMapper.insertSelective(record);
 					//-----请求战力分析，并且更新数据库-----------
 					Runnable run = new Runnable() {
@@ -320,7 +326,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 
 					if(temp.containsKey("version")){
 						int version = (int) temp.get("version");
-						record.setVersion(version);
+						record.setVERSION(version);
 					}
 
 					ForceAnalysis tempAna = forceAnalysisExtendsMapper.selectByFdtId(record);
@@ -358,7 +364,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 								Map<String, Object>  mapTar = new HashMap<String, Object>(2);
 								int flag = XiaoTMDHelp.getJsonData(listMapday,item,market,listMapMin,mapTar);
 								if(flag==0){
-									String jsonData = JsonUtil.ObToJson(mapTar);
+									String jsonData = JSON.toJSONString(mapTar);//JsonUtil.ObToJson(mapTar);
 									try {
 										byte[] byteTar = YSUtils.compress(jsonData.getBytes(), 2);
 										item.setJsonData(byteTar);

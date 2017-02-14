@@ -1,7 +1,7 @@
 package cn.hkfdt.xiaot.web.xiaot.service;
 
 
-import cn.hkfdt.xiaot.mybatis.model.ForceAnalysis;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.ForceAnalysis;
 
 import java.util.List;
 import java.util.Map;

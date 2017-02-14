@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hkfdt.xiaot.mybatis.mapper.ltschina.TQuestionsMapper" >
+  <resultMap id="BaseResultMap" type="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions" >
+    <id column="questionId" property="questionId" jdbcType="INTEGER" />
+    <result column="exchangeCode" property="exchangeCode" jdbcType="VARCHAR" />
+    <result column="shortSymbol" property="shortSymbol" jdbcType="VARCHAR" />
+    <result column="tradeDay" property="tradeDay" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="BIGINT" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="topicType" property="topicType" jdbcType="VARCHAR" />
+    <result column="initType" property="initType" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions" extends="BaseResultMap" >
+    <result column="jsonData" property="jsonData" jdbcType="LONGVARBINARY" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    questionId, exchangeCode, shortSymbol, tradeDay, createTime, type, topicType, initType, 
+    version
+  </sql>
+  <sql id="Blob_Column_List" >
+    jsonData
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from xiaot_questions
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from xiaot_questions
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from xiaot_questions
+    where questionId = #{questionId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from xiaot_questions
+    where questionId = #{questionId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsExample" >
+    delete from xiaot_questions
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions" >
+    insert into xiaot_questions (questionId, exchangeCode, shortSymbol, 
+      tradeDay, createTime, type, 
+      topicType, initType, version, 
+      jsonData)
+    values (#{questionId,jdbcType=INTEGER}, #{exchangeCode,jdbcType=VARCHAR}, #{shortSymbol,jdbcType=VARCHAR}, 
+      #{tradeDay,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, 
+      #{topicType,jdbcType=VARCHAR}, #{initType,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}, 
+      #{jsonData,jdbcType=LONGVARBINARY})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions" >
+    insert into xiaot_questions
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="questionId != null" >
+        questionId,
+      </if>
+      <if test="exchangeCode != null" >
+        exchangeCode,
+      </if>
+      <if test="shortSymbol != null" >
+        shortSymbol,
+      </if>
+      <if test="tradeDay != null" >
+        tradeDay,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="topicType != null" >
+        topicType,
+      </if>
+      <if test="initType != null" >
+        initType,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="jsonData != null" >
+        jsonData,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="questionId != null" >
+        #{questionId,jdbcType=INTEGER},
+      </if>
+      <if test="exchangeCode != null" >
+        #{exchangeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shortSymbol != null" >
+        #{shortSymbol,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeDay != null" >
+        #{tradeDay,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="topicType != null" >
+        #{topicType,jdbcType=VARCHAR},
+      </if>
+      <if test="initType != null" >
+        #{initType,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="jsonData != null" >
+        #{jsonData,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsExample" resultType="java.lang.Integer" >
+    select count(*) from xiaot_questions
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update xiaot_questions
+    <set >
+      <if test="record.questionId != null" >
+        questionId = #{record.questionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.exchangeCode != null" >
+        exchangeCode = #{record.exchangeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shortSymbol != null" >
+        shortSymbol = #{record.shortSymbol,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tradeDay != null" >
+        tradeDay = #{record.tradeDay,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        createTime = #{record.createTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.type != null" >
+        type = #{record.type,jdbcType=INTEGER},
+      </if>
+      <if test="record.topicType != null" >
+        topicType = #{record.topicType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.initType != null" >
+        initType = #{record.initType,jdbcType=INTEGER},
+      </if>
+      <if test="record.version != null" >
+        version = #{record.version,jdbcType=INTEGER},
+      </if>
+      <if test="record.jsonData != null" >
+        jsonData = #{record.jsonData,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update xiaot_questions
+    set questionId = #{record.questionId,jdbcType=INTEGER},
+      exchangeCode = #{record.exchangeCode,jdbcType=VARCHAR},
+      shortSymbol = #{record.shortSymbol,jdbcType=VARCHAR},
+      tradeDay = #{record.tradeDay,jdbcType=VARCHAR},
+      createTime = #{record.createTime,jdbcType=BIGINT},
+      type = #{record.type,jdbcType=INTEGER},
+      topicType = #{record.topicType,jdbcType=VARCHAR},
+      initType = #{record.initType,jdbcType=INTEGER},
+      version = #{record.version,jdbcType=INTEGER},
+      jsonData = #{record.jsonData,jdbcType=LONGVARBINARY}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update xiaot_questions
+    set questionId = #{record.questionId,jdbcType=INTEGER},
+      exchangeCode = #{record.exchangeCode,jdbcType=VARCHAR},
+      shortSymbol = #{record.shortSymbol,jdbcType=VARCHAR},
+      tradeDay = #{record.tradeDay,jdbcType=VARCHAR},
+      createTime = #{record.createTime,jdbcType=BIGINT},
+      type = #{record.type,jdbcType=INTEGER},
+      topicType = #{record.topicType,jdbcType=VARCHAR},
+      initType = #{record.initType,jdbcType=INTEGER},
+      version = #{record.version,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions" >
+    update xiaot_questions
+    <set >
+      <if test="exchangeCode != null" >
+        exchangeCode = #{exchangeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shortSymbol != null" >
+        shortSymbol = #{shortSymbol,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeDay != null" >
+        tradeDay = #{tradeDay,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="topicType != null" >
+        topicType = #{topicType,jdbcType=VARCHAR},
+      </if>
+      <if test="initType != null" >
+        initType = #{initType,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="jsonData != null" >
+        jsonData = #{jsonData,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where questionId = #{questionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions" >
+    update xiaot_questions
+    set exchangeCode = #{exchangeCode,jdbcType=VARCHAR},
+      shortSymbol = #{shortSymbol,jdbcType=VARCHAR},
+      tradeDay = #{tradeDay,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=BIGINT},
+      type = #{type,jdbcType=INTEGER},
+      topicType = #{topicType,jdbcType=VARCHAR},
+      initType = #{initType,jdbcType=INTEGER},
+      version = #{version,jdbcType=INTEGER},
+      jsonData = #{jsonData,jdbcType=LONGVARBINARY}
+    where questionId = #{questionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions" >
+    update xiaot_questions
+    set exchangeCode = #{exchangeCode,jdbcType=VARCHAR},
+      shortSymbol = #{shortSymbol,jdbcType=VARCHAR},
+      tradeDay = #{tradeDay,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=BIGINT},
+      type = #{type,jdbcType=INTEGER},
+      topicType = #{topicType,jdbcType=VARCHAR},
+      initType = #{initType,jdbcType=INTEGER},
+      version = #{version,jdbcType=INTEGER}
+    where questionId = #{questionId,jdbcType=INTEGER}
+  </update>
+</mapper>

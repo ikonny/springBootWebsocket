@@ -5,12 +5,17 @@ package cn.hkfdt.xiaot.web.common;
  * Powered by Rock
  */
 public final class DeviceContext {
-    private static final ThreadLocal<DeviceInfo> deviceInfo = new ThreadLocal<>();
+    private static ThreadLocal<DeviceInfo> deviceInfo = new ThreadLocal<>();
 
     private DeviceContext() {
     }
 
     public static ThreadLocal<DeviceInfo> getDeviceInfo() {
         return deviceInfo;
+    }
+
+
+    public static DeviceInfo getDevice() {
+        return deviceInfo.get();
     }
 }

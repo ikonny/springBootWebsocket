@@ -1,7 +1,7 @@
 package cn.hkfdt.xiaot.web.xiaot.service.md;
 
 
-import cn.hkfdt.xiaot.mybatis.model.TQuestions;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
 import cn.hkfdt.xiaot.util.DateUtil;
 import cn.hkfdt.xiaot.web.xiaot.service.impl.XiaoTHelp;
 import com.alibaba.fastjson.JSON;

@@ -1,0 +1,4 @@
+2017-02-14 15:09:16,269 INFO [http-nio-8080-exec-1] xiaot_sensitive [LogUtil.java:16] 敏感日志启动
+2017-02-14 15:09:16,270 INFO [http-nio-8080-exec-1] xiaot_sensitive [LogUtil.java:29] DeviceInfo{appName=FOREXMASTER, lang='null', country='null', clientVersion='5.0', ip='0:0:0:0:0:0:0:1'}
+2017-02-14 15:09:26,806 INFO [http-nio-8080-exec-1] xiaot_sensitive [LogUtil.java:29] asfdsafffffffffffffffff
+2017-02-14 16:06:16,134 INFO [http-nio-8080-exec-1] xiaot_sensitive [LogUtil.java:31] 访问耗时6+秒:/im/xiaot/index__dev:DeviceInfo{appName=FOREXMASTER, lang='null', country='null', clientVersion='5.0', ip='0:0:0:0:0:0:0:1'}

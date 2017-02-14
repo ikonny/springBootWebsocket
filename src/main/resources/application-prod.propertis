@@ -1,1 +1,2 @@
 server.port=12306
+server.domain.http=http://prod.forexmaster.cn

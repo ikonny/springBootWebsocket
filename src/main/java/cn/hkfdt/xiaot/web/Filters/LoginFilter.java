@@ -1,9 +1,6 @@
 package cn.hkfdt.xiaot.web.Filters;
 
-import cn.hkfdt.xiaot.web.common.DeviceContext;
-import cn.hkfdt.xiaot.web.common.LogUtil;
-import cn.hkfdt.xiaot.web.common.ThreadLocalUserInfo;
-import cn.hkfdt.xiaot.web.common.UserContext;
+import cn.hkfdt.xiaot.web.common.*;
 import cn.hkfdt.xiaot.websocket.conmng.WebSocketConnectionListener;
 import com.alibaba.fastjson.JSON;
 import com.mysql.jdbc.StringUtils;
@@ -52,6 +49,7 @@ public class LoginFilter implements Filter{
             userInfo.setFdtId(fdtId);
         }
         boolean isNotLoginURI = LoginFilterHelp.isNotLoginURI(request);//true就不需要登录检查
+        long timeStar = System.currentTimeMillis();
         try{
             UserContext.getUserInfo().set(userInfo);
             if(isNotLoginURI){
@@ -68,9 +66,22 @@ public class LoginFilter implements Filter{
         }catch (Exception e){
             e.printStackTrace();
         }finally {
+            recordTimeOutReq(request,timeStar);
             UserContext.getUserInfo().remove();
         }
 
+    }
+    /**
+     * 记录超时的url
+     * @return
+     * @author whyse
+     * @Date 2017/2/14 15:18
+    */
+    private void recordTimeOutReq(HttpServletRequest request, long timeStar) {
+        if((System.currentTimeMillis()-timeStar)>1000*6){
+            DeviceInfo dev = DeviceContext.getDevice();
+            LogUtil.logSensitive("访问耗时6+秒:"+request.getRequestURI()+"__dev:"+dev);
+        }
     }
 
     private void responseClient(HttpServletResponse response, int code, String msg) throws IOException {

@@ -1,7 +1,7 @@
 package cn.hkfdt.xiaot.websocket.task;
 
-import cn.hkfdt.xiaot.mybatis.mapper.AuthMapper;
-import cn.hkfdt.xiaot.mybatis.model.Auth;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.AuthMapper;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

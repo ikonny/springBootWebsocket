@@ -1,6 +1,6 @@
 package cn.hkfdt.xiaot.web.xiaot.service.impl;
 
-import cn.hkfdt.xiaot.mybatis.model.TQuestions;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
 import cn.hkfdt.xiaot.util.TimeUtil;
 import cn.hkfdt.xiaot.web.xiaot.service.md.XiaoTMDDBHelper;
 import cn.hkfdt.xiaot.web.xiaot.util.NetUtil;

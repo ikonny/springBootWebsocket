@@ -1,6 +1,6 @@
 package cn.hkfdt.xiaot.web.xiaot.service.md;
 
-import cn.hkfdt.xiaot.mybatis.model.TQuestions;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
 import com.alibaba.fastjson.JSON;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;

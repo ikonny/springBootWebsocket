@@ -53,7 +53,7 @@ public class DeviceFilter implements Filter{
             DeviceContext.getDeviceInfo().set(deviceInfo);
         }
 
-        LogUtil.logSensitive(DeviceContext.getDeviceInfo().get().toString());//测试代码
+//        LogUtil.logSensitive(DeviceContext.getDeviceInfo().get().toString());//测试代码
 
         try {
             chain.doFilter(request, response);

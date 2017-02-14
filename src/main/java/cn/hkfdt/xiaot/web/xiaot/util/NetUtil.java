@@ -172,10 +172,13 @@ public class NetUtil {
         try {
             URL realUrl = new URL(url);
             // 打开和URL之间的连接
-            URLConnection conn = realUrl.openConnection();
+            URLConnection conn_ = realUrl.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) conn_;
             // 设置通用的请求属性
+            conn.setConnectTimeout(8*1000);//建立连接的时候，网络不通等情况，就能超时
+            conn.setReadTimeout(6*1000);//建立连接没问题，建立后上传或者下载，网络中断，就会
             conn.setRequestProperty("accept", "*/*");
-            conn.setRequestProperty("Content-Type", "application/json"); 
+            conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("connection", "Keep-Alive");
             conn.setRequestProperty("user-agent",
                     "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
