@@ -42,7 +42,7 @@ public class XiaoTController {
 	 * author:xumin 
 	 * 2016-12-16 上午9:58:34
 	 */
-	@RequestMapping(value="/im/xiaotTraining")
+	@RequestMapping(value="/xiaoth/xiaotTraining")
 	@ResponseBody
     public Object xiaotTraining(@RequestParam(defaultValue = "0") int market, Model model){
 		Map<String, Object> mapTar = new HashMap<String, Object>(8);
@@ -62,7 +62,7 @@ public class XiaoTController {
 	 * author:xumin 
 	 * 2016-12-19 下午3:13:10
 	 */
-	@RequestMapping(value="/im/xiaotDoScore")
+	@RequestMapping(value="/xiaoth/xiaotDoScore")
 	@ResponseBody
     public Object xiaotDoScore(@RequestBody String body, Model model){
     	
@@ -83,7 +83,7 @@ public class XiaoTController {
 	 * author:xumin 
 	 * 2016-12-15 下午5:02:06
 	 */
-	@RequestMapping(value="/im/xiaot/{other}")
+	@RequestMapping(value="/xiaoth/xiaot/{other}")
     public String xiaot(@PathVariable String other, Model model){
 		//{"lib":"1.1.10", "liveVideo":"1.1.10"}
 		Map<String,Object>  mapTar = commonService.getSystemSettingValueAsMap("xiaoT_version");
@@ -100,7 +100,7 @@ public class XiaoTController {
 	 * author:xumin
 	 * 2016-12-15 下午5:02:06
 	 */
-	@RequestMapping(value="/im/xiaot/{other}/{param}")
+	@RequestMapping(value="/xiaoth/xiaot/{other}/{param}")
 	public String xiaot2path(@PathVariable String other, @PathVariable String param, Model model){
 		//{"lib":"1.1.10", "liveVideo":"1.1.10"}
 		Map<String,Object>  mapTar = commonService.getSystemSettingValueAsMap("xiaoT_version");
@@ -117,7 +117,7 @@ public class XiaoTController {
 	 * author:xumin 
 	 * 2016-12-15 下午4:55:38
 	 */
-    @RequestMapping(value="/im/getXiaotForceAnalysis")
+    @RequestMapping(value="/xiaoth/getXiaotForceAnalysis")
     @ResponseBody
     public Object getXiaotForceAnalysis(
             @RequestParam(defaultValue = "0") int market, Model model){
@@ -155,7 +155,7 @@ public class XiaoTController {
      * author:xumin 
      * 2016-12-15 下午4:56:11
      */
-    @RequestMapping(value="/im/getXiaotRecords")
+    @RequestMapping(value="/xiaoth/getXiaotRecords")
     @ResponseBody
     public Object getXiaotRecord(
             @RequestParam(defaultValue = "0") int market, Model model,
@@ -184,7 +184,7 @@ public class XiaoTController {
      * 2016-12-15 下午4:56:53
      */
 //    @CacheControl(maxAge = 300, policy = CachePolicy.PRIVATE)  //不使用服务缓存
-    @RequestMapping(value="/im/getXiaotMasterList")
+    @RequestMapping(value="/xiaoth/getXiaotMasterList")
     @ResponseBody
     public Object getXiaotMasterList(@RequestParam(defaultValue = "0") int market, Model model,
                                      @RequestParam(defaultValue = "false") boolean isflush){
@@ -197,7 +197,7 @@ public class XiaoTController {
     }
     
     //=============================================================
-    @RequestMapping(value="/im/initTQuestions")
+    @RequestMapping(value="/xiaoth/initTQuestions")
     @ResponseBody
     public String initTQuestions(@RequestParam(required = true) String xm, @RequestParam(defaultValue = "0") int market ){
     	
@@ -210,10 +210,10 @@ public class XiaoTController {
         return "尽力而为";
     }
 
-	@RequestMapping(value = "/im/getQrCode")
+	@RequestMapping(value = "/xiaoth/getQrCode")
 	@ResponseBody
 	public Object getQrCode(@RequestParam Integer num, Model model) {
-		String url = GlobalInfo.getDomainHttp()+"/im/xiaot/game?type=battle";
+		String url = GlobalInfo.getDomainHttp()+"/xiaoth/xiaot/game?type=battle";
 //		if (ConfigService.isDevEnv()) {
 //			url = "http://dev.forexmaster.cn/im/xiaot/game?type=battle";
 //		} else if (ConfigService.isTestEnv()) {

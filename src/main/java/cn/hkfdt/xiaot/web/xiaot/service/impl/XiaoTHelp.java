@@ -112,8 +112,6 @@ public class XiaoTHelp {
 		
 //		str = URLEncoder.encode(str);
 		
-//		String retStr =  NetUtil.sendPostJson("http://localhost:8080/im/xiaotDoScore", str);
-		
 		return xiaotDoScore(str);
 	}
 	//===============================================================

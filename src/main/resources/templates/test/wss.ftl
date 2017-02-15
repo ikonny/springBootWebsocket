@@ -27,7 +27,7 @@
             return "<li><p>Received: " + date + "</p><div>" + message.content + "</li>";
         };
 
-        var socket = new SockJS('/xiaot');
+        var socket = new SockJS('/xiaots');
         var stompClient = Stomp.over(socket);
         stompClient.connect({ }, function(frame) {
             // subscribe to the /topic/entries endpoint which feeds newly added messages

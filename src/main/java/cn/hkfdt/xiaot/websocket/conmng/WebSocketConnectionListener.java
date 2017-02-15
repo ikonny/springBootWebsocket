@@ -13,14 +13,13 @@ import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.security.interfaces.RSAPrivateKey;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-/*
- * 这个是连接信息接口
+/**
+ * 专职监听websocket的连线断开或者请求
  */
 @Component
 public class WebSocketConnectionListener implements
@@ -29,7 +28,6 @@ public class WebSocketConnectionListener implements
 	private static Logger logger = LoggerFactory.getLogger(WebSocketConnectionListener.class);
 	private static final String FDT_KEY = "fdt-key"; 
     private static final String SIMP_SESSION_ID = "simpSessionId";
-    public static Map<String, Object> mapTemp = new HashMap<String, Object>(1);
     public static ConcurrentHashMap<String, String> mapSession2FdtId = new ConcurrentHashMap<>(500);
     public static ConcurrentHashMap<String, String> mapFdtId2Session = new ConcurrentHashMap<>(500);
     
@@ -114,7 +112,7 @@ public class WebSocketConnectionListener implements
 	private void setUserIds(String fdtId, String sessionId) {
 		mapSession2FdtId.put(sessionId, fdtId);
 		mapFdtId2Session.put(fdtId, sessionId);
-		logger.info("设置连接:fdtId "+fdtId);
+		logger.info("设置连接:fdtId："+fdtId);
 	}
 	private void removeUserId(String sessionId) {
 		String fdtId = mapSession2FdtId.get(sessionId);
@@ -129,7 +127,7 @@ public class WebSocketConnectionListener implements
 			//{"exp":1476859144613,"phone":"8613675841954","market":"SC","email":"jie.ding@hkfdt.cn",
 			//"Id":"mb000000003","language":"CN","utype":90,"country":"CN"}
 			String verifyJson = RSAUtil.decodeTokenByKey(key, fdtKey);
-			Map<String, Object> map = (Map<String, Object>) JSON.parseObject(verifyJson, mapTemp.getClass());
+			Map<String, Object> map = JSON.parseObject(verifyJson);//(Map<String, Object>) JSON.parseObject(verifyJson, mapTemp.getClass());
 			String fdtId = map.get("Id").toString();
 			return fdtId;
 		} catch (Exception e) {

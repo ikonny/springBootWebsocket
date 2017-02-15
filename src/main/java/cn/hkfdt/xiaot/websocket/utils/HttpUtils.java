@@ -1,18 +1,12 @@
 package cn.hkfdt.xiaot.websocket.utils;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.alibaba.fastjson.JSON;
+import okhttp3.*;
 
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class HttpUtils {
 
@@ -46,7 +40,7 @@ public class HttpUtils {
 //		str = URLEncoder.encode(str);
 		System.err.println(str);
 		
-		String url = "https://prod.forexmaster.cn/im/xiaotTraining";
+		String url = "https://prod.forexmaster.cn/xiaoth/xiaotTraining";
 //		String retStr =  NetUtil.sendPost("http://localhost:8080/im/xiaotDoScore", str);
 //		String res = postJson(url, "");
 //		System.err.println(res);
@@ -59,7 +53,10 @@ public class HttpUtils {
 	 * 2016-12-16 下午1:32:15
 	 */
 	public static String postJson(String url,String json) {
-		OkHttpClient okHttpClient = new OkHttpClient();
+		OkHttpClient okHttpClient = new OkHttpClient().newBuilder().
+				connectTimeout(6, TimeUnit.SECONDS)
+				.readTimeout(6,TimeUnit.SECONDS)
+				.build();
 		// 创建一个RequestBody(参数1：数据类型 参数2传递的json串)
 		RequestBody requestBody = RequestBody.create(JSONType, json);
 		// 创建一个请求对象

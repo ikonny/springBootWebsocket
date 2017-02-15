@@ -3,7 +3,6 @@
   <groupId>fdt.cps</groupId>
   <artifactId>xiaot-boot</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-xxxvxccvcb
    <parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>

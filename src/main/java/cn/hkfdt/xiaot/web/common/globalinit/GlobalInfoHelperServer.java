@@ -19,7 +19,8 @@ import java.util.List;
 public class GlobalInfoHelperServer {
     @Autowired
     SystemSettingsMapper systemSettingsMapper;
-    @Value("server.domain.http")
+    //正确的注入方式，不要忘了配置文件名写错
+    @Value("${server.domain.http}")
     String domainHttp;
 
     @PostConstruct

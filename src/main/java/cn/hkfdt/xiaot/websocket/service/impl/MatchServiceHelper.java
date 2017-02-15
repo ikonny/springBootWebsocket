@@ -1,7 +1,9 @@
 package cn.hkfdt.xiaot.websocket.service.impl;
 
+import cn.hkfdt.xiaot.web.xiaot.service.XiaoTService;
+import cn.hkfdt.xiaot.web.xiaot.service.impl.XiaoTHelp;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
-import cn.hkfdt.xiaot.websocket.utils.HttpUtils;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
@@ -18,7 +20,7 @@ public class MatchServiceHelper {
 	 * rankList : listMap 对matchPeople 中的排序
 	 */
 	public static ConcurrentHashMap<String, Map<String, Object>> mapMatchInfo = new ConcurrentHashMap<>(66);
-	public static final String xiaotTrainingUrl = "https://prod.forexmaster.cn/im/xiaotTraining";
+//	public static final String xiaotTrainingUrl = "https://prod.forexmaster.cn/im/xiaotTraining";
 	public static ExecutorService executorService = Executors.newCachedThreadPool();
 	public static LinkedBlockingQueue<String>  rankQueue = new LinkedBlockingQueue<>(87);
 	public static volatile Map<String, Object> rankMapHelper = new HashMap<>(100);
@@ -122,10 +124,10 @@ public class MatchServiceHelper {
 	 * 改方法在同步块中，同一场比赛同步
 	 * @param paraMap 入参matchId sessionId num
 	 * @param mapRsp  matchJson , isReady ,empty
-	 * author:xumin 
-	 * 2017-1-11 上午10:26:56
+	 * author:xumin
+	 * @param xiaoTService
 	 */
-	public static void getMatch(Map<String, Object> paraMap, Map<String, Object> mapRsp) {
+	public static void getMatch(Map<String, Object> paraMap, Map<String, Object> mapRsp, XiaoTService xiaoTService) {
 		String matchId = paraMap.get("matchId").toString();
 		int num = Integer.parseInt(paraMap.get("num").toString());
 		Map<String, Object>  mapItem = mapMatchInfo.get(matchId);
@@ -135,7 +137,7 @@ public class MatchServiceHelper {
 			mapMatchInfo.put(matchId, mapMatch);
 			mapMatch.put("num", num);
 			
-			String matchJson = HttpUtils.postJson(xiaotTrainingUrl, "");
+			String matchJson = getMatchJson(xiaoTService);//HttpUtils.postJson(xiaotTrainingUrl, "");
 			mapMatch.put("matchJson", matchJson);
 			
 			Map<String, Object> matchPeople = new HashMap<>(num);
@@ -151,6 +153,18 @@ public class MatchServiceHelper {
 			mapRsp.put("matchJson", matchJson);
 		}
 	}
+
+	/**
+	 * 游客随机获取题目信息
+	 * @param xiaoTService
+	 * @return
+	 */
+	public static String getMatchJson(XiaoTService xiaoTService) {
+		Map<String, Object> mapTar = new HashMap<String, Object>(8);
+		xiaoTService.xiaotTraining(XiaoTHelp.xiaoTGuest,0,mapTar);
+		return JSON.toJSONString(mapTar);
+	}
+
 	//这个是降序
 	protected static void sort(List<Map<String, Object>> rankList) {
 		Collections.sort(rankList, new Comparator<Map<String, Object>>() {

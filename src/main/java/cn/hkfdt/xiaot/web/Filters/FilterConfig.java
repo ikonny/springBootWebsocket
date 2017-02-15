@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 过滤素有xiaoth开头的url,代表http的过滤器
  * Created by whyse
  * on 2017/2/7 10:40
  */
@@ -23,7 +24,7 @@ public class FilterConfig extends WebMvcConfigurerAdapter {
         registrationBean.setFilter(deviceFilter);
         registrationBean.setOrder(1);
         List<String> urlList = new ArrayList<String>();
-        urlList.add("/*");
+        urlList.add("/xiaoth/*");
         registrationBean.setUrlPatterns(urlList);
         return registrationBean;
     }
@@ -36,7 +37,7 @@ public class FilterConfig extends WebMvcConfigurerAdapter {
         registrationBean.setFilter(loginFilter);
         registrationBean.setOrder(2);
         List<String> urlList = new ArrayList<String>();
-        urlList.add("/*");
+        urlList.add("/xiaoth/*");//测试的时候可以把这个过滤器去掉
         registrationBean.setUrlPatterns(urlList);
         return registrationBean;
     }

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,8 @@ public class TestController {
 	TRecordExtendsMapper testMapper;
 	@Autowired
 	CommonService commonService;
+	@Autowired
+	private SimpMessagingTemplate simpMessagingTemplate;
 
 	private static Logger logger = LoggerFactory.getLogger(TestController.class);
 	
@@ -37,7 +40,7 @@ public class TestController {
 	}
 
 	//=========================================================
-	@RequestMapping("/test/mybatis")
+	@RequestMapping("/xiaoth/mybatis")
     @ResponseBody
 	public Object mybatis(String id) {
 		Map<String,Object> map = new HashMap<>(5);
@@ -52,14 +55,12 @@ public class TestController {
 		LogUtil.logSensitive("asfdsafffffffffffffffff");
 		return size;
 	}
-
-	@RequestMapping("/test/xiaot")
-//    @ResponseBody
-	public String http(String message) {
-		System.out.println();
-		return "xiaot/index";
-	}
-	@RequestMapping("/test/wss")
+	/**
+	 * 这个是用来测试soketjs的，有用
+	 * @param message
+	 * @return
+	 */
+	@RequestMapping("/xiaoth/wss")
 //    @ResponseBody
 	public String https(String message) {
 		System.out.println();
@@ -82,10 +83,10 @@ public class TestController {
 	public void testTopic(SimpMessageHeaderAccessor headerAccessor,String msg) {
 //		Map<String, Object>  paraMap = getParaMap(headerAccessor,msg);
 		Map<String, Object>  mapTar = new HashMap<>(2);
-		mapTar.put("serverHadRec",msg);
+		mapTar.put("topic server Had Rec",msg);
 		String str = JSON.toJSONString(mapTar);
 		logger.info(str);
-//		simpMessagingTemplate.convertAndSend("/topic/test/send", str);
+		simpMessagingTemplate.convertAndSend("/topic/test/send", str);
 
 	}
 

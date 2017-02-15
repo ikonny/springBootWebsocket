@@ -1,5 +1,6 @@
 package cn.hkfdt.xiaot.websocket.service.impl;
 
+import cn.hkfdt.xiaot.web.xiaot.service.XiaoTService;
 import cn.hkfdt.xiaot.websocket.service.MatchService;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ public class MatchServiceImpl implements MatchService{
 
 	@Autowired
 	XiaoTMatchTopics xiaoTMatchTopics;
+	@Autowired
+	XiaoTService xiaoTService;
+
 	//==================================================================
 	
 	@Override
@@ -20,7 +24,7 @@ public class MatchServiceImpl implements MatchService{
 		String matchId = paraMap.get("matchId").toString();
 		Map<String, Object> mapRsp = new HashMap<>(6);
 		synchronized(matchId){
-			MatchServiceHelper.getMatch(paraMap,mapRsp);
+			MatchServiceHelper.getMatch(paraMap,mapRsp,xiaoTService);
 		}
 		String matchJson = mapRsp.get("matchJson").toString();
 		return matchJson;
