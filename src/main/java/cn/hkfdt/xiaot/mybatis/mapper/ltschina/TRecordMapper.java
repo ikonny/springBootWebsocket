@@ -2,9 +2,9 @@ package cn.hkfdt.xiaot.mybatis.mapper.ltschina;
 
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TRecord;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TRecordExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 public interface TRecordMapper {
     int countByExample(TRecordExample example);
 

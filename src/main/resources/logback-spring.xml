@@ -28,7 +28,9 @@
         </rollingPolicy>
     </appender>
 
-    <logger name="org.springframework" additivity="false" level="info"/>
+    <!--这个包下的log都打印-->
+    <logger name="org.springframework" level="info"/>
+    <!--<logger name="cn.hkfdt.xiaot" level="info"/>-->
 
     <logger name="xiaot_sensitive" additivity="false" level="info">
         <appender-ref ref="xiaot_sensitive"/>

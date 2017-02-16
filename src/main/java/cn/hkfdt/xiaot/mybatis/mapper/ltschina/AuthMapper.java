@@ -2,11 +2,9 @@ package cn.hkfdt.xiaot.mybatis.mapper.ltschina;
 
 import cn.hkfdt.xiaot.mybatis.model.ltschina.Auth;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.AuthExample;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-@Mapper
 public interface AuthMapper {
     int countByExample(AuthExample example);
 

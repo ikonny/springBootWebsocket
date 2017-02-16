@@ -2,13 +2,11 @@ package cn.hkfdt.xiaot.mybatis.mapper.ltschina;
 
 
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TRecord;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 import java.util.Map;
-@Mapper
 public interface TRecordExtendsMapper extends TRecordMapper {
 
 	@Select("select * from xiaot_record WHERE fdtId = #{para.fdtId} and type = #{para.market}" +

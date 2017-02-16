@@ -23,6 +23,7 @@ public class GlobalInfoHelperServer {
     @Value("${server.domain.http}")
     String domainHttp;
 
+
     @PostConstruct
     public void init(){
         //初始化全局常量数据,配置在数据库里面的
@@ -32,5 +33,6 @@ public class GlobalInfoHelperServer {
         GlobalInfo.setBaseSSLUrl(list.get(0).getValue());
 
         GlobalInfo.setDomainHttp(domainHttp);
+
     }
 }

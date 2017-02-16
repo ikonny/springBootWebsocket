@@ -2,9 +2,9 @@ package cn.hkfdt.xiaot.mybatis.mapper.ltschina;
 
 import cn.hkfdt.xiaot.mybatis.model.ltschina.UserType;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.UserTypeExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 public interface UserTypeMapper {
     int countByExample(UserTypeExample example);
 

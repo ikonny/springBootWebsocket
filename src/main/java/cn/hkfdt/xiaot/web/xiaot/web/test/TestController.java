@@ -4,6 +4,7 @@ import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TRecordExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.model.fxchina.SystemSettings;
 import cn.hkfdt.xiaot.web.common.LogUtil;
 import cn.hkfdt.xiaot.web.common.service.CommonService;
+import cn.hkfdt.xiaot.web.common.service.TestDBServer;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,8 @@ public class TestController {
 	TRecordExtendsMapper testMapper;
 	@Autowired
 	CommonService commonService;
+	@Autowired
+	TestDBServer testDBServer;
 	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
 
@@ -65,6 +68,18 @@ public class TestController {
 	public String https(String message) {
 		System.out.println();
 		return "test/wss";
+	}
+	/**
+	 * 这个是用来测试soketjs的，有用
+	 * @param message
+	 * @return
+	 */
+	@RequestMapping("/xiaoth/trans")
+    @ResponseBody
+	public String trans(String message) {
+		new Thread(()->{testDBServer.transCASTest("11");}).start();
+		new Thread(()->{testDBServer.transCASTest("22");}).start();
+		return "ok";
 	}
 
 	@MessageMapping("/queue/test/send")

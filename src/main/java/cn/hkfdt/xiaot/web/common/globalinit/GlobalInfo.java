@@ -10,6 +10,7 @@ public class GlobalInfo {
 
     private static String baseSSLUrl="https://prodxiaot.investmaster.cn";
     private static String domainHttp = "http://prodxiaot.investmaster.cn";
+
     /**
      * 读取system_settings key_code = 'SSLURI' 的值
      * https://test.forexmaster.cn

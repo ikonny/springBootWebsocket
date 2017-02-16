@@ -2,12 +2,10 @@ package cn.hkfdt.xiaot.mybatis.mapper.ltschina;
 
 
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
-@Mapper
 public interface TQuestionsExtendsMapper extends TQuestionsMapper {
 	/**
 	 * 根据外部接口的题目获取联合主键
