@@ -1945,6 +1945,76 @@ public class AuthExample {
             return (Criteria) this;
         }
 
+        public Criteria andServingUrlIsNull() {
+            addCriterion("serving_url is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andServingUrlIsNotNull() {
+            addCriterion("serving_url is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andServingUrlEqualTo(String value) {
+            addCriterion("serving_url =", value, "servingUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andServingUrlNotEqualTo(String value) {
+            addCriterion("serving_url <>", value, "servingUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andServingUrlGreaterThan(String value) {
+            addCriterion("serving_url >", value, "servingUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andServingUrlGreaterThanOrEqualTo(String value) {
+            addCriterion("serving_url >=", value, "servingUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andServingUrlLessThan(String value) {
+            addCriterion("serving_url <", value, "servingUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andServingUrlLessThanOrEqualTo(String value) {
+            addCriterion("serving_url <=", value, "servingUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andServingUrlLike(String value) {
+            addCriterion("serving_url like", value, "servingUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andServingUrlNotLike(String value) {
+            addCriterion("serving_url not like", value, "servingUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andServingUrlIn(List<String> values) {
+            addCriterion("serving_url in", values, "servingUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andServingUrlNotIn(List<String> values) {
+            addCriterion("serving_url not in", values, "servingUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andServingUrlBetween(String value1, String value2) {
+            addCriterion("serving_url between", value1, value2, "servingUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andServingUrlNotBetween(String value1, String value2) {
+            addCriterion("serving_url not between", value1, value2, "servingUrl");
+            return (Criteria) this;
+        }
+
         public Criteria andImageWidthIsNull() {
             addCriterion("image_width is null");
             return (Criteria) this;
@@ -3162,6 +3232,11 @@ public class AuthExample {
 
         public Criteria andBlacklistRankingLikeInsensitive(String value) {
             addCriterion("upper(blackList_ranking) like", value.toUpperCase(), "blacklistRanking");
+            return (Criteria) this;
+        }
+
+        public Criteria andServingUrlLikeInsensitive(String value) {
+            addCriterion("upper(serving_url) like", value.toUpperCase(), "servingUrl");
             return (Criteria) this;
         }
 

@@ -71,6 +71,8 @@ public class ImageUtil {
         if (StringUtils.isNullOrEmpty(dbUrl)) {
             return "";
         }
+        dbUrl = operPicURL(dbUrl);
+
         for (String key : IMAGEMAP.keySet()) {
             if (dbUrl.contains(key)) {
                 return dbUrl.replace(key, IMAGEMAP.get(key));
@@ -84,7 +86,7 @@ public class ImageUtil {
         if(dbUrl.contains("investmaster")){
             dbUrl+="@"+h+"h_"+w+"w";
         }
-        dbUrl = operPicURL(dbUrl);
+
         return dbUrl;
     }
 

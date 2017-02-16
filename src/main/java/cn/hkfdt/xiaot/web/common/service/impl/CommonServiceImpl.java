@@ -1,10 +1,17 @@
 package cn.hkfdt.xiaot.web.common.service.impl;
 
 import cn.hkfdt.xiaot.mybatis.mapper.fxchina.SystemSettingsMapper;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TQuestionsExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.model.fxchina.SystemSettings;
 import cn.hkfdt.xiaot.mybatis.model.fxchina.SystemSettingsExample;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsExample;
+import cn.hkfdt.xiaot.web.common.LogUtil;
 import cn.hkfdt.xiaot.web.common.service.CommonService;
 import com.alibaba.fastjson.JSON;
+import org.apache.ibatis.session.RowBounds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +24,37 @@ import java.util.Map;
  */
 @Service
 public class CommonServiceImpl implements CommonService {
+    static Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
     @Autowired
     SystemSettingsMapper systemSettingsMapper;
+    @Autowired
+    TQuestionsExtendsMapper tQuestionsExtendsMapper;
 
+    @Override
+    public void testConnect() {
+        try {
+            TQuestionsExample example = new TQuestionsExample();
+//        example.setOrderByClause( " *** desc");
+            RowBounds tq = new RowBounds(0, 1);
+            List<TQuestions> list = tQuestionsExtendsMapper.selectByExampleWithRowbounds(example, tq);
+            if(!list.isEmpty()){
+                logger.info("lts_china DB OK");
+            }else{
+                LogUtil.logSensitive("lts_china DB bad!!!!");
+            }
+            SystemSettingsExample sysExample = new SystemSettingsExample();
+            List<SystemSettings> lists = systemSettingsMapper.selectByExampleWithRowbounds(sysExample, tq);
+            if(!lists.isEmpty()){
+                logger.info("lts_fx DB OK");
+            }else{
+                LogUtil.logSensitive("lts_fx DB bad!!!!");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            LogUtil.logSensitive("DB bad!!!!");
+        }
+    }
+    //=================================================
     @Override
     public SystemSettings getSystemSettingValue(String keyCode) {
 
@@ -39,4 +74,6 @@ public class CommonServiceImpl implements CommonService {
             return null;
         }
     }
+
+
 }

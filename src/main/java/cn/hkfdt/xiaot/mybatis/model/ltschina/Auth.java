@@ -58,6 +58,8 @@ public class Auth implements Serializable {
 
     private String blacklistRanking;
 
+    private String servingUrl;
+
     private String imageWidth;
 
     private String imageHeight;
@@ -93,8 +95,6 @@ public class Auth implements Serializable {
     private String bio;
 
     private String backgroundUrl;
-
-    private String servingUrl;
 
     private static final long serialVersionUID = 1L;
 
@@ -314,6 +314,14 @@ public class Auth implements Serializable {
         this.blacklistRanking = blacklistRanking == null ? null : blacklistRanking.trim();
     }
 
+    public String getServingUrl() {
+        return servingUrl;
+    }
+
+    public void setServingUrl(String servingUrl) {
+        this.servingUrl = servingUrl == null ? null : servingUrl.trim();
+    }
+
     public String getImageWidth() {
         return imageWidth;
     }
@@ -456,13 +464,5 @@ public class Auth implements Serializable {
 
     public void setBackgroundUrl(String backgroundUrl) {
         this.backgroundUrl = backgroundUrl == null ? null : backgroundUrl.trim();
-    }
-
-    public String getServingUrl() {
-        return servingUrl;
-    }
-
-    public void setServingUrl(String servingUrl) {
-        this.servingUrl = servingUrl == null ? null : servingUrl.trim();
     }
 }

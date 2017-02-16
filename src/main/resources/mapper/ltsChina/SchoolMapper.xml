@@ -415,4 +415,18 @@
       last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP}
     where school_key = #{schoolKey,jdbcType=VARCHAR}
   </update>
+  <select resultMap="BaseResultMap" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.SchoolExample" id="selectByExampleWithRowbounds" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from school
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
 </mapper>

@@ -2,8 +2,10 @@ package cn.hkfdt.xiaot.mybatis.mapper.fxchina;
 
 import cn.hkfdt.xiaot.mybatis.model.fxchina.SystemSettings;
 import cn.hkfdt.xiaot.mybatis.model.fxchina.SystemSettingsExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
+
+import java.util.List;
 
 public interface SystemSettingsMapper {
     int countByExample(SystemSettingsExample example);
@@ -15,6 +17,8 @@ public interface SystemSettingsMapper {
     int insert(SystemSettings record);
 
     int insertSelective(SystemSettings record);
+
+    List<SystemSettings> selectByExampleWithRowbounds(SystemSettingsExample example, RowBounds rowBounds);
 
     List<SystemSettings> selectByExample(SystemSettingsExample example);
 

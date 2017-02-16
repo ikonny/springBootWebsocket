@@ -22,4 +22,9 @@ public interface CommonService {
      * @Date 2017/2/14 14:46
     */
     Map<String,Object> getSystemSettingValueAsMap(String keyCode);
+
+    /**
+     * 测试数据库连接情况，读个数据源
+     */
+    void testConnect();
 }

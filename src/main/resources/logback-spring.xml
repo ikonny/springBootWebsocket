@@ -32,7 +32,8 @@
     <logger name="org.springframework" level="info"/>
     <!--<logger name="cn.hkfdt.xiaot" level="info"/>-->
 
-    <logger name="xiaot_sensitive" additivity="false" level="info">
+    <!--不向上打印 additivity="false" 认为敏感日志单独一份，但root日志有汇总-->
+    <logger name="xiaot_sensitive" level="info">
         <appender-ref ref="xiaot_sensitive"/>
     </logger>
 

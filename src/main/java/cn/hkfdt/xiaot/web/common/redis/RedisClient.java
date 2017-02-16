@@ -1,6 +1,10 @@
 package cn.hkfdt.xiaot.web.common.redis;
 
-import cn.hkfdt.xiaot.util.PropertieUtil;
+import cn.hkfdt.xiaot.web.common.LogUtil;
+import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
+import com.mysql.jdbc.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.SerializationUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -13,14 +17,31 @@ import java.io.IOException;
  * on 2017/2/9 17:43
  */
 public class RedisClient {
+    static Logger logger = LoggerFactory.getLogger(RedisClient.class);
     private static JedisPool pool = null;
-    private  static String HOST = "127.0.0.1";
-    private  static int PORT = 6380;
-    static {
-        HOST = PropertieUtil.getDefaultProByKey("redisClient.redisServer");
-        PORT = Integer.parseInt(PropertieUtil.getDefaultProByKey("redisClient.redisPort"));
-        getPool();
+    private  static String HOST = "192.168.4.153";
+    private  static int PORT = 6379;
+//    static {
+//        HOST = GlobalInfo.redisServer;
+//        PORT = GlobalInfo.redisPort;
+//        getPool();
+//    }
+    public static void test() {
+        try {
+            getPool();
+            String key = "xiaotRedisTest";
+            String value = "ok";
+            String temp = RedisClient.set(key, value);
+            if (value.equals(RedisClient.get(key))) {
+                long del = RedisClient.delKey(key);
+                logger.info("xiaotRedis is ok");
+            }
+        }catch (Exception e){
+            LogUtil.logSensitive("xiaotRedis not connected!!!");
+            e.printStackTrace();
+        }
     }
+
     private static JedisPool getPool() {
         if (pool == null) {
             JedisPoolConfig config = new JedisPoolConfig();
@@ -45,8 +66,10 @@ public class RedisClient {
             // 逐出扫描的时间间隔(毫秒) 如果为负数,则不运行逐出线程, 默认-1
             config.setTimeBetweenEvictionRunsMillis(1000 * 300);
 
-//			pool = new JedisPool(config, HOST, PORT,6000);
-            pool = new JedisPool(config, HOST, PORT, 6000, "xumin");
+            if(StringUtils.isNullOrEmpty(GlobalInfo.redisAuth))
+			    pool = new JedisPool(config, GlobalInfo.redisServer, GlobalInfo.redisPort,6000);
+            else
+                pool = new JedisPool(config, GlobalInfo.redisServer, GlobalInfo.redisPort,6000,GlobalInfo.redisAuth);
         }
         return pool;
     }
@@ -73,6 +96,22 @@ public class RedisClient {
                 jedis.close();
         }
         return value;
+    }
+    public static long delKey(String key) {
+        String value = null;
+        Jedis jedis = null;
+        try {
+            pool = getPool();
+            jedis = pool.getResource();
+            return jedis.del(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 返还到连接池,新的方法
+            if(jedis!=null)
+                jedis.close();
+        }
+        return 0l;
     }
 
     public static Object getex(String key) {

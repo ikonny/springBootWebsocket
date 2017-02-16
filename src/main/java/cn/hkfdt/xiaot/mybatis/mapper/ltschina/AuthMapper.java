@@ -2,9 +2,10 @@ package cn.hkfdt.xiaot.mybatis.mapper.ltschina;
 
 import cn.hkfdt.xiaot.mybatis.model.ltschina.Auth;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.AuthExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
+
 public interface AuthMapper {
     int countByExample(AuthExample example);
 
@@ -16,7 +17,11 @@ public interface AuthMapper {
 
     int insertSelective(Auth record);
 
+    List<Auth> selectByExampleWithBLOBsWithRowbounds(AuthExample example, RowBounds rowBounds);
+
     List<Auth> selectByExampleWithBLOBs(AuthExample example);
+
+    List<Auth> selectByExampleWithRowbounds(AuthExample example, RowBounds rowBounds);
 
     List<Auth> selectByExample(AuthExample example);
 

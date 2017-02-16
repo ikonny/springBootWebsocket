@@ -4,6 +4,7 @@ import cn.hkfdt.xiaot.mybatis.model.ltschina.ForceAnalysis;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.ForceAnalysisExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 public interface ForceAnalysisMapper {
     int countByExample(ForceAnalysisExample example);
@@ -15,6 +16,8 @@ public interface ForceAnalysisMapper {
     int insert(ForceAnalysis record);
 
     int insertSelective(ForceAnalysis record);
+
+    List<ForceAnalysis> selectByExampleWithRowbounds(ForceAnalysisExample example, RowBounds rowBounds);
 
     List<ForceAnalysis> selectByExample(ForceAnalysisExample example);
 

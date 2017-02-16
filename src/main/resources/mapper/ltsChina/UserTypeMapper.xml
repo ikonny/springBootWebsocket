@@ -178,4 +178,18 @@
     where user_id = #{userId,jdbcType=VARCHAR}
       and type_id = #{typeId,jdbcType=VARCHAR}
   </update>
+  <select resultMap="BaseResultMap" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.UserTypeExample" id="selectByExampleWithRowbounds" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user_type
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
 </mapper>

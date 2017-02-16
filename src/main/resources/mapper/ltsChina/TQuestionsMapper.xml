@@ -338,4 +338,34 @@
       version = #{version,jdbcType=INTEGER}
     where questionId = #{questionId,jdbcType=INTEGER}
   </update>
+  <select resultMap="ResultMapWithBLOBs" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsExample" id="selectByExampleWithBLOBsWithRowbounds" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from xiaot_questions
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select resultMap="BaseResultMap" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsExample" id="selectByExampleWithRowbounds" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from xiaot_questions
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
 </mapper>

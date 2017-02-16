@@ -23,7 +23,7 @@ public class FilterConfig extends WebMvcConfigurerAdapter {
         DeviceFilter deviceFilter = new DeviceFilter();
         registrationBean.setFilter(deviceFilter);
         registrationBean.setOrder(1);
-        List<String> urlList = new ArrayList<String>();
+        List<String> urlList = new ArrayList<>();
         urlList.add("/xiaoth/*");
         registrationBean.setUrlPatterns(urlList);
         return registrationBean;
@@ -36,8 +36,8 @@ public class FilterConfig extends WebMvcConfigurerAdapter {
         LoginFilter loginFilter = new LoginFilter();
         registrationBean.setFilter(loginFilter);
         registrationBean.setOrder(2);
-        List<String> urlList = new ArrayList<String>();
-        urlList.add("/xiaoth/*");//测试的时候可以把这个过滤器去掉
+        List<String> urlList = new ArrayList<>();
+        urlList.add("/xiaoth/*");
         registrationBean.setUrlPatterns(urlList);
         return registrationBean;
     }

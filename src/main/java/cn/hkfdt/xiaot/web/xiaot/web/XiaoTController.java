@@ -189,7 +189,7 @@ public class XiaoTController {
     public Object getXiaotMasterList(@RequestParam(defaultValue = "0") int market, Model model,
                                      @RequestParam(defaultValue = "false") boolean isflush){
     	
-    	Map<String, Object> mapTar = new HashMap<String, Object>(3);
+    	Map<String, Object> mapTar = new HashMap<>(3);
         List<Map<String, Object>> listMap = xiaoTService.getXiaotMasterList(market,isflush);
         mapTar.put("status", 200);
         mapTar.put("data", listMap);

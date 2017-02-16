@@ -17,6 +17,6 @@ public interface ForceAnalysisExtendsMapper extends ForceAnalysisMapper {
 	 * author:xumin 
 	 * 2016-12-19 下午2:07:40
 	 */
-	@Select("select * from xiaot_force_analysis WHERE type = #{para.type} ORDER BY accumulatedIncome DESC,fdtScore DESC LIMIT 0,50")
+	@Select("select * from xiaot_force_analysis WHERE type = #{type} ORDER BY accumulatedIncome DESC,fdtScore DESC LIMIT 0,50")
 	List<ForceAnalysis> getXiaotMasterList(@Param("type") int type);
 }

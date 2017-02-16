@@ -4,6 +4,7 @@ import cn.hkfdt.xiaot.mybatis.model.ltschina.School;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.SchoolExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 public interface SchoolMapper {
     int countByExample(SchoolExample example);
@@ -15,6 +16,8 @@ public interface SchoolMapper {
     int insert(School record);
 
     int insertSelective(School record);
+
+    List<School> selectByExampleWithRowbounds(SchoolExample example, RowBounds rowBounds);
 
     List<School> selectByExample(SchoolExample example);
 

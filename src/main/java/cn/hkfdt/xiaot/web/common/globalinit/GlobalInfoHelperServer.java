@@ -3,6 +3,8 @@ package cn.hkfdt.xiaot.web.common.globalinit;
 import cn.hkfdt.xiaot.mybatis.mapper.fxchina.SystemSettingsMapper;
 import cn.hkfdt.xiaot.mybatis.model.fxchina.SystemSettings;
 import cn.hkfdt.xiaot.mybatis.model.fxchina.SystemSettingsExample;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,11 +19,18 @@ import java.util.List;
  */
 @Service
 public class GlobalInfoHelperServer {
+    Logger logger = LoggerFactory.getLogger(GlobalInfoHelperServer.class);
     @Autowired
     SystemSettingsMapper systemSettingsMapper;
     //正确的注入方式，不要忘了配置文件名写错
     @Value("${server.domain.http}")
     String domainHttp;
+    @Value("${redisClient.redisServer}")
+    String redisServer;
+    @Value("${redisClient.redisPort}")
+    int redisPort;
+    @Value("${redisClient.redisAuth}")
+    String redisAuth;
 
 
     @PostConstruct
@@ -33,6 +42,10 @@ public class GlobalInfoHelperServer {
         GlobalInfo.setBaseSSLUrl(list.get(0).getValue());
 
         GlobalInfo.setDomainHttp(domainHttp);
+        GlobalInfo.redisServer = redisServer;
+        GlobalInfo.redisPort = redisPort;
+        GlobalInfo.redisAuth = redisAuth;
+        //============================================
 
     }
 }

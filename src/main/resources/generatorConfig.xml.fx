@@ -15,6 +15,8 @@
 		
 		<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin" />
 		<plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+		<!--支持分页-->
+		<plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
 		
 		<commentGenerator
 			type="cn.hkfdt.mybatis.comment.generator.HkfdtCommentGenerator">
@@ -25,27 +27,27 @@
 
 		<!-- !!!! Database Configurations !!!! -->
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://192.168.4.71:3306/LTS_China" userId="tqt001"
+			connectionURL="jdbc:mysql://192.168.4.71:3306/LTS_China_FX" userId="tqt001"
 			password="tqt002" />
 		<javaTypeResolver>
 			<property name="forceBigDecimals" value="false" />
 		</javaTypeResolver>
 
 		<!-- !!!! Model Configurations !!!! -->
-		<javaModelGenerator targetPackage="cn.hkfdt.xiaot.mybatis.model.ltschina"
+		<javaModelGenerator targetPackage="cn.hkfdt.xiaot.mybatis.model.fxchina"
 			targetProject="src/main/java">
 			<property name="enableSubPackages" value="false" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 
 		<!-- !!!! Mapper XML Configurations !!!! -->
-		<sqlMapGenerator targetPackage="mapper.ltsChina"
+		<sqlMapGenerator targetPackage="mapper.fxChina"
 			targetProject="src/main/resources">
 			<property name="enableSubPackages" value="false" />
 		</sqlMapGenerator>
 
 		<!-- !!!! Mapper Interface Configurations !!!! -->
-		<javaClientGenerator targetPackage="cn.hkfdt.xiaot.mybatis.mapper.ltschina"
+		<javaClientGenerator targetPackage="cn.hkfdt.xiaot.mybatis.mapper.fxchina"
 			targetProject="src/main/java" type="XMLMAPPER">
 			<property name="enableSubPackages" value="false" />
 		</javaClientGenerator>
@@ -56,40 +58,11 @@
 			enableUpdateByExample="false" domainObjectName="ForceAnalysis">
 			<property name="useActualColumnNames" value="true" />
 		</table>
-
 		-->
-
-
-		<!--<table tableName="xiaot_force_analysis" domainObjectName="ForceAnalysis">-->
-			<!--<property name="useActualColumnNames" value="true" />-->
-		<!--</table>-->
-
-		<!--<table tableName="xiaot_record"  domainObjectName="TRecord">-->
-		<!--<property name="useActualColumnNames" value="true" />-->
-		<!--<columnOverride column="actions" jdbcType="VARCHAR"  />-->
-		<!--</table>-->
-
-		<!--<table tableName="xiaot_questions"  domainObjectName="TQuestions">-->
-			<!--<property name="useActualColumnNames" value="true" />-->
-		<!--</table>-->
-
-		<!--<table tableName="AUTH"  domainObjectName="Auth">-->
-
-		<!--</table>-->
-
-		<table tableName="user_type"  domainObjectName="UserType">
+		<table tableName="system_settings"  domainObjectName="SystemSettings">
+			<columnOverride column="value" jdbcType="VARCHAR"  />
+			<columnOverride column="memo" jdbcType="VARCHAR"  />
 		</table>
-
-		<table tableName="school"  domainObjectName="School">
-		<columnOverride column="en_name" jdbcType="VARCHAR"  />
-		<columnOverride column="sc_name" jdbcType="VARCHAR"  />
-		<columnOverride column="tc_name" jdbcType="VARCHAR"  />
-		<columnOverride column="flag_url" jdbcType="VARCHAR"  />
-		<columnOverride column="oss_flag_url" jdbcType="VARCHAR"  />
-		<columnOverride column="group_id" jdbcType="VARCHAR"  />
-		</table>
-
-
 
 	</context>
 </generatorConfiguration>

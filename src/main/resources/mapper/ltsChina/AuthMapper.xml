@@ -29,6 +29,7 @@
     <result column="is_blocked" property="isBlocked" jdbcType="VARCHAR" />
     <result column="is_active" property="isActive" jdbcType="VARCHAR" />
     <result column="blackList_ranking" property="blacklistRanking" jdbcType="VARCHAR" />
+    <result column="serving_url" property="servingUrl" jdbcType="VARCHAR" />
     <result column="image_width" property="imageWidth" jdbcType="VARCHAR" />
     <result column="image_height" property="imageHeight" jdbcType="VARCHAR" />
     <result column="forget_password" property="forgetPassword" jdbcType="VARCHAR" />
@@ -49,7 +50,6 @@
   <resultMap id="ResultMapWithBLOBs" type="cn.hkfdt.xiaot.mybatis.model.ltschina.Auth" extends="BaseResultMap" >
     <result column="bio" property="bio" jdbcType="LONGVARCHAR" />
     <result column="background_url" property="backgroundUrl" jdbcType="LONGVARCHAR" />
-    <result column="serving_url" property="servingUrl" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -113,12 +113,12 @@
     USERID, EMAIL, USERNAME, PASSWORD, SALT, PHONE, CREATED, USERTYPE, COUNTRY, LANGUAGE, 
     USERLEVEL, ISTERMINATED, SCHOOL, SERVICE, firstname, lastname, location, org, sex, 
     birthday, school_id, school_key, school_region, school_name, is_blocked, is_active, 
-    blackList_ranking, image_width, image_height, forget_password, publish_time, last_update_time, 
-    openid, unionid, city, province, wechat_privilege, qq_vip, PHONE_COUNTRY, identity, 
-    PASS_CHANGED_TIME, PERMISSION, EBROKER_ID
+    blackList_ranking, serving_url, image_width, image_height, forget_password, publish_time, 
+    last_update_time, openid, unionid, city, province, wechat_privilege, qq_vip, PHONE_COUNTRY, 
+    identity, PASS_CHANGED_TIME, PERMISSION, EBROKER_ID
   </sql>
   <sql id="Blob_Column_List" >
-    bio, background_url, serving_url
+    bio, background_url
   </sql>
   <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.AuthExample" >
     select
@@ -180,13 +180,13 @@
       sex, birthday, school_id, 
       school_key, school_region, school_name, 
       is_blocked, is_active, blackList_ranking, 
-      image_width, image_height, forget_password, 
-      publish_time, last_update_time, openid, 
-      unionid, city, province, 
-      wechat_privilege, qq_vip, PHONE_COUNTRY, 
-      identity, PASS_CHANGED_TIME, PERMISSION, 
-      EBROKER_ID, bio, background_url, 
-      serving_url)
+      serving_url, image_width, image_height, 
+      forget_password, publish_time, last_update_time, 
+      openid, unionid, city, 
+      province, wechat_privilege, qq_vip, 
+      PHONE_COUNTRY, identity, PASS_CHANGED_TIME, 
+      PERMISSION, EBROKER_ID, bio, 
+      background_url)
     values (#{userid,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
       #{created,jdbcType=TIMESTAMP}, #{usertype,jdbcType=TINYINT}, #{country,jdbcType=VARCHAR}, 
@@ -196,13 +196,13 @@
       #{sex,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR}, #{schoolId,jdbcType=BIGINT}, 
       #{schoolKey,jdbcType=VARCHAR}, #{schoolRegion,jdbcType=VARCHAR}, #{schoolName,jdbcType=VARCHAR}, 
       #{isBlocked,jdbcType=VARCHAR}, #{isActive,jdbcType=VARCHAR}, #{blacklistRanking,jdbcType=VARCHAR}, 
-      #{imageWidth,jdbcType=VARCHAR}, #{imageHeight,jdbcType=VARCHAR}, #{forgetPassword,jdbcType=VARCHAR}, 
-      #{publishTime,jdbcType=VARCHAR}, #{lastUpdateTime,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, 
-      #{unionid,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
-      #{wechatPrivilege,jdbcType=VARCHAR}, #{qqVip,jdbcType=VARCHAR}, #{phoneCountry,jdbcType=VARCHAR}, 
-      #{identity,jdbcType=VARCHAR}, #{passChangedTime,jdbcType=TIMESTAMP}, #{permission,jdbcType=VARCHAR}, 
-      #{ebrokerId,jdbcType=VARCHAR}, #{bio,jdbcType=LONGVARCHAR}, #{backgroundUrl,jdbcType=LONGVARCHAR}, 
-      #{servingUrl,jdbcType=LONGVARCHAR})
+      #{servingUrl,jdbcType=VARCHAR}, #{imageWidth,jdbcType=VARCHAR}, #{imageHeight,jdbcType=VARCHAR}, 
+      #{forgetPassword,jdbcType=VARCHAR}, #{publishTime,jdbcType=VARCHAR}, #{lastUpdateTime,jdbcType=VARCHAR}, 
+      #{openid,jdbcType=VARCHAR}, #{unionid,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{province,jdbcType=VARCHAR}, #{wechatPrivilege,jdbcType=VARCHAR}, #{qqVip,jdbcType=VARCHAR}, 
+      #{phoneCountry,jdbcType=VARCHAR}, #{identity,jdbcType=VARCHAR}, #{passChangedTime,jdbcType=TIMESTAMP}, 
+      #{permission,jdbcType=VARCHAR}, #{ebrokerId,jdbcType=VARCHAR}, #{bio,jdbcType=LONGVARCHAR}, 
+      #{backgroundUrl,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.Auth" >
     insert into AUTH
@@ -288,6 +288,9 @@
       <if test="blacklistRanking != null" >
         blackList_ranking,
       </if>
+      <if test="servingUrl != null" >
+        serving_url,
+      </if>
       <if test="imageWidth != null" >
         image_width,
       </if>
@@ -341,9 +344,6 @@
       </if>
       <if test="backgroundUrl != null" >
         background_url,
-      </if>
-      <if test="servingUrl != null" >
-        serving_url,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -428,6 +428,9 @@
       <if test="blacklistRanking != null" >
         #{blacklistRanking,jdbcType=VARCHAR},
       </if>
+      <if test="servingUrl != null" >
+        #{servingUrl,jdbcType=VARCHAR},
+      </if>
       <if test="imageWidth != null" >
         #{imageWidth,jdbcType=VARCHAR},
       </if>
@@ -481,9 +484,6 @@
       </if>
       <if test="backgroundUrl != null" >
         #{backgroundUrl,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="servingUrl != null" >
-        #{servingUrl,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -577,6 +577,9 @@
       <if test="record.blacklistRanking != null" >
         blackList_ranking = #{record.blacklistRanking,jdbcType=VARCHAR},
       </if>
+      <if test="record.servingUrl != null" >
+        serving_url = #{record.servingUrl,jdbcType=VARCHAR},
+      </if>
       <if test="record.imageWidth != null" >
         image_width = #{record.imageWidth,jdbcType=VARCHAR},
       </if>
@@ -631,9 +634,6 @@
       <if test="record.backgroundUrl != null" >
         background_url = #{record.backgroundUrl,jdbcType=LONGVARCHAR},
       </if>
-      <if test="record.servingUrl != null" >
-        serving_url = #{record.servingUrl,jdbcType=LONGVARCHAR},
-      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -668,6 +668,7 @@
       is_blocked = #{record.isBlocked,jdbcType=VARCHAR},
       is_active = #{record.isActive,jdbcType=VARCHAR},
       blackList_ranking = #{record.blacklistRanking,jdbcType=VARCHAR},
+      serving_url = #{record.servingUrl,jdbcType=VARCHAR},
       image_width = #{record.imageWidth,jdbcType=VARCHAR},
       image_height = #{record.imageHeight,jdbcType=VARCHAR},
       forget_password = #{record.forgetPassword,jdbcType=VARCHAR},
@@ -685,8 +686,7 @@
       PERMISSION = #{record.permission,jdbcType=VARCHAR},
       EBROKER_ID = #{record.ebrokerId,jdbcType=VARCHAR},
       bio = #{record.bio,jdbcType=LONGVARCHAR},
-      background_url = #{record.backgroundUrl,jdbcType=LONGVARCHAR},
-      serving_url = #{record.servingUrl,jdbcType=LONGVARCHAR}
+      background_url = #{record.backgroundUrl,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -720,6 +720,7 @@
       is_blocked = #{record.isBlocked,jdbcType=VARCHAR},
       is_active = #{record.isActive,jdbcType=VARCHAR},
       blackList_ranking = #{record.blacklistRanking,jdbcType=VARCHAR},
+      serving_url = #{record.servingUrl,jdbcType=VARCHAR},
       image_width = #{record.imageWidth,jdbcType=VARCHAR},
       image_height = #{record.imageHeight,jdbcType=VARCHAR},
       forget_password = #{record.forgetPassword,jdbcType=VARCHAR},
@@ -818,6 +819,9 @@
       <if test="blacklistRanking != null" >
         blackList_ranking = #{blacklistRanking,jdbcType=VARCHAR},
       </if>
+      <if test="servingUrl != null" >
+        serving_url = #{servingUrl,jdbcType=VARCHAR},
+      </if>
       <if test="imageWidth != null" >
         image_width = #{imageWidth,jdbcType=VARCHAR},
       </if>
@@ -872,9 +876,6 @@
       <if test="backgroundUrl != null" >
         background_url = #{backgroundUrl,jdbcType=LONGVARCHAR},
       </if>
-      <if test="servingUrl != null" >
-        serving_url = #{servingUrl,jdbcType=LONGVARCHAR},
-      </if>
     </set>
     where USERID = #{userid,jdbcType=VARCHAR}
       and EMAIL = #{email,jdbcType=VARCHAR}
@@ -906,6 +907,7 @@
       is_blocked = #{isBlocked,jdbcType=VARCHAR},
       is_active = #{isActive,jdbcType=VARCHAR},
       blackList_ranking = #{blacklistRanking,jdbcType=VARCHAR},
+      serving_url = #{servingUrl,jdbcType=VARCHAR},
       image_width = #{imageWidth,jdbcType=VARCHAR},
       image_height = #{imageHeight,jdbcType=VARCHAR},
       forget_password = #{forgetPassword,jdbcType=VARCHAR},
@@ -923,8 +925,7 @@
       PERMISSION = #{permission,jdbcType=VARCHAR},
       EBROKER_ID = #{ebrokerId,jdbcType=VARCHAR},
       bio = #{bio,jdbcType=LONGVARCHAR},
-      background_url = #{backgroundUrl,jdbcType=LONGVARCHAR},
-      serving_url = #{servingUrl,jdbcType=LONGVARCHAR}
+      background_url = #{backgroundUrl,jdbcType=LONGVARCHAR}
     where USERID = #{userid,jdbcType=VARCHAR}
       and EMAIL = #{email,jdbcType=VARCHAR}
   </update>
@@ -955,6 +956,7 @@
       is_blocked = #{isBlocked,jdbcType=VARCHAR},
       is_active = #{isActive,jdbcType=VARCHAR},
       blackList_ranking = #{blacklistRanking,jdbcType=VARCHAR},
+      serving_url = #{servingUrl,jdbcType=VARCHAR},
       image_width = #{imageWidth,jdbcType=VARCHAR},
       image_height = #{imageHeight,jdbcType=VARCHAR},
       forget_password = #{forgetPassword,jdbcType=VARCHAR},
@@ -974,4 +976,34 @@
     where USERID = #{userid,jdbcType=VARCHAR}
       and EMAIL = #{email,jdbcType=VARCHAR}
   </update>
+  <select resultMap="ResultMapWithBLOBs" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.AuthExample" id="selectByExampleWithBLOBsWithRowbounds" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from AUTH
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select resultMap="BaseResultMap" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.AuthExample" id="selectByExampleWithRowbounds" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from AUTH
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
 </mapper>
