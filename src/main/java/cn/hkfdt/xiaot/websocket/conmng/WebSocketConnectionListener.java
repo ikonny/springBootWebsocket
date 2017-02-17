@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
@@ -79,10 +80,18 @@ public class WebSocketConnectionListener implements
 	public void onApplicationEvent(ApplicationEvent event) {
 		if (event instanceof SessionConnectEvent) {
 			handleSessionConnected((SessionConnectEvent) event);
-		} else if (event instanceof SessionDisconnectEvent) {
+		}
+//		if (event instanceof SessionSubscribeEvent) {
+//			logger.info("SubscribeEvent");
+//		}
+//		if (event instanceof SessionUnsubscribeEvent) {
+//			logger.info("UnsubscribeEvent");
+//		}
+		else if (event instanceof SessionDisconnectEvent) {
 			handleSessionDisconnect((SessionDisconnectEvent) event);
 		}
-//		System.err.println(event.toString());
+
+//		System.err.println(event.getSource());
 	}
 	// SessionDisconnectEvent[sessionId=8v_ueimg, CloseStatus[code=1000, reason=null]]
 	private void handleSessionDisconnect(SessionDisconnectEvent event) {
@@ -95,8 +104,11 @@ public class WebSocketConnectionListener implements
 	//heart-beat=[10000,10000]}, simpMessageType=CONNECT,
 	//null, null, null, null, null, null, simpHeartbeat=[J@5c7d82d, simpSessionId=nhdw6oj_, null, null]
 	private void handleSessionConnected(SessionConnectEvent event) {
-		SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
-		String sessionId = (String) headers.getHeader(SIMP_SESSION_ID);
+//		SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
+//		String sessionId = (String) headers.getHeader(SIMP_SESSION_ID);
+		StompHeaderAccessor headers = StompHeaderAccessor.wrap(event.getMessage()); //获取消息头
+		String sessionId =headers.getSessionId();
+//		String name = headers.getUser().getName(); //获取账号名,获取不到？？！
 		String fdtId = sessionId;
 		List<String> fdtKeyList = headers.getNativeHeader(FDT_KEY);
 		if(fdtKeyList!=null){

@@ -1,16 +1,13 @@
 package cn.hkfdt.xiaot.websocket.interceptors;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
+
+import java.util.Map;
 
 public class XiaoTShareInterceptor extends HttpSessionHandshakeInterceptor {
 
@@ -38,7 +35,7 @@ public class XiaoTShareInterceptor extends HttpSessionHandshakeInterceptor {
 			ServerHttpResponse arg1, WebSocketHandler arg2,
 			Map<String, Object> arg3) throws Exception {
 
-//		System.out.println("beforeHandshake：建立连接的时候只调用一次");
+//		System.out.println("beforeHandshake："+arg0.getURI());
 //		if (arg0 instanceof ServletServerHttpRequest) {
 //			ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) arg0;
 //			System.err.println(servletRequest.toString());

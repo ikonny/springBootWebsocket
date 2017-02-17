@@ -22,6 +22,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         // use the /topic prefix for outgoing WebSocket communication
+//        config.setUserDestinationPrefix("/user");//设置点对点通信订阅前缀，默认的
     	config.enableSimpleBroker("/queue", "/topic");//我发给客户端，客户端需要订阅的
 
         //这个可以没有，请求和订阅就是一个url了
