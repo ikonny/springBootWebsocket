@@ -1,8 +1,8 @@
 package cn.hkfdt.xiaot.common;
 
-import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
 import cn.hkfdt.xiaot.web.common.redis.RedisClient;
 import cn.hkfdt.xiaot.web.common.service.CommonService;
+import cn.hkfdt.xiaot.web.xiaot.service.impl.XiaoTHelp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +36,15 @@ public class ContexStartedListen  implements ApplicationListener<ContextRefreshe
      */
     private void contexStarted() {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        logger.info("===========以下测试系统依赖=================");
-        GlobalInfo.printInfo();
+        logger.info("===============系统依赖检测开始========================");
+//        GlobalInfo.printInfo();
         RedisClient.test();//测试redis是否ok
         commonService.testConnect();
+        XiaoTHelp.testRemoteServer();
+        logger.info("===============系统依赖检测结束=======================");
     }
 }

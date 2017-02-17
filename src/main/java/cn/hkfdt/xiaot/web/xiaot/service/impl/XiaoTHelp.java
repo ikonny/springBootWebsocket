@@ -2,10 +2,13 @@ package cn.hkfdt.xiaot.web.xiaot.service.impl;
 
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
 import cn.hkfdt.xiaot.util.TimeUtil;
+import cn.hkfdt.xiaot.web.common.LogUtil;
 import cn.hkfdt.xiaot.web.xiaot.service.md.XiaoTMDDBHelper;
 import cn.hkfdt.xiaot.web.xiaot.util.NetUtil;
 import cn.hkfdt.xiaot.web.xiaot.util.XiaoTMarketType;
 import com.alibaba.fastjson.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.math.BigDecimal;
@@ -19,6 +22,7 @@ import java.util.concurrent.Executors;
 
 public class XiaoTHelp {
 
+	static Logger logger = LoggerFactory.getLogger(XiaoTHelp.class);
 	//http://121.43.73.191:8082
 	/**
 	 * 如果xiaoT本次修改影响打分等历史数据，则该字段+1
@@ -212,5 +216,14 @@ public class XiaoTHelp {
 			XiaoTMarketType.SC.getCode();
 		return "FC";
 	}
-
+	public static void testRemoteServer() {
+		try {
+			TQuestions tq = getTQuestion(xiaoTGuest, 0);
+			if(tq!=null){
+				logger.info("xiaot 选题server OK");
+			}
+		}catch (Exception e){
+			LogUtil.logSensitive("xiaot 选题server Bad!!!!!!!!!!");
+		}
+	}
 }

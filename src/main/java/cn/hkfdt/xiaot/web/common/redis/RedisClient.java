@@ -34,7 +34,7 @@ public class RedisClient {
             String temp = RedisClient.set(key, value);
             if (value.equals(RedisClient.get(key))) {
                 long del = RedisClient.delKey(key);
-                logger.info("xiaotRedis is ok");
+                logger.info("xiaotRedis is OK");
             }
         }catch (Exception e){
             LogUtil.logSensitive("xiaotRedis not connected!!!");
