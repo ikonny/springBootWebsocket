@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * 过滤素有xiaoth开头的url,代表http的过滤器
+ * white开头不需要过滤和验证
  * Created by whyse
  * on 2017/2/7 10:40
  */

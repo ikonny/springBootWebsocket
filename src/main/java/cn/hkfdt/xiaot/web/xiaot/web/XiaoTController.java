@@ -35,7 +35,7 @@ public class XiaoTController {
 
 	//=========================================
 	/**
-	 * 请求选题并且开做
+	 * 请求选题并且开做。
 	 * @param market 0：期货  1:股票  2：外汇
 	 * @param model
 	 * @return

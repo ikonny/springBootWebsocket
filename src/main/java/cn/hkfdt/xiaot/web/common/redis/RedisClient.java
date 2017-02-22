@@ -49,7 +49,7 @@ public class RedisClient {
             // 如果赋值为-1，则表示不限制；如果pool已经分配了maxActive个jedis实例，则此时pool的状态为exhausted(耗尽)。
             config.setBlockWhenExhausted(true);// 连接耗尽时是否阻塞，或者抛出异常
             // 表示当borrow(引入)一个jedis实例时，最大的等待时间，如果超过等待时间，则直接抛出JedisConnectionException；
-            config.setMaxWaitMillis(1000 * 11);
+            config.setMaxWaitMillis(1000 * 6);
 
             config.setMaxTotal(30);// 设置最大连接数
             config.setMaxIdle(10);// 最大空闲数

@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class LoginFilter implements Filter{
 
-    static String anonym = "anonym";
+    static final String anonym = "anonym";
 
 
     @Override
@@ -43,7 +43,10 @@ public class LoginFilter implements Filter{
         if(StringUtils.isNullOrEmpty(token)){
             token =  headersInfo.get("fdt-key");
         }
-        String fdtId=anonym;
+        String fdtId = headersInfo.get("fdt-id");//headersInfo.containsKey("fdt-id")?headersInfo.get("fdt-id"):anonym;
+        if(StringUtils.isNullOrEmpty(fdtId)){
+            fdtId = anonym;
+        }
         if(!StringUtils.isNullOrEmpty(token)){
             fdtId = WebSocketConnectionListener.getFdtId(token,anonym);
             userInfo.setFdtId(fdtId);
