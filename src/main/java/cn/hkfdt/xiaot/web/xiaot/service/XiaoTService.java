@@ -39,22 +39,24 @@ public interface XiaoTService {
 	 * 数据是预先准备好的
 	 * @param fdtId 
 	 * @param market 0：期货  1:股票  2：外汇
+	 * @param type all：全部  history:历史  today：今日
 	 * @param mapTar
 	 * @return
 	 * author:xumin 
 	 * 2016-12-16 上午10:07:26
 	 */
-	int xiaotTraining(String fdtId, int market, Map<String, Object> mapTar);
+	int xiaotTraining(String fdtId, int market, Map<String, Object> mapTar, String type);
 	/**
 	 * 请求远程服务，对本次训练结果打分
 	 * @param fdtId
 	 * @param body json数据，参考协议
+	 * @param status 0:未结束 1:已结束
 	 * @param mapTar
 	 * @return
 	 * author:xumin 
 	 * 2016-12-19 下午3:18:05
 	 */
-	int xiaotDoScore(String fdtId, String body, Map<String, Object> mapTar);
+	int xiaotDoScore(String fdtId, String body, Map<String, Object> mapTar, Integer status);
 	/**
 	 * 
 	 * @param market

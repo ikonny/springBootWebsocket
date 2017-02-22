@@ -37,6 +37,7 @@ public class XiaoTController {
 	/**
 	 * 请求选题并且开做。
 	 * @param market 0：期货  1:股票  2：外汇
+	 * @param type all：全部  history:历史  today：今日
 	 * @param model
 	 * @return
 	 * author:xumin 
@@ -44,13 +45,14 @@ public class XiaoTController {
 	 */
 	@RequestMapping(value="/xiaoth/xiaotTraining")
 	@ResponseBody
-    public Object xiaotTraining(@RequestParam(defaultValue = "0") int market, Model model){
+    public Object xiaotTraining(@RequestParam(defaultValue = "0") int market,
+								@RequestParam(defaultValue = "all") String type, Model model){
 		Map<String, Object> mapTar = new HashMap<String, Object>(8);
 		String fdtId = UserContext.getUserInfo().get().getFdtId();
 		if(LoginFilter.isNotLogin(fdtId)){
 			fdtId = XiaoTHelp.xiaoTGuest;
 		}
-        xiaoTService.xiaotTraining(fdtId,market,mapTar);
+        xiaoTService.xiaotTraining(fdtId, market, mapTar, type);
 //        String jsonData = mapTar.get("jsonData").toString();
         return mapTar;
     }
@@ -58,20 +60,22 @@ public class XiaoTController {
 	 * 
 	 * @param body json数据，用户完成练习，将题目id和买卖点返回
 	 * @param model
+	 * @param status 0:未结束 1:已结束
 	 * @return
 	 * author:xumin 
 	 * 2016-12-19 下午3:13:10
 	 */
 	@RequestMapping(value="/xiaoth/xiaotDoScore")
 	@ResponseBody
-    public Object xiaotDoScore(@RequestBody String body, Model model){
+    public Object xiaotDoScore(@RequestBody String body,
+							   @RequestParam Integer status, Model model){
     	
 		Map<String, Object> mapTar = new HashMap<String, Object>(8);
 		String fdtId = UserContext.getUserInfo().get().getFdtId();
 		if(LoginFilter.isNotLogin(fdtId)){
 			fdtId = XiaoTHelp.xiaoTGuest;
 		}
-        int flag = xiaoTService.xiaotDoScore(fdtId,body,mapTar);
+		int flag = xiaoTService.xiaotDoScore(fdtId, body, mapTar, status);
 //		System.err.println(body);
         return mapTar;
     }
