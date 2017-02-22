@@ -15,4 +15,5 @@ public interface TRecordExtendsMapper extends TRecordMapper {
 
 	@Select("select COUNT(1) from xiaot_record WHERE fdtId = #{para.fdtId} and type = #{para.market}")
 	int getXiaotRecordTotal(@Param("para") Map<String, Object> mapPara);
+
 }

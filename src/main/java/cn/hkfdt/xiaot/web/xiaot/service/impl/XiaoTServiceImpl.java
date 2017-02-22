@@ -18,6 +18,7 @@ import com.alibaba.fastjson.JSON;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -59,6 +60,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 	 	try {
 			XiaoTMDDBHelper.jdbcTemplate = jdbcTemplate;
 			XiaoTHelp.init(jdbcTemplate);//初始化一些配置信息
+			checkTimeOutRecord();
 		}catch (Exception e){
 	 		e.printStackTrace();
 		}
@@ -175,7 +177,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public int xiaotTraining(String fdtId, int market, Map<String, Object> mapTar) {
+	public int xiaotTraining(String fdtId, int market, Map<String, Object> mapTar, String type) {
 		TQuestions tQuestions = null;
 		int count=0;
 		while(tQuestions == null){
@@ -192,6 +194,11 @@ public class XiaoTServiceImpl implements XiaoTService {
 			jsonData = YSUtils.uncompress(jsonData);
 			Map<String, Object> jsonDataMap = new HashMap<String, Object>(6);
 			jsonDataMap = JSON.parseObject(new String(jsonData));//(Map<String, Object>) JsonUtil.JsonToOb(new String(jsonData), jsonDataMap.getClass());
+			if("history".equalsIgnoreCase(type)){
+				jsonDataMap.put("today", null);
+			}else if("today".equalsIgnoreCase(type)){
+				jsonDataMap.put("history", null);
+			}
 			mapTar.put("jsonData",jsonDataMap );
 			
 			mapTar.put("key", XiaoTHelp.getTKey(tQuestions));
@@ -208,8 +215,8 @@ public class XiaoTServiceImpl implements XiaoTService {
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public int xiaotDoScore(final String fdtId, final String body,
-			Map<String, Object> mapTar) {
+	public int      xiaotDoScore(final String fdtId, final String body,
+			Map<String, Object> mapTar, Integer status) {
 		int count=0;
 		Map<String, Object> tempMap = new HashMap<String, Object>(1);
 		tempMap = JSON.parseObject(body);//(Map<String, Object>) JsonUtil.JsonToOb(body, tempMap.getClass());
@@ -241,22 +248,26 @@ public class XiaoTServiceImpl implements XiaoTService {
 					record.setCreateTime(System.currentTimeMillis());
 					record.setScore(score);
 					record.setVERSION(XiaoTHelp.version);//新数据需要加上
+					record.setStatus(status);
 					tRecordExtendsMapper.insertSelective(record);
-					//-----请求战力分析，并且更新数据库-----------
-					Runnable run = new Runnable() {
-						
-						@Override
-						public void run() {
-							try {
-								Thread.sleep(500);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
+					//当status为1时请求战力分析
+					if(status == 1) {
+						//-----请求战力分析，并且更新数据库-----------
+						Runnable run = new Runnable() {
+
+							@Override
+							public void run() {
+								try {
+									Thread.sleep(500);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+								setxiaoTZL(fdtId, body);
 							}
-							setxiaoTZL(fdtId,body);
-						}
-					};
-					XiaoTHelp.executorService.execute(run);
-					//----------------------------------------------
+						};
+						XiaoTHelp.executorService.execute(run);
+						//----------------------------------------------
+					}
 					return 0;
 				}
 			}
@@ -398,5 +409,13 @@ public class XiaoTServiceImpl implements XiaoTService {
 		return 0;
 	}
 
+
+	/**
+	 * 每两分钟检查一次超时5分钟以上的交易，请求打分
+	 */
+	@Scheduled(cron = "0 0 0 0/2 * ?")
+	public void checkTimeOutRecord(){
+
+	}
 
 }

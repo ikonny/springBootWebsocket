@@ -93,6 +93,14 @@ public class TRecord implements Serializable {
      */
     private Integer VERSION;
 
+    /**
+     * <pre>
+     * 表字段注释 : 状态 0:未结束 1:已结束
+     * 表字段 : xiaot_record.status
+     * </pre>
+     */
+    private Integer status;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getRecordId() {
@@ -189,5 +197,13 @@ public class TRecord implements Serializable {
 
     public void setVERSION(Integer VERSION) {
         this.VERSION = VERSION;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

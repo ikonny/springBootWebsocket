@@ -301,11 +301,14 @@ public class XiaoTMDHelp {
 		mapTar.put("history", history);// ---------->一级菜单
 		double todayOpenPrice = (double) listMapDay.get(0).get("OPEN_PRICE");
 		history.put("todayOpenPrice", todayOpenPrice);// 当日开盘价格
-		List<Map<String, Object>> items = new ArrayList<Map<String, Object>>(59);
+		List<Map<String, Object>> items = new ArrayList<Map<String, Object>>(39);
 		history.put("items", items);
+		emaShort = new ArrayList<>();
+		emaLone = new ArrayList<>();
+		emaDea = new ArrayList<>();
 		//处理后list第一个节点是最老的数据
-		for(int i=1;i<60;i++){
-			Map<String, Object> item = getHistoryItem(60-i,listMapDay);//获取了最早一个点的历史比如60
+		for(int i=1;i<40;i++){
+			Map<String, Object> item = getHistoryItem(40-i,listMapDay);//获取了最早一个点的历史比如60
 			items.add(item);
 		}
 	}
@@ -354,7 +357,16 @@ public class XiaoTMDHelp {
 		item.put("ma5", XiaoTHelp.get2Point(ma5));
 		item.put("ma10", XiaoTHelp.get2Point(ma10));
 		item.put("ma20", XiaoTHelp.get2Point(ma20));
-		
+
+		//计算macd start add by crimson 2017-02-22
+		double diff = EMA(index,close,12,emaShort) - EMA(index,close,26,emaLone);
+		item.put("diff", XiaoTHelp.get2Point(diff));// 变化快的线
+		double dea = EMA(index,diff,9,emaDea);
+		item.put("dea", XiaoTHelp.get2Point(dea));// EMA diff 9后的线
+		double macd = 2*(diff-dea);
+		item.put("macd", XiaoTHelp.get2Point(macd));
+		//计算macd end
+
 		return item;
 	}
 	//------------------------------------------------------------------
