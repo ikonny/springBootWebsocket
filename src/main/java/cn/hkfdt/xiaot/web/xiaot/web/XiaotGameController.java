@@ -1,13 +1,13 @@
 package cn.hkfdt.xiaot.web.xiaot.web;
 
-import cn.hkfdt.xiaot.web.Filters.LoginFilter;
 import cn.hkfdt.xiaot.web.common.UserContext;
 import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
 import cn.hkfdt.xiaot.web.weixin.WXHelper;
-import cn.hkfdt.xiaot.web.xiaot.service.impl.XiaoTHelp;
+import cn.hkfdt.xiaot.web.xiaot.service.XiaoTGameService;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,6 +26,8 @@ import java.util.Map;
 public class XiaotGameController {
 
     Logger logger = LoggerFactory.getLogger(XiaotGameController.class);
+    @Autowired
+    XiaoTGameService xiaoTGameService;
 
     public static void main(String[] args) {
         Map<String,Object> map = new LinkedHashMap<>();
@@ -41,7 +43,7 @@ public class XiaotGameController {
      */
     @RequestMapping("/xiaoth/game/getUserInfo")
     @ResponseBody
-    public String gameIndex(HttpServletRequest request, HttpServletResponse response) {
+    public Object gameIndex(HttpServletRequest request, HttpServletResponse response) {
         if(WXHelper.isFromWx(request)){
 //            logger.info("微信:"+GlobalInfo.wxLoginUrl);
             try {
@@ -52,10 +54,8 @@ public class XiaotGameController {
             return null;
         }
         String fdtId = UserContext.getUserInfo().get().getFdtId();
-        if(LoginFilter.isNotLogin(fdtId)){
-            fdtId = XiaoTHelp.xiaoTGuest;
-        }
-        return "ok";
+        Map<String,Object> mapTar =  xiaoTGameService.getGameUser(fdtId);
+        return mapTar;
     }
 
 }

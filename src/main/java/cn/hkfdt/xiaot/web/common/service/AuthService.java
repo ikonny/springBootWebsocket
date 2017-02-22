@@ -1,5 +1,7 @@
 package cn.hkfdt.xiaot.web.common.service;
 
+import cn.hkfdt.xiaot.mybatis.model.ltschina.Auth;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,4 +18,6 @@ public interface AuthService {
      * @Date 2017/2/10 11:04
     */
     ConcurrentHashMap<String,Map<String, Object>> getFdtId2AuthExInfo(List<String> fdtIds);
+
+    Auth getAuthByFdtId(String fdtId);
 }

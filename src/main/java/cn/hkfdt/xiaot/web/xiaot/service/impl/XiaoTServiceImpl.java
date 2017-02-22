@@ -15,7 +15,7 @@ import cn.hkfdt.xiaot.web.xiaot.service.md.XiaoTMDHelp;
 import cn.hkfdt.xiaot.web.xiaot.util.XiaoTMarketType;
 import cn.hkfdt.xiaot.web.xiaot.util.YSUtils;
 import com.alibaba.fastjson.JSON;
-import org.springframework.beans.BeanUtils;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -246,7 +246,11 @@ public class XiaoTServiceImpl implements XiaoTService {
 						return 0;
 					//---------登录用户才可以记录战绩---------------------
 					TRecord record = new TRecord();
-					BeanUtils.copyProperties(record, tempMap);
+					try {
+						BeanUtils.copyProperties(record, tempMap);//
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					record.setActions(tempMap.get("actions").toString());
 					record.setQuestionKey(tempMap.get("key").toString());
 					record.setCreateTime(System.currentTimeMillis());

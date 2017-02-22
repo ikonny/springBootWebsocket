@@ -66,6 +66,17 @@ public class AuthServiceImpl implements AuthService {
         return null;
     }
 
+    @Override
+    public Auth getAuthByFdtId(String fdtId) {
+        AuthExample example = new AuthExample();
+        example.createCriteria().andUseridEqualTo(fdtId);
+        List<Auth> listAuth = authMapper.selectByExample(example);
+        if(listAuth.isEmpty())
+            return null;
+        else
+            return listAuth.get(0);
+    }
+
     /**
      * @return 返回是vip的map,key是fdtid
      * @author whyse
