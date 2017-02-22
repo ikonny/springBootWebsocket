@@ -257,6 +257,9 @@ public class XiaoTServiceImpl implements XiaoTService {
 					record.setScore(score);
 					record.setVERSION(XiaoTHelp.version);//新数据需要加上
 					record.setStatus(status);
+					if(record.getType()==null){
+						record.setType(0);
+					}
 					tRecordExtendsMapper.replaceXiaotRecord(record);
 					//当status为1时请求战力分析
 					if(status == 1) {
