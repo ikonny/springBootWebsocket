@@ -67,15 +67,14 @@ public class XiaoTController {
 	 */
 	@RequestMapping(value="/xiaoth/xiaotDoScore")
 	@ResponseBody
-    public Object xiaotDoScore(@RequestBody String body,
-							   @RequestParam Integer status, Model model){
+    public Object xiaotDoScore(@RequestBody String body, Model model){
     	
 		Map<String, Object> mapTar = new HashMap<String, Object>(8);
 		String fdtId = UserContext.getUserInfo().get().getFdtId();
 		if(LoginFilter.isNotLogin(fdtId)){
 			fdtId = XiaoTHelp.xiaoTGuest;
 		}
-		int flag = xiaoTService.xiaotDoScore(fdtId, body, mapTar, status);
+		int flag = xiaoTService.xiaotDoScore(fdtId, body, mapTar);
 //		System.err.println(body);
         return mapTar;
     }

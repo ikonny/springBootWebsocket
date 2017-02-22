@@ -216,11 +216,15 @@ public class XiaoTServiceImpl implements XiaoTService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public int      xiaotDoScore(final String fdtId, final String body,
-			Map<String, Object> mapTar, Integer status) {
+			Map<String, Object> mapTar) {
 		int count=0;
 		Map<String, Object> tempMap = new HashMap<String, Object>(1);
 		tempMap = JSON.parseObject(body);//(Map<String, Object>) JsonUtil.JsonToOb(body, tempMap.getClass());
 		String[] strs = tempMap.get("key").toString().split("#");
+		int status = 1;
+        if(tempMap.get("status")!=null){
+            status = Integer.parseInt(tempMap.get("status").toString());
+        }
 		tempMap.put("exchangeCode", strs[0]);
 		tempMap.put("symbol", strs[1]);
 		tempMap.put("fdtId", fdtId);
@@ -249,7 +253,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 					record.setScore(score);
 					record.setVERSION(XiaoTHelp.version);//新数据需要加上
 					record.setStatus(status);
-					tRecordExtendsMapper.insertSelective(record);
+					tRecordExtendsMapper.replaceXiaotRecord(record);
 					//当status为1时请求战力分析
 					if(status == 1) {
 						//-----请求战力分析，并且更新数据库-----------

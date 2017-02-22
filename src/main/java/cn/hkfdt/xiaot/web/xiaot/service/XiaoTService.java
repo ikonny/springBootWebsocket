@@ -56,7 +56,7 @@ public interface XiaoTService {
 	 * author:xumin 
 	 * 2016-12-19 下午3:18:05
 	 */
-	int xiaotDoScore(String fdtId, String body, Map<String, Object> mapTar, Integer status);
+	int xiaotDoScore(String fdtId, String body, Map<String, Object> mapTar);
 	/**
 	 * 
 	 * @param market
