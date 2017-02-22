@@ -161,7 +161,7 @@ public class MatchServiceHelper {
 	 */
 	public static String getMatchJson(XiaoTService xiaoTService) {
 		Map<String, Object> mapTar = new HashMap<String, Object>(8);
-		xiaoTService.xiaotTraining(XiaoTHelp.xiaoTGuest,0,mapTar);
+		xiaoTService.xiaotTraining(XiaoTHelp.xiaoTGuest,0,mapTar,"all");
 		return JSON.toJSONString(mapTar);
 	}
 

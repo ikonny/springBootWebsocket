@@ -49,8 +49,8 @@ public class LoginFilter implements Filter{
         }
         if(!StringUtils.isNullOrEmpty(token)){
             fdtId = WebSocketConnectionListener.getFdtId(token,anonym);
-            userInfo.setFdtId(fdtId);
         }
+        userInfo.setFdtId(fdtId);
         boolean isNotLoginURI = LoginFilterHelp.isNotLoginURI(request);//true就不需要登录检查
         long timeStar = System.currentTimeMillis();
         try{

@@ -93,7 +93,7 @@ public class XiaoTController {
 		Map<String,Object>  mapTar = commonService.getSystemSettingValueAsMap("xiaoT_version");
         model.addAttribute("lib_version", mapTar.get("lib"));
         model.addAttribute("xiaoT_version", mapTar.get("xiaoT"));
-        model.addAttribute("baseUrl", GlobalInfo.getBaseSSLUrl());
+        model.addAttribute("baseUrl", GlobalInfo.imDomain);
 		return "xiaot/index";
     }
 
@@ -110,7 +110,7 @@ public class XiaoTController {
 		Map<String,Object>  mapTar = commonService.getSystemSettingValueAsMap("xiaoT_version");
 		model.addAttribute("lib_version", mapTar.get("lib"));
 		model.addAttribute("xiaoT_version", mapTar.get("xiaoT"));
-		model.addAttribute("baseUrl", GlobalInfo.getBaseSSLUrl());
+		model.addAttribute("baseUrl", GlobalInfo.imDomain);
 		return "xiaot/index";
 	}
 	/**

@@ -20,6 +20,11 @@ public class GlobalInfo {
     public static String redisServer;
     public static int redisPort;
     public static String redisAuth;
+    public static String imDomain;
+    public static String domainHttps;
+    public static String wxLoginUrl;
+    public static String wxAppsecret;
+    public static String wxAppid;
 
     public static void printInfo() {
         Map<String,Object> mapTar = new LinkedHashMap<>(20);

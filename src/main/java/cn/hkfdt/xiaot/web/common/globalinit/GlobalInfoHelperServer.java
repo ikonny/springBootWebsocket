@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -25,12 +26,20 @@ public class GlobalInfoHelperServer {
     //正确的注入方式，不要忘了配置文件名写错
     @Value("${server.domain.http}")
     String domainHttp;
+    @Value("${server.domain.https}")
+    String domainHttps;
     @Value("${redisClient.redisServer}")
     String redisServer;
     @Value("${redisClient.redisPort}")
     int redisPort;
     @Value("${redisClient.redisAuth}")
     String redisAuth;
+    @Value("${im.domain.http}")
+    String imDomain;
+    @Value("${wx.appid}")
+    String wxAppid;
+    @Value("${wx.appsecret}")
+    String wxAppsecret;
 
 
     @PostConstruct
@@ -45,7 +54,20 @@ public class GlobalInfoHelperServer {
         GlobalInfo.redisServer = redisServer;
         GlobalInfo.redisPort = redisPort;
         GlobalInfo.redisAuth = redisAuth;
+        GlobalInfo.imDomain = imDomain;
+        GlobalInfo.domainHttps = domainHttps;
         //============================================
+        GlobalInfo.wxAppid = wxAppid;
+        String xwRedUrl = domainHttps+"/white/wx/getuserinfo";
+        try {
+            xwRedUrl = URLEncoder.encode(xwRedUrl, "utf-8");
+        }catch (Exception e){
+
+        }
+        GlobalInfo.wxLoginUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+wxAppid+"&redirect_uri=" +
+                xwRedUrl + "&response_type=code&scope=snsapi_userinfo&state=xm#wechat_redirect";
+        GlobalInfo.wxAppsecret = wxAppsecret;
+        //===================================================
 
     }
 }

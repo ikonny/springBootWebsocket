@@ -79,4 +79,24 @@ public class HttpUtils {
 
 	}
 
+	public static String httpGet(String url) {
+		OkHttpClient okHttpClient = new OkHttpClient().newBuilder().
+				connectTimeout(6, TimeUnit.SECONDS)
+				.readTimeout(6,TimeUnit.SECONDS)
+				.build();
+		Request request = new Request.Builder()
+				.url(url)
+				.build();
+		Response response = null;
+		try {
+			response = okHttpClient.newCall(request).execute();
+			if (response.isSuccessful()) {
+				// 打印服务端返回结果
+				return response.body().string();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
