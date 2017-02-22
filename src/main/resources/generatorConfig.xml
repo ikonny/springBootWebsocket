@@ -6,8 +6,8 @@
 <generatorConfiguration>
 	<!-- 自动生成代码，只加了mybatis2个包和plugin,再加上这个文件的配置就行，不依赖其他信息 mybatis-generator:generate -->
 	<!-- !!!! Driver Class Path !!!! -->
-	<classPathEntry location="/Usr/local/apache-maven-3.2.5/repo/mysql/mysql-connector-java/5.1.34/mysql-connector-java-5.1.34.jar"/>
-
+	<classPathEntry
+			location="E:\.m2\repository\mysql\mysql-connector-java\5.1.27\mysql-connector-java-5.1.27.jar" />
 
 	<context id="context" defaultModelType="flat" targetRuntime="MyBatis3">
 
