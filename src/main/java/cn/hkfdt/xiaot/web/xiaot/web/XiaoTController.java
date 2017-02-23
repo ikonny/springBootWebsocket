@@ -92,12 +92,6 @@ public class XiaoTController {
         model.addAttribute("lib_version", mapTar.get("lib"));
         model.addAttribute("xiaoT_version", mapTar.get("xiaoT"));
 		String baseUrl = GlobalInfo.imDomain;
-		String url = request.getRequestURL().toString();
-		if(!url.startsWith("https")){
-			baseUrl = "http://"+baseUrl;
-		}else{
-			baseUrl = "https://"+baseUrl;
-		}
         model.addAttribute("baseUrl", baseUrl);
 		return "xiaot/index";
     }
@@ -116,12 +110,6 @@ public class XiaoTController {
 		model.addAttribute("lib_version", mapTar.get("lib"));
 		model.addAttribute("xiaoT_version", mapTar.get("xiaoT"));
 		String baseUrl = GlobalInfo.imDomain;
-		String url = request.getRequestURL().toString();
-		if(!url.startsWith("https")){
-			baseUrl = "http://"+baseUrl;
-		}else{
-			baseUrl = "https://"+baseUrl;
-		}
 		model.addAttribute("baseUrl", baseUrl);
 		return "xiaot/index";
 	}
