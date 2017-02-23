@@ -8,6 +8,7 @@ import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
 import cn.hkfdt.xiaot.web.common.service.CommonService;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTService;
 import cn.hkfdt.xiaot.web.xiaot.service.impl.XiaoTHelp;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +76,7 @@ public class XiaoTController {
 		if(LoginFilter.isNotLogin(fdtId)){
 			fdtId = XiaoTHelp.xiaoTGuest;
 		}
-		int flag = xiaoTService.xiaotDoScore(fdtId, body, mapTar, status);
+		int flag = xiaoTService.xiaotDoScore(fdtId, body, mapTar);
 //		System.err.println(body);
         return mapTar;
     }
@@ -88,12 +89,19 @@ public class XiaoTController {
 	 * 2016-12-15 下午5:02:06
 	 */
 	@RequestMapping(value="/xiaoth/xiaot/{other}")
-    public String xiaot(@PathVariable String other, Model model){
+    public String xiaot(HttpServletRequest request, @PathVariable String other, Model model){
 		//{"lib":"1.1.10", "liveVideo":"1.1.10"}
 		Map<String,Object>  mapTar = commonService.getSystemSettingValueAsMap("xiaoT_version");
         model.addAttribute("lib_version", mapTar.get("lib"));
         model.addAttribute("xiaoT_version", mapTar.get("xiaoT"));
-        model.addAttribute("baseUrl", GlobalInfo.getBaseSSLUrl());
+		String baseUrl = GlobalInfo.getBaseSSLUrl();
+		String url = request.getRequestURL().toString();
+		if(!url.startsWith("https")){
+			baseUrl = baseUrl.replace("https:", "http:");
+		}else{
+            baseUrl = baseUrl.replace("http:", "https:");
+        }
+        model.addAttribute("baseUrl", baseUrl);
 		return "xiaot/index";
     }
 
@@ -105,12 +113,19 @@ public class XiaoTController {
 	 * 2016-12-15 下午5:02:06
 	 */
 	@RequestMapping(value="/xiaoth/xiaot/{other}/{param}")
-	public String xiaot2path(@PathVariable String other, @PathVariable String param, Model model){
+	public String xiaot2path(HttpServletRequest request, @PathVariable String other, @PathVariable String param, Model model){
 		//{"lib":"1.1.10", "liveVideo":"1.1.10"}
 		Map<String,Object>  mapTar = commonService.getSystemSettingValueAsMap("xiaoT_version");
 		model.addAttribute("lib_version", mapTar.get("lib"));
 		model.addAttribute("xiaoT_version", mapTar.get("xiaoT"));
-		model.addAttribute("baseUrl", GlobalInfo.getBaseSSLUrl());
+		String baseUrl = GlobalInfo.getBaseSSLUrl();
+		String url = request.getRequestURL().toString();
+		if(!url.startsWith("https")){
+			baseUrl = baseUrl.replace("https:", "http");
+		}else{
+            baseUrl = baseUrl.replace("http:", "https:");
+        }
+		model.addAttribute("baseUrl", baseUrl);
 		return "xiaot/index";
 	}
 	/**
