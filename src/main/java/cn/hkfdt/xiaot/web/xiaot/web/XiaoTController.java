@@ -36,7 +36,7 @@ public class XiaoTController {
 
 	//=========================================
 	/**
-	 * 请求选题并且开做
+	 * 请求选题并且开做。
 	 * @param market 0：期货  1:股票  2：外汇
 	 * @param type all：全部  history:历史  today：今日
 	 * @param model
@@ -68,8 +68,7 @@ public class XiaoTController {
 	 */
 	@RequestMapping(value="/xiaoth/xiaotDoScore")
 	@ResponseBody
-    public Object xiaotDoScore(@RequestBody String body,
-							   @RequestParam Integer status, Model model){
+    public Object xiaotDoScore(@RequestBody String body, Model model){
     	
 		Map<String, Object> mapTar = new HashMap<String, Object>(8);
 		String fdtId = UserContext.getUserInfo().get().getFdtId();
@@ -118,6 +117,7 @@ public class XiaoTController {
 		Map<String,Object>  mapTar = commonService.getSystemSettingValueAsMap("xiaoT_version");
 		model.addAttribute("lib_version", mapTar.get("lib"));
 		model.addAttribute("xiaoT_version", mapTar.get("xiaoT"));
+
 		String baseUrl = GlobalInfo.getBaseSSLUrl();
 		String url = request.getRequestURL().toString();
 		if(!url.startsWith("https")){
