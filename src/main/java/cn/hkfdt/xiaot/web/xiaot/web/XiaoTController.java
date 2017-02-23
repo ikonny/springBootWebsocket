@@ -7,6 +7,7 @@ import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
 import cn.hkfdt.xiaot.web.common.service.CommonService;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTService;
 import cn.hkfdt.xiaot.web.xiaot.service.impl.XiaoTHelp;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,13 +85,20 @@ public class XiaoTController {
 	 * 2016-12-15 下午5:02:06
 	 */
 	@RequestMapping(value="/xiaoth/xiaot/{other}")
-    public String xiaot(@PathVariable String other, Model model){
+    public String xiaot(HttpServletRequest request, @PathVariable String other, Model model){
 		//{"lib":"1.1.10", "liveVideo":"1.1.10"}
 //		String str = request.getRequestURI();
 		Map<String,Object>  mapTar = commonService.getSystemSettingValueAsMap("xiaoT_version");
         model.addAttribute("lib_version", mapTar.get("lib"));
         model.addAttribute("xiaoT_version", mapTar.get("xiaoT"));
-        model.addAttribute("baseUrl", GlobalInfo.imDomain);
+		String baseUrl = GlobalInfo.imDomain;
+		String url = request.getRequestURL().toString();
+		if(!url.startsWith("https")){
+			baseUrl = "http://"+baseUrl;
+		}else{
+			baseUrl = "https://"+baseUrl;
+		}
+        model.addAttribute("baseUrl", baseUrl);
 		return "xiaot/index";
     }
 
@@ -102,12 +110,19 @@ public class XiaoTController {
 	 * 2016-12-15 下午5:02:06
 	 */
 	@RequestMapping(value="/xiaoth/xiaot/{other}/{param}")
-	public String xiaot2path(@PathVariable String other, @PathVariable String param, Model model){
+	public String xiaot2path(HttpServletRequest request, @PathVariable String other, @PathVariable String param, Model model){
 		//{"lib":"1.1.10", "liveVideo":"1.1.10"}
 		Map<String,Object>  mapTar = commonService.getSystemSettingValueAsMap("xiaoT_version");
 		model.addAttribute("lib_version", mapTar.get("lib"));
 		model.addAttribute("xiaoT_version", mapTar.get("xiaoT"));
-		model.addAttribute("baseUrl", GlobalInfo.imDomain);
+		String baseUrl = GlobalInfo.imDomain;
+		String url = request.getRequestURL().toString();
+		if(!url.startsWith("https")){
+			baseUrl = "http://"+baseUrl;
+		}else{
+			baseUrl = "https://"+baseUrl;
+		}
+		model.addAttribute("baseUrl", baseUrl);
 		return "xiaot/index";
 	}
 	/**
