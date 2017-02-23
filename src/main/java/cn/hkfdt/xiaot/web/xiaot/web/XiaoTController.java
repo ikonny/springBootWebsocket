@@ -1,7 +1,6 @@
 package cn.hkfdt.xiaot.web.xiaot.web;
 
 import cn.hkfdt.xiaot.mybatis.model.ltschina.ForceAnalysis;
-import cn.hkfdt.xiaot.util.QrCodeUtil;
 import cn.hkfdt.xiaot.web.Filters.LoginFilter;
 import cn.hkfdt.xiaot.web.common.UserContext;
 import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * author:xumin 
@@ -60,7 +58,6 @@ public class XiaoTController {
 	 * 
 	 * @param body json数据，用户完成练习，将题目id和买卖点返回
 	 * @param model
-	 * @param status 0:未结束 1:已结束
 	 * @return
 	 * author:xumin 
 	 * 2016-12-19 下午3:13:10
@@ -89,6 +86,7 @@ public class XiaoTController {
 	@RequestMapping(value="/xiaoth/xiaot/{other}")
     public String xiaot(@PathVariable String other, Model model){
 		//{"lib":"1.1.10", "liveVideo":"1.1.10"}
+//		String str = request.getRequestURI();
 		Map<String,Object>  mapTar = commonService.getSystemSettingValueAsMap("xiaoT_version");
         model.addAttribute("lib_version", mapTar.get("lib"));
         model.addAttribute("xiaoT_version", mapTar.get("xiaoT"));
@@ -213,23 +211,23 @@ public class XiaoTController {
         return "尽力而为";
     }
 
-	@RequestMapping(value = "/xiaoth/getQrCode")
-	@ResponseBody
-	public Object getQrCode(@RequestParam Integer num, Model model) {
-		String url = GlobalInfo.getDomainHttp()+"/xiaoth/xiaot/game?type=battle";
-//		if (ConfigService.isDevEnv()) {
-//			url = "http://dev.forexmaster.cn/im/xiaot/game?type=battle";
-//		} else if (ConfigService.isTestEnv()) {
-//			url = "http://test.forexmaster.cn/im/xiaot/game?type=battle";
-//		}
-		String uuid = UUID.randomUUID().toString();
-		url = url + "&matchId=" + uuid + "&num=" + num;
-		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("img", QrCodeUtil.createImage2Base64(url));
-		resultMap.put("matchId", uuid);
-		resultMap.put("url", url);
-		return resultMap;
-	}
+//	@RequestMapping(value = "/xiaoth/getQrCode")
+//	@ResponseBody
+//	public Object getQrCode(@RequestParam Integer num, Model model) {
+//		String url = GlobalInfo.getDomainHttp()+"/xiaoth/xiaot/game?type=battle";
+////		if (ConfigService.isDevEnv()) {
+////			url = "http://dev.forexmaster.cn/im/xiaot/game?type=battle";
+////		} else if (ConfigService.isTestEnv()) {
+////			url = "http://test.forexmaster.cn/im/xiaot/game?type=battle";
+////		}
+//		String uuid = UUID.randomUUID().toString();
+//		url = url + "&matchId=" + uuid + "&num=" + num;
+//		Map<String, Object> resultMap = new HashMap<>();
+//		resultMap.put("img", QrCodeUtil.createImage2Base64(url));
+//		resultMap.put("matchId", uuid);
+//		resultMap.put("url", url);
+//		return resultMap;
+//	}
 
 
 }

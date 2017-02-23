@@ -2,6 +2,8 @@ package cn.hkfdt.xiaot.web.weixin;
 
 import cn.hkfdt.xiaot.util.MapUtil;
 import cn.hkfdt.xiaot.util.SHAUtil;
+import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
+import cn.hkfdt.xiaot.web.xiaot.util.XiaoTUserType;
 import cn.hkfdt.xiaot.websocket.utils.HttpUtils;
 import com.alibaba.fastjson.JSON;
 import com.mysql.jdbc.StringUtils;
@@ -38,7 +40,7 @@ public class WxCommonController {
     public String validate(@RequestParam(required = true) String signature,
                            @RequestParam(required = true)String timestamp, @RequestParam(required = true)String nonce,
                            @RequestParam(required = true)String echostr) {
-        String[] strs = {WXHelper.wxToken,timestamp,nonce};
+        String[] strs = {GlobalInfo.wxToken,timestamp,nonce};
         Arrays.sort(strs);
         StringBuffer sb = new StringBuffer();
         for(String item : strs){
@@ -92,7 +94,7 @@ unionid	只有在用户将公众号绑定到微信开放平台帐号后，才会
                 String openid = mapTemp.get("openid").toString();
                 mapTar.put("userName",nickname);
                 mapTar.put("userId",openid);
-                mapTar.put("userType",2);
+                mapTar.put("userType", XiaoTUserType.WxUser.getType());
 
                 return mapTar;
             }

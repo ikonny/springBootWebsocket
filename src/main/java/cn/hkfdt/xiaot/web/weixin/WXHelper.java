@@ -10,8 +10,6 @@ import java.util.Map;
  * on 2017/2/21 15:42
  */
 public class WXHelper {
-    public static final String wxToken = "xuminadmin";
-
     /**
      * 判断是否来自微信浏览器打开
      * @param request

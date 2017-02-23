@@ -24,22 +24,24 @@ public class GlobalInfoHelperServer {
     @Autowired
     SystemSettingsMapper systemSettingsMapper;
     //正确的注入方式，不要忘了配置文件名写错
-    @Value("${server.domain.http}")
-    String domainHttp;
-    @Value("${server.domain.https}")
-    String domainHttps;
+    @Value("${server.domain}")
+    String serverDomain;
     @Value("${redisClient.redisServer}")
     String redisServer;
     @Value("${redisClient.redisPort}")
     int redisPort;
     @Value("${redisClient.redisAuth}")
     String redisAuth;
-    @Value("${im.domain.http}")
+    @Value("${im.domain}")
     String imDomain;
     @Value("${wx.appid}")
     String wxAppid;
     @Value("${wx.appsecret}")
     String wxAppsecret;
+    @Value("${wx.token}")
+    String wxToken;
+    @Value("${xiaot.game.client.indexurl}")
+    String gameClientUrl;//扫码跳转的url
 
 
     @PostConstruct
@@ -50,15 +52,15 @@ public class GlobalInfoHelperServer {
         List<SystemSettings> list = systemSettingsMapper.selectByExample(example);
         GlobalInfo.setBaseSSLUrl(list.get(0).getValue());
 
-        GlobalInfo.setDomainHttp(domainHttp);
         GlobalInfo.redisServer = redisServer;
         GlobalInfo.redisPort = redisPort;
         GlobalInfo.redisAuth = redisAuth;
         GlobalInfo.imDomain = imDomain;
-        GlobalInfo.domainHttps = domainHttps;
+        GlobalInfo.serverDomain = serverDomain;
         //============================================
+        GlobalInfo.wxToken = wxToken;
         GlobalInfo.wxAppid = wxAppid;
-        String xwRedUrl = domainHttps+"/white/wx/getuserinfo";
+        String xwRedUrl = "https://"+serverDomain+"/white/wx/getuserinfo";
         try {
             xwRedUrl = URLEncoder.encode(xwRedUrl, "utf-8");
         }catch (Exception e){
@@ -68,6 +70,7 @@ public class GlobalInfoHelperServer {
                 xwRedUrl + "&response_type=code&scope=snsapi_userinfo&state=xm#wechat_redirect";
         GlobalInfo.wxAppsecret = wxAppsecret;
         //===================================================
+        GlobalInfo.gameClientUrl = gameClientUrl;
 
     }
 }

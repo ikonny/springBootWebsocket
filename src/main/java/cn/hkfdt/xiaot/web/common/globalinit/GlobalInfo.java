@@ -16,20 +16,21 @@ import java.util.Map;
 public class GlobalInfo {
     static Logger logger = LoggerFactory.getLogger(GlobalInfo.class);
     private static String baseSSLUrl = "https://prodxiaot.investmaster.cn";
-    private static String domainHttp = "http://prodxiaot.investmaster.cn";
+//    private static String domainHttp = "http://prodxiaot.investmaster.cn";
     public static String redisServer;
     public static int redisPort;
     public static String redisAuth;
     public static String imDomain;
-    public static String domainHttps;
     public static String wxLoginUrl;
     public static String wxAppsecret;
     public static String wxAppid;
+    public static String wxToken;
+    public static String serverDomain;
+    public static String gameClientUrl;
 
     public static void printInfo() {
         Map<String,Object> mapTar = new LinkedHashMap<>(20);
         mapTar.put("qdBaseUrl",GlobalInfo.getBaseSSLUrl());
-        mapTar.put("domainHttp",GlobalInfo.getDomainHttp());
 
         logger.info("当前全局配置:"+ JSON.toJSONString(mapTar));
     }
@@ -46,13 +47,7 @@ public class GlobalInfo {
         GlobalInfo.baseSSLUrl = baseSSLUrl;
     }
 
-    public static String getDomainHttp() {
-        return domainHttp;
-    }
 
-    public static void setDomainHttp(String domainHttp) {
-        GlobalInfo.domainHttp = domainHttp;
-    }
 
 
 }
