@@ -215,7 +215,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public int      xiaotDoScore(final String fdtId, final String body,
+	public int  xiaotDoScore(final String fdtId, final String body,
 			Map<String, Object> mapTar) {
 		int count=0;
 		Map<String, Object> tempMap = new HashMap<String, Object>(1);
