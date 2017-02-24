@@ -67,8 +67,8 @@ public class XiaoTMatchController {
 		return tar;
 	}
 
-	@MessageMapping(GameUrlHelp.topic_userReadyInfo)
-	@SendToUser("/queue/game/doReady")
+	@MessageMapping(GameUrlHelp.queue_userDoReady)
+	@SendToUser(GameUrlHelp.queue_userDoReady)
 	public String ready(SimpMessageHeaderAccessor headerAccessor,String msg) {
 		Map<String, Object>  paraMap = getParaMap(headerAccessor, msg);
 		int flag = matchService.ready(paraMap);
