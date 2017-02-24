@@ -303,9 +303,9 @@ public class XiaoTMDHelp {
 		history.put("todayOpenPrice", todayOpenPrice);// 当日开盘价格
 		List<Map<String, Object>> items = new ArrayList<Map<String, Object>>(39);
 		history.put("items", items);
-		emaShort = new ArrayList<>();
-		emaLone = new ArrayList<>();
-		emaDea = new ArrayList<>();
+		emaShort = new ArrayList<>(39);
+		emaLone = new ArrayList<>(39);
+		emaDea = new ArrayList<>(39);
 		//处理后list第一个节点是最老的数据
 		for(int i=1;i<40;i++){
 			Map<String, Object> item = getHistoryItem(40-i,listMapDay);//获取了最早一个点的历史比如60
