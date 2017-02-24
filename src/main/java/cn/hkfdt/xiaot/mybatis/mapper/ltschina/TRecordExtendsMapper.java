@@ -20,7 +20,7 @@ public interface TRecordExtendsMapper extends TRecordMapper {
 	@Insert("replace into xiaot_record (symbol, fdtId," +
 			"      tradeTime, returnRate, volatility, " +
 			"      type, createTime, actions, " +
-			"      score, questionKey, VERSION, reqBody, uniqueId, 'status'" +
+			"      score, questionKey, VERSION, reqBody, uniqueId, `status`" +
 			"      )" +
 			"    values (#{record.symbol}, #{record.fdtId}, " +
 			"      #{record.tradeTime}, #{record.returnRate}, #{record.volatility}, " +
@@ -29,7 +29,7 @@ public interface TRecordExtendsMapper extends TRecordMapper {
 			"      )")
 	void replaceXiaotRecord(@Param("record") TRecord record);
 
-	@Select("select * from xiaot_record where createTime < #{time} and 'status' = 0")
+	@Select("select * from xiaot_record where createTime < #{time} and `status` = 0")
 	List<TRecord> getTimeOutRecord(@Param("time") Long time);
 
 }
