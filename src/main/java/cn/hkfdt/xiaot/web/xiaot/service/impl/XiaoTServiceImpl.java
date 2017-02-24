@@ -16,17 +16,16 @@ import cn.hkfdt.xiaot.web.xiaot.util.XiaoTMarketType;
 import cn.hkfdt.xiaot.web.xiaot.util.YSUtils;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.tomcat.util.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -207,6 +206,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 			
 			String tradeTime = tQuestions.getTradeDay();
 			mapTar.put("tradeTime", tradeTime.replace("-", "."));
+			mapTar.put("uniqueId", UUID.randomUUID().toString());
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -221,6 +221,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 		Map<String, Object> tempMap = new HashMap<String, Object>(1);
 		tempMap = JSON.parseObject(body);//(Map<String, Object>) JsonUtil.JsonToOb(body, tempMap.getClass());
 		String[] strs = tempMap.get("key").toString().split("#");
+		String unId = tempMap.get("uniqueId").toString();
 		int status = 1;
         if(tempMap.get("status")!=null){
             status = Integer.parseInt(tempMap.get("status").toString());
@@ -255,8 +256,10 @@ public class XiaoTServiceImpl implements XiaoTService {
 					record.setQuestionKey(tempMap.get("key").toString());
 					record.setCreateTime(System.currentTimeMillis());
 					record.setScore(score);
+					record.setUniqueId(unId);
 					record.setVERSION(XiaoTHelp.version);//新数据需要加上
 					record.setStatus(status);
+					record.setReqBody(body);
 					if(record.getType()==null){
 						record.setType(0);
 					}
@@ -426,6 +429,28 @@ public class XiaoTServiceImpl implements XiaoTService {
 	 */
 	@Scheduled(cron = "0 0 0 0/2 * ?")
 	public void checkTimeOutRecord(){
+		Calendar beforeTime = Calendar.getInstance();
+		beforeTime.add(Calendar.MINUTE, -5);// 5分钟之前的时间
+		long time =beforeTime.getTimeInMillis();
+		List<TRecord> recordList = tRecordExtendsMapper.getTimeOutRecord(time);
+		if(recordList != null && recordList.size() > 0){
+			for (final TRecord tRecord : recordList) {
+				//-----请求战力分析，并且更新数据库-----------
+				Runnable run = new Runnable() {
+
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						setxiaoTZL(tRecord.getFdtId(), tRecord.getReqBody());
+					}
+				};
+				XiaoTHelp.executorService.execute(run);
+			}
+		}
 
 	}
 

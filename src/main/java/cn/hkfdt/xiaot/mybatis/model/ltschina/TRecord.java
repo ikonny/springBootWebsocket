@@ -101,6 +101,22 @@ public class TRecord implements Serializable {
      */
     private Integer status;
 
+    /**
+     * <pre>
+     * 表字段注释 : 记录请求内容，方便超时打分调用
+     * 表字段 : xiaot_record.reqBody
+     * </pre>
+     */
+    private String reqBody;
+
+    /**
+     * <pre>
+     * 表字段注释 : 一次比赛的唯一标识
+     * 表字段 : xiaot_record.uniqueId
+     * </pre>
+     */
+    private String uniqueId;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getRecordId() {
@@ -205,5 +221,21 @@ public class TRecord implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getReqBody() {
+        return reqBody;
+    }
+
+    public void setReqBody(String reqBody) {
+        this.reqBody = reqBody == null ? null : reqBody.trim();
+    }
+
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId == null ? null : uniqueId.trim();
     }
 }

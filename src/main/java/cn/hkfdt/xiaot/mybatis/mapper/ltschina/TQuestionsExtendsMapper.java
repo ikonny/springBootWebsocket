@@ -23,6 +23,6 @@ public interface TQuestionsExtendsMapper extends TQuestionsMapper {
 	 * author:xumin 
 	 * 2016-12-19 下午6:29:41
 	 */
-	@Select("select * from xiaot_questions WHERE type = #{type} and initType =0")
+	@Select("select * from xiaot_questions WHERE initType = 0")
 	List<TQuestions> initTQuestions(@Param("type") int type);
 }

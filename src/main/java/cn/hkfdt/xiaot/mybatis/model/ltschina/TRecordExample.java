@@ -934,6 +934,146 @@ public class TRecordExample {
             return (Criteria) this;
         }
 
+        public Criteria andReqBodyIsNull() {
+            addCriterion("reqBody is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andReqBodyIsNotNull() {
+            addCriterion("reqBody is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andReqBodyEqualTo(String value) {
+            addCriterion("reqBody =", value, "reqBody");
+            return (Criteria) this;
+        }
+
+        public Criteria andReqBodyNotEqualTo(String value) {
+            addCriterion("reqBody <>", value, "reqBody");
+            return (Criteria) this;
+        }
+
+        public Criteria andReqBodyGreaterThan(String value) {
+            addCriterion("reqBody >", value, "reqBody");
+            return (Criteria) this;
+        }
+
+        public Criteria andReqBodyGreaterThanOrEqualTo(String value) {
+            addCriterion("reqBody >=", value, "reqBody");
+            return (Criteria) this;
+        }
+
+        public Criteria andReqBodyLessThan(String value) {
+            addCriterion("reqBody <", value, "reqBody");
+            return (Criteria) this;
+        }
+
+        public Criteria andReqBodyLessThanOrEqualTo(String value) {
+            addCriterion("reqBody <=", value, "reqBody");
+            return (Criteria) this;
+        }
+
+        public Criteria andReqBodyLike(String value) {
+            addCriterion("reqBody like", value, "reqBody");
+            return (Criteria) this;
+        }
+
+        public Criteria andReqBodyNotLike(String value) {
+            addCriterion("reqBody not like", value, "reqBody");
+            return (Criteria) this;
+        }
+
+        public Criteria andReqBodyIn(List<String> values) {
+            addCriterion("reqBody in", values, "reqBody");
+            return (Criteria) this;
+        }
+
+        public Criteria andReqBodyNotIn(List<String> values) {
+            addCriterion("reqBody not in", values, "reqBody");
+            return (Criteria) this;
+        }
+
+        public Criteria andReqBodyBetween(String value1, String value2) {
+            addCriterion("reqBody between", value1, value2, "reqBody");
+            return (Criteria) this;
+        }
+
+        public Criteria andReqBodyNotBetween(String value1, String value2) {
+            addCriterion("reqBody not between", value1, value2, "reqBody");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdIsNull() {
+            addCriterion("uniqueId is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdIsNotNull() {
+            addCriterion("uniqueId is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdEqualTo(String value) {
+            addCriterion("uniqueId =", value, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdNotEqualTo(String value) {
+            addCriterion("uniqueId <>", value, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdGreaterThan(String value) {
+            addCriterion("uniqueId >", value, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdGreaterThanOrEqualTo(String value) {
+            addCriterion("uniqueId >=", value, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdLessThan(String value) {
+            addCriterion("uniqueId <", value, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdLessThanOrEqualTo(String value) {
+            addCriterion("uniqueId <=", value, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdLike(String value) {
+            addCriterion("uniqueId like", value, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdNotLike(String value) {
+            addCriterion("uniqueId not like", value, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdIn(List<String> values) {
+            addCriterion("uniqueId in", values, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdNotIn(List<String> values) {
+            addCriterion("uniqueId not in", values, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdBetween(String value1, String value2) {
+            addCriterion("uniqueId between", value1, value2, "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdNotBetween(String value1, String value2) {
+            addCriterion("uniqueId not between", value1, value2, "uniqueId");
+            return (Criteria) this;
+        }
+
         public Criteria andSymbolLikeInsensitive(String value) {
             addCriterion("upper(symbol) like", value.toUpperCase(), "symbol");
             return (Criteria) this;
@@ -956,6 +1096,16 @@ public class TRecordExample {
 
         public Criteria andQuestionKeyLikeInsensitive(String value) {
             addCriterion("upper(questionKey) like", value.toUpperCase(), "questionKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andReqBodyLikeInsensitive(String value) {
+            addCriterion("upper(reqBody) like", value.toUpperCase(), "reqBody");
+            return (Criteria) this;
+        }
+
+        public Criteria andUniqueIdLikeInsensitive(String value) {
+            addCriterion("upper(uniqueId) like", value.toUpperCase(), "uniqueId");
             return (Criteria) this;
         }
     }
