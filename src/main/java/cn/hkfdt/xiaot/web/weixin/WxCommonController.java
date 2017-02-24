@@ -92,9 +92,11 @@ unionid	只有在用户将公众号绑定到微信开放平台帐号后，才会
 
                 String nickname = mapTemp.get("nickname").toString();
                 String openid = mapTemp.get("openid").toString();
+                String headimgurl = mapTemp.get("headimgurl").toString();
                 mapTar.put("userName",nickname);
                 mapTar.put("userId",openid);
                 mapTar.put("userType", XiaoTUserType.WxUser.getType());
+                mapTar.put("headimgurl",headimgurl);
 
                 return mapTar;
             }

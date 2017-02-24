@@ -3,6 +3,7 @@ package cn.hkfdt.xiaot.websocket.controllers.match;
 import cn.hkfdt.xiaot.websocket.conmng.WebSocketConnectionListener;
 import cn.hkfdt.xiaot.websocket.protocol.ProtocolHelper;
 import cn.hkfdt.xiaot.websocket.service.MatchService;
+import cn.hkfdt.xiaot.websocket.utils.GameUrlHelp;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.LoggerFactory;
@@ -66,8 +67,8 @@ public class XiaoTMatchController {
 		return tar;
 	}
 
-	@MessageMapping("/match/ready")
-	@SendToUser("/queue/match/ready")
+	@MessageMapping(GameUrlHelp.topic_userReadyInfo)
+	@SendToUser("/queue/game/doReady")
 	public String ready(SimpMessageHeaderAccessor headerAccessor,String msg) {
 		Map<String, Object>  paraMap = getParaMap(headerAccessor, msg);
 		int flag = matchService.ready(paraMap);

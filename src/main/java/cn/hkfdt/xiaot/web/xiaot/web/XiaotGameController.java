@@ -1,10 +1,10 @@
 package cn.hkfdt.xiaot.web.xiaot.web;
 
-import cn.hkfdt.xiaot.util.QrCodeUtil;
 import cn.hkfdt.xiaot.web.common.UserContext;
 import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
 import cn.hkfdt.xiaot.web.weixin.WXHelper;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTGameService;
+import cn.hkfdt.xiaot.web.xiaot.util.XiaoTUserType;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by whyse
@@ -36,6 +34,7 @@ public class XiaotGameController {
 
     public static void main(String[] args) {
         Map<String,Object> map = new LinkedHashMap<>();
+        XiaoTUserType.OtherUser.getType();
         map.put("img", "生成二维码图片，返回图片的base64字符串");
         map.put("matchId", "adsffgcsdf");
         map.put("url", "");
@@ -68,13 +67,8 @@ public class XiaotGameController {
     @RequestMapping(value = "/xiaoth/game/create")
     @ResponseBody
     public Object gameCreate(@RequestBody String body) {
-        String url = GlobalInfo.gameClientUrl;
-        String uuid = UUID.randomUUID().toString();
-        url = url + "&matchId=" + uuid + "&num=" + 1;
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("img", QrCodeUtil.createImage2Base64(url));
-        resultMap.put("matchId", uuid);
-        resultMap.put("url", url);
+        Map<String,Object> mapPara = JSON.parseObject(body);
+        Map<String, Object> resultMap = xiaoTGameService.gameCreate(mapPara);
         return resultMap;
     }
 

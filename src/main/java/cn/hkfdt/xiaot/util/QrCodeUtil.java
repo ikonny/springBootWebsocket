@@ -76,17 +76,13 @@ public class QrCodeUtil {
      * @param content
      * @return
      */
-    public static String createImage2Base64(String content) {
-        try {
-            BufferedImage image = getNormalQRCode(content);
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            ImageIO.write(image, FORMAT_NAME, os);
-            byte imageByte[] = os.toByteArray();//从流中获取数据数组
-            BASE64Encoder encoder = new BASE64Encoder();
-            return encoder.encode(imageByte);
-        } catch (Exception e) {
-            return null;
-        }
+    public static String createImage2Base64(String content) throws Exception {
+        BufferedImage image = getNormalQRCode(content);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ImageIO.write(image, FORMAT_NAME, os);
+        byte imageByte[] = os.toByteArray();//从流中获取数据数组
+        BASE64Encoder encoder = new BASE64Encoder();
+        return encoder.encode(imageByte);
     }
     /**
      *

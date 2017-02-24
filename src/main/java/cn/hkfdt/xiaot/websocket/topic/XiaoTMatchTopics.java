@@ -1,6 +1,9 @@
 package cn.hkfdt.xiaot.websocket.topic;
 
+import cn.hkfdt.xiaot.common.beans.GameUser;
+import cn.hkfdt.xiaot.web.xiaot.util.XiaoTUserType;
 import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
+import cn.hkfdt.xiaot.websocket.utils.GameUrlHelp;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,11 +12,11 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+/**
+ * 都是topic相关的订阅
+ */
 @Component
 public class XiaoTMatchTopics {
 
@@ -34,12 +37,35 @@ public class XiaoTMatchTopics {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.err.println("sdf");
+		Map<String,Object> map = new LinkedHashMap<>();
+		XiaoTUserType.OtherUser.getType();
+		map.put("gameInfo", "生成二维码图片，返回图片的base64字符串");
+		map.put("matchId", "adsffgcsdf");
+		map.put("url", "");
+
+		List<GameUser> listUser = new ArrayList<>();
+		GameUser item = new GameUser();
+		item.userId="sfddg";
+		item.userName="李雷";
+		item.userType=2;
+		item.headimgurl="https://sdfdf";
+		listUser.add(item);
+		System.err.println(JSON.toJSONString(map));
 	}
 	//==================================================================== 
 	@PostConstruct
 	public void init(){
 		MatchServiceHelper.xiaoTMatchTopics = this;
+	}
+
+	/**
+	 * /topic/game/readyInfo/gameId
+	 * @param gameId
+	 */
+	public void readyInfo(String gameId) {
+		String destination = GameUrlHelp.getReadyInfo(gameId);
+		List<GameUser> listUser = new ArrayList<>();
+		simpMessagingTemplate.convertAndSend(destination, listUser);
 	}
 	/**
 	 * 通知本次比赛参加人开始比赛

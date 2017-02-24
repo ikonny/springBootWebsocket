@@ -66,10 +66,10 @@
 			<!--<property name="useActualColumnNames" value="true" />-->
 		<!--</table>-->
 
-		<table tableName="xiaot_record"  domainObjectName="TRecord">
-		<property name="useActualColumnNames" value="true" />
-		<columnOverride column="actions" jdbcType="VARCHAR"  />
-		</table>
+		<!--<table tableName="xiaot_record"  domainObjectName="TRecord">-->
+		<!--<property name="useActualColumnNames" value="true" />-->
+		<!--<columnOverride column="actions" jdbcType="VARCHAR"  />-->
+		<!--</table>-->
 
 		<!--<table tableName="xiaot_questions"  domainObjectName="TQuestions">-->
 			<!--<property name="useActualColumnNames" value="true" />-->
@@ -91,6 +91,14 @@
 		<!--<columnOverride column="oss_flag_url" jdbcType="VARCHAR"  />-->
 		<!--<columnOverride column="group_id" jdbcType="VARCHAR"  />-->
 		<!--</table>-->
+
+		<table tableName="xiaot_game"  domainObjectName="TGame">
+			<property name="useActualColumnNames" value="true" />
+		</table>
+		<table tableName="xiaot_game_user"  domainObjectName="TGameUser">
+			<property name="useActualColumnNames" value="true" />
+			<columnOverride column="actions" jdbcType="VARCHAR"  />
+		</table>
 
 
 

@@ -34,8 +34,8 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
         // use the /guestbook endpoint (prefixed with /app as configured above) for incoming requests
     	//这是一条连线
     	XiaoTShareInterceptor xiaoTShareInterceptor = new XiaoTShareInterceptor();//这个是连接建立时候的
-        registry.addEndpoint("/xiaots").addInterceptors(xiaoTShareInterceptor).setAllowedOrigins("*")
-        .withSockJS().setStreamBytesLimit(1000 * 1024);
+        registry.addEndpoint("/xiaots").addInterceptors(xiaoTShareInterceptor).setAllowedOrigins("*");
+//        .withSockJS().setStreamBytesLimit(1000 * 1024);//客户端是SockJS就使用这个
     }
     @Override
     public void configureClientInboundChannel(ChannelRegistration channelRegistration) {

@@ -177,7 +177,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public int xiaotTraining(String fdtId, int market, Map<String, Object> mapTar, String type) {
+	public TQuestions xiaotTraining(String fdtId, int market, Map<String, Object> mapTar, String type) {
 		TQuestions tQuestions = null;
 		int count=0;
 		while(tQuestions == null){
@@ -211,7 +211,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return 0;
+		return tQuestions;
 	}
 	@SuppressWarnings("unchecked")
 	@Override

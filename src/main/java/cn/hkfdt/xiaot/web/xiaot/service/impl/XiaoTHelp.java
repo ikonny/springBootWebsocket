@@ -209,11 +209,25 @@ public class XiaoTHelp {
 	public static String getMarketCode(TQuestions tQuestions) {
 		int type = tQuestions.getType();
 		if(type==0)
-			XiaoTMarketType.FC.getCode();
+			return XiaoTMarketType.FC.getCode();
 		if(type==1)
-			XiaoTMarketType.FX.getCode();
+			return XiaoTMarketType.FX.getCode();
 		if(type==2)
-			XiaoTMarketType.SC.getCode();
+			return XiaoTMarketType.SC.getCode();
+		return "FC";
+	}
+	/**
+	 * 返回code
+	 * @param type 0,fc  1,fx  2,sc
+	 * @return
+	 */
+	public static String getMarketCode(int type) {
+		if(type==0)
+			return XiaoTMarketType.FC.getCode();
+		if(type==1)
+			return XiaoTMarketType.FX.getCode();
+		if(type==2)
+			return XiaoTMarketType.SC.getCode();
 		return "FC";
 	}
 	public static void testRemoteServer() {
