@@ -120,13 +120,13 @@ public class WebSocketConnectionListener implements
 		setUserIds(fdtId,sessionId);
 //		System.err.println("handleSessionConnected");
 	}
-	
-	private void setUserIds(String fdtId, String sessionId) {
+
+	public static  void setUserIds(String fdtId, String sessionId) {
 		mapSession2FdtId.put(sessionId, fdtId);
 		mapFdtId2Session.put(fdtId, sessionId);
 		logger.info("设置连接:fdtId："+fdtId);
 	}
-	private void removeUserId(String sessionId) {
+	public static void removeUserId(String sessionId) {
 		String fdtId = mapSession2FdtId.get(sessionId);
 		if(!StringUtils.isEmpty(fdtId)){
 			mapSession2FdtId.remove(sessionId);

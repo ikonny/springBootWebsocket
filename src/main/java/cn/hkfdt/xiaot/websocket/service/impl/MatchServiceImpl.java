@@ -1,16 +1,17 @@
 package cn.hkfdt.xiaot.websocket.service.impl;
 
+import cn.hkfdt.xiaot.common.beans.ReqCommonBean;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTService;
-import cn.hkfdt.xiaot.websocket.service.MatchService;
+import cn.hkfdt.xiaot.websocket.Beans.GameRuntimeBean;
+import cn.hkfdt.xiaot.websocket.service.GameService;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import static cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper.cacheMapXM;
 
 @Service
-public class MatchServiceImpl implements MatchService{
+public class MatchServiceImpl implements GameService {
 
 	@Autowired
 	XiaoTMatchTopics xiaoTMatchTopics;
@@ -20,44 +21,32 @@ public class MatchServiceImpl implements MatchService{
 	//==================================================================
 	
 	@Override
-	public String getMatch(Map<String, Object> paraMap) {
-		String matchId = paraMap.get("matchId").toString();
-		Map<String, Object> mapRsp = new HashMap<>(6);
-		synchronized(matchId){
-			MatchServiceHelper.getMatch(paraMap,mapRsp,xiaoTService);
-		}
-		String matchJson = mapRsp.get("matchJson").toString();
-		return matchJson;
-	}
-	@Override
-	public int ready(Map<String, Object> paraMap) {
-		final String matchId = paraMap.get("matchId").toString();
+	public int ready(ReqCommonBean reqCommonBean) {
+		final String gameId = reqCommonBean.data.get("gameId").toString();
 		int flag;
-		synchronized(matchId){
-			flag = MatchServiceHelper.ready(paraMap);
-		}
-		if(flag==1){
-			//开线程去执行go命令
-			Runnable run = new Runnable() {
-				
-				@Override
-				public void run() {
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					xiaoTMatchTopics.start(matchId);
-				}
-			};
-			MatchServiceHelper.executorService.execute(run);
+		synchronized(gameId){
+			flag = MatchServiceHelper.ready(reqCommonBean);
 		}
 		return flag;
 	}
+	@Override
+	public int gameStart(ReqCommonBean reqCommonBean) {
+		//{"action":"go","gameId":"adsffgcsdf"}
+		String gameId = reqCommonBean.data.get("gameId").toString();
+		GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) cacheMapXM.get(gameId);
+		if(gameRuntimeBean.canJoinGame()){
+			return -1;
+		}
+		cacheMapXM.put(gameId,gameRuntimeBean,60*5);//开始后调整时间
+		xiaoTMatchTopics.start(gameId);
+		return 0;
+	}
 
 	@Override
-	public void sendClientMatchInfo(Map<String, Object> paraMap) {
-		MatchServiceHelper.rankList(paraMap);
+	public void sendClientMatchInfo(ReqCommonBean reqCommonBean) {
+		MatchServiceHelper.sendClientMatchInfo(reqCommonBean);
 	}
+
+
 
 }

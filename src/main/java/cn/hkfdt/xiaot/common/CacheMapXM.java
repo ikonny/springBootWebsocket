@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
  * on 2017/2/23 20:02
  */
 public class CacheMapXM {
-    ConcurrentHashMap<String, XmItem> mapMatchInfo = null;
+    public ConcurrentHashMap<String, XmItem> mapMatchInfo = null;
     int revoverTime = 60;//回收间隔时间
     /**
      * @param size  可存放对象大小
@@ -45,12 +45,19 @@ public class CacheMapXM {
         service.scheduleAtFixedRate(runnable, 10, revoverTime, TimeUnit.SECONDS);
     }
     /**
-     *
+     * 如果有相同key，覆盖后，时间也同时计算
      * @param key
      * @param item 存放的对象
      * @param remainTime 停留的秒数
      */
     public void put(String key, Object item, int remainTime) {
+        if(mapMatchInfo.containsKey(key)){
+
+            XmItem xmItem = mapMatchInfo.get(key);
+            xmItem.endTime = remainTime*1000+System.currentTimeMillis();
+            xmItem.item = item;
+            return ;
+        }
         XmItem xmItem = new XmItem();
         xmItem.endTime = remainTime*1000+System.currentTimeMillis();
         xmItem.item = item;

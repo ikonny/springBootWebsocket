@@ -42,6 +42,9 @@ public class GlobalInfoHelperServer {
     String wxToken;
     @Value("${xiaot.game.client.indexurl}")
     String gameClientUrl;//扫码跳转的url
+    @Value("${xiaot.game.overtime.minute}")
+    int gameOvertimeM;
+
 
 
     @PostConstruct
@@ -71,6 +74,7 @@ public class GlobalInfoHelperServer {
         GlobalInfo.wxAppsecret = wxAppsecret;
         //===================================================
         GlobalInfo.gameClientUrl = gameClientUrl;
+        GlobalInfo.gameOvertimeM = gameOvertimeM;
 
     }
 }
