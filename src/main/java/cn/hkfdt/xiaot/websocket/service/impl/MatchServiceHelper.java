@@ -1,16 +1,19 @@
 package cn.hkfdt.xiaot.websocket.service.impl;
 
-import cn.hkfdt.xiaot.web.xiaot.service.XiaoTService;
-import cn.hkfdt.xiaot.web.xiaot.service.impl.XiaoTHelp;
+import cn.hkfdt.xiaot.common.CacheMapXM;
+import cn.hkfdt.xiaot.common.beans.GameCacheBean;
+import cn.hkfdt.xiaot.common.beans.ReqCommonBean;
+import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
+import cn.hkfdt.xiaot.websocket.Beans.GameRuntimeBean;
+import cn.hkfdt.xiaot.websocket.Beans.GameUserExtBean;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
-import com.alibaba.fastjson.JSON;
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class MatchServiceHelper {
 	/**
@@ -19,11 +22,7 @@ public class MatchServiceHelper {
 	 * matchPeople : fdtId为key : {curIdx, yieldRate, tradeCount, drawOption, fdtId,nickName}
 	 * rankList : listMap 对matchPeople 中的排序
 	 */
-	public static ConcurrentHashMap<String, Map<String, Object>> mapMatchInfo = new ConcurrentHashMap<>(66);
-//	public static final String xiaotTrainingUrl = "https://prod.forexmaster.cn/im/xiaotTraining";
-	public static ExecutorService executorService = Executors.newCachedThreadPool();
-	public static LinkedBlockingQueue<String>  rankQueue = new LinkedBlockingQueue<>(87);
-	public static volatile Map<String, Object> rankMapHelper = new HashMap<>(100);
+	public static CacheMapXM cacheMapXM = new CacheMapXM();
 	public static XiaoTMatchTopics xiaoTMatchTopics = null;//被动注入的
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(MatchServiceHelper.class);
 	/**
@@ -33,227 +32,108 @@ public class MatchServiceHelper {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		List<Map<String, Object>> rankList = new ArrayList<Map<String,Object>>(3);
-		Map<String, Object> item1 = new HashMap<>();
-		item1.put("yieldRate", 1.2);
-		item1.put("ssd", 1334);
-		rankList.add(item1);
-		
-		item1 = new HashMap<>(2);
-		item1.put("yieldRate", 2.2);
-		item1.put("ssd", 11114);
-		rankList.add(item1);
-		
-		item1 = new HashMap<>(2);
-		item1.put("yieldRate", 0.2);
-		item1.put("ssd", 1000);
-		rankList.add(item1);
-		
-		sort(rankList);
-		for(Map<String, Object> map : rankList)
-			System.err.println(map);
-		
+
 	}
 	static{
-		Runnable run = new Runnable() {
-			
-			@Override
+		Runnable runnable = new Runnable() {
+
 			public void run() {
-				// TODO Auto-generated method stub
-				while(true){
-					try {
-						String matchId = rankQueue.take();
-						rankMapHelper.remove(matchId);//消费一个排序
-//						System.err.println("消费消息"+matchId);
-						Map<String, Object>  mapItem = mapMatchInfo.get(matchId);
-						//进行排序---------------------------
-						Map<String, Object> matchPeople = (Map<String, Object>) mapItem.get("matchPeople");
-						//rankList
-						List<Map<String, Object>> rankList = new ArrayList<Map<String,Object>>(matchPeople.size());
-						for (String key : matchPeople.keySet()) {
-							//							System.out.println("key:"+key);
-//							System.out.println("value:"+matchPeople.get(key));
-							Object obTemp = matchPeople.get(key);
-							if (obTemp instanceof HashMap<?, ?>) {
-								Map<String, Object> paraMap = (Map<String, Object>) matchPeople.get(key);
-								rankList.add(paraMap);
-							}
-						}
-						sort(rankList);
-						mapItem.put("rankList", rankList);//排序完成
-						//-----排序完成广播+用户数据全部更新事件----------
-						sendToClientRankEvent(rankList);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+				cacheMapXM.mapMatchInfo.forEachKey(2,key->{
+					GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) cacheMapXM.get(key);
+					if(gameRuntimeBean.clientVersion!=gameRuntimeBean.serverVersion) {
+						//拷贝一份数据
+						List<GameUserExtBean> list = new ArrayList<>(gameRuntimeBean.userNum);
+						gameRuntimeBean.mapUsers.values().forEach(item->{
+							GameUserExtBean itemNew = item.deepCopy();
+							list.add(itemNew);
+						});
+						//----------------------------------------------
+						sendTopicClientInfoAll(list,gameRuntimeBean.gameId);
+						gameRuntimeBean.serverVersion = gameRuntimeBean.clientVersion;
 					}
-				}
+				});
 			}
 		};
-		Thread td = new Thread(run);
-		td.setName("游戏排行线程");
-		td.start();
+		ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+		// 第二个参数为首次执行的延时时间，第三个参数为定时执行的间隔时间
+		service.scheduleAtFixedRate(runnable, 10, 500, TimeUnit.MILLISECONDS);
 	}
-	/**
-	 * 定时器调用这个方法来回收比赛时间
-	 * createTime,readyTime ()
-	 * author:xumin 
-	 * 2017-1-11 下午7:06:03
-	 */
-	public static void recoverMatchInfo() {
-		long now = System.currentTimeMillis();
-		for(String key : mapMatchInfo.keySet()){
-			Map<String, Object> mapMatch = mapMatchInfo.get(key);
-			if(mapMatch.containsKey("readyTime")){
-				long readyTime = (long) mapMatch.get("readyTime");
-				if((now-readyTime)>1000*60*7){
-					//如果比赛开始，7分钟后的统一回收
-					mapMatchInfo.remove(key);
-				}
-			}else{
-				long createTime = (long) mapMatch.get("createTime");
-				if((now-createTime)>1000*60*18){
-					//如果比赛创建，18分钟后的统一回收
-					mapMatchInfo.remove(key);
-				}
-			}
-			
-		}
+
+	public static void createGameAsy(GameCacheBean cacheBean) {
+		//比赛创建后5分钟后不开始，比赛超时，需要重新创建
+		GameRuntimeBean gameRuntimeBean = new GameRuntimeBean();
+		gameRuntimeBean.userNum = cacheBean.tGame.getUserNum();
+		gameRuntimeBean.gameId = cacheBean.tGame.getGameId();
+		gameRuntimeBean.mapUsers = new HashMap<>(gameRuntimeBean.userNum);
+//		gameRuntimeBean.listUser = new ArrayList<>(gameRuntimeBean.userNum);
+
+		cacheMapXM.put(gameRuntimeBean.gameId,gameRuntimeBean,60* GlobalInfo.gameOvertimeM);
 	}
 	//==============================================================
 	/**
-	 * 改方法在同步块中，同一场比赛同步
-	 * @param paraMap 入参matchId sessionId num
-	 * @param mapRsp  matchJson , isReady ,empty
-	 * author:xumin
-	 * @param xiaoTService
-	 */
-	public static void getMatch(Map<String, Object> paraMap, Map<String, Object> mapRsp, XiaoTService xiaoTService) {
-		String matchId = paraMap.get("matchId").toString();
-		int num = Integer.parseInt(paraMap.get("num").toString());
-		Map<String, Object>  mapItem = mapMatchInfo.get(matchId);
-		if(mapItem==null){
-			//1.如果比赛id没有就内存创建比赛，比赛id为key,后面是比赛信息，包括人数，参加人数，比赛题目。
-			Map<String, Object> mapMatch = new HashMap<>(8);
-			mapMatchInfo.put(matchId, mapMatch);
-			mapMatch.put("num", num);
-			
-			String matchJson = getMatchJson(xiaoTService);//HttpUtils.postJson(xiaotTrainingUrl, "");
-			mapMatch.put("matchJson", matchJson);
-			
-			Map<String, Object> matchPeople = new HashMap<>(num);
-			mapMatch.put("matchPeople", matchPeople);
-			
-			mapMatch.put("createTime", System.currentTimeMillis());
-			
-			mapRsp.put("matchJson", matchJson);
-			
-			logger.info("创建比赛_num:"+num+"matchId:"+matchId);
-		}else{
-			String matchJson = mapItem.get("matchJson").toString();
-			mapRsp.put("matchJson", matchJson);
-		}
-	}
-
-	/**
-	 * 游客随机获取题目信息
-	 * @param xiaoTService
-	 * @return
-	 */
-	public static String getMatchJson(XiaoTService xiaoTService) {
-		Map<String, Object> mapTar = new HashMap<String, Object>(8);
-		xiaoTService.xiaotTraining(XiaoTHelp.xiaoTGuest,0,mapTar,"all");
-		return JSON.toJSONString(mapTar);
-	}
-
-	//这个是降序
-	protected static void sort(List<Map<String, Object>> rankList) {
-		Collections.sort(rankList, new Comparator<Map<String, Object>>() {
-
-			@Override
-			public int compare(Map<String, Object> o1,
-					Map<String, Object> o2) {
-				double yieldRate1 = Double.parseDouble(o1.get("yieldRate").toString());
-				double yieldRate2 = Double.parseDouble(o2.get("yieldRate").toString());
-				if(yieldRate1>=yieldRate2)
-					return -1;
-				return 1;
-			}
-		});
-	}
-	/**
 	 * 
-	 * @param paraMap sessionId,matchId
-	 * @return -2 比赛不存在， -1比赛人数已满 ，0：准备成功 ,1:准备成功+可以通知开始
+	 * @param reqCommonBean sessionId,matchId
+	 * @return -2 比赛不存在，超时， -1比赛人数已满 ，0：准备成功 ,1:准备成功+可以通知开始
 	 * author:xumin 
 	 * 2017-1-11 上午11:29:29
 	 */
 	@SuppressWarnings("unchecked")
-	public static int ready(Map<String, Object> paraMap) {
-		String matchId = paraMap.get("matchId").toString();
-		String fdtId = paraMap.get("fdtId").toString();
-		Map<String, Object>  mapItem = mapMatchInfo.get(matchId);
-		if(mapItem==null)
+	public static int ready(ReqCommonBean reqCommonBean) {
+		String gameId = reqCommonBean.data.get("gameId").toString();
+		GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) cacheMapXM.get(gameId);
+		if(gameRuntimeBean==null)
 			return -2;
-		Map<String, Object> matchPeople = (Map<String, Object>) mapItem.get("matchPeople");
-		int numP = Integer.parseInt(mapItem.get("num").toString());
-		if(matchPeople.size()==numP){
-			//比赛已经开始，人数已经满了
+		if(!gameRuntimeBean.canJoinGame()){
 			return -1;
 		}
-		matchPeople.put(fdtId, 1);//准备一个，入队列
-		logger.info("比赛matchId:"+matchId+"_num:"+numP+"__加入一人fdtId:"+fdtId);
-		if(matchPeople.size()==numP){
-			//start
-			logger.info("比赛matchId:"+matchId+"_num:"+numP+"__人齐了");
-			mapItem.put("readyTime", System.currentTimeMillis());
+		GameUserExtBean gameUserExtBean = getReadyUser(reqCommonBean);
+		gameRuntimeBean.insertGameUser(gameUserExtBean);
+
+		logger.info("比赛gameId:"+gameRuntimeBean.gameId+"_num:"+gameRuntimeBean.userNum
+				+"__加入一人fdtId:"+gameUserExtBean.userId);
+		if(!gameRuntimeBean.canJoinGame()){
+			logger.info("比赛gameId:"+gameRuntimeBean.gameId+"_num:"+gameRuntimeBean.userNum+"__人齐了");
 			return 1;
 		}
 		return 0;
 	}
-	public static void rankList(Map<String, Object> paraMap) {
-		String matchId = paraMap.get("matchId").toString();
-		String fdtId = paraMap.get("fdtId").toString();
-		Map<String, Object>  mapItem = mapMatchInfo.get(matchId);
-		if(mapItem==null){
-			System.err.println("获取不到比赛");
-			return;
+	// {"userName":"小李","userType":2,"userId":"sagfcdgthgjk",
+	// "headimgurl":"https://sdf.ico","gameId":"asfddhgh"}
+	private static GameUserExtBean getReadyUser(ReqCommonBean reqCommonBean) {
+		GameUserExtBean gameUserExtBean = new GameUserExtBean();
+		try {
+			BeanUtils.copyProperties(gameUserExtBean,reqCommonBean.data);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		Map<String, Object> matchPeople = (Map<String, Object>) mapItem.get("matchPeople");
-		Map<String, Object> mapPeople = new HashMap<>(16);
-		setInfoForPerson(mapPeople,paraMap);
-		matchPeople.put(fdtId, mapPeople);//准备一个，入队列
-		
-		if(!rankMapHelper.containsKey(matchId)){
-			rankMapHelper.put(matchId, 1);
-			rankQueue.add(matchId);//发排序事件，需要这个线程去排序
-		}
+		return gameUserExtBean;
 	}
-	private static void setInfoForPerson(Map<String, Object> mapPeople,
-			Map<String, Object> paraMap) {
-		mapPeople.put("yieldRate", paraMap.get("yieldRate"));//收益率
-		mapPeople.put("curIdx", paraMap.get("curIdx"));//交易点
-		mapPeople.put("tradeCount", paraMap.get("tradeCount"));//交易次数
-		mapPeople.put("drawOption", paraMap.get("drawOption"));
-		mapPeople.put("fdtId", paraMap.get("fdtId"));//fdtId
-		mapPeople.put("nickName", paraMap.get("fdtId"));//昵称
-		
-		mapPeople.put("preClosePrice", paraMap.get("preClosePrice"));//fdtId
-		mapPeople.put("curClosePrice", paraMap.get("curClosePrice"));//fdtId
-		mapPeople.put("curMa", paraMap.get("curMa"));//fdtId
-		mapPeople.put("curVolume", paraMap.get("curVolume"));//fdtId
+
+	/**
+	 * 将客户端数据更新到服务端，用来之后的排序
+	 * @param reqCommonBean
+	 */
+	public static void sendClientMatchInfo(ReqCommonBean reqCommonBean) {
+		//{ curIdx: 1, gameId: '', userId: '',actions: [],returnRate: ''}
+		Map<String,Object> mapPara = reqCommonBean.data;
+		String gameId = mapPara.get("gameId").toString();
+		String userId = mapPara.get("userId").toString();
+		GameRuntimeBean gameRuntimeBean = (GameRuntimeBean)cacheMapXM.get(gameId);
+		GameUserExtBean gameUserExtBean = gameRuntimeBean.mapUsers.get(userId);//获取到当前比赛用户信息
+		//更新数据
+		gameUserExtBean.gameId = gameId;
+		gameUserExtBean.curIdx = Integer.parseInt(mapPara.get("curIdx").toString());
+		gameUserExtBean.returnRate = Double.parseDouble(mapPara.get("returnRate").toString());
+		gameUserExtBean.actions = mapPara.get("actions");
+
+		gameRuntimeBean.clientVersion++;
 	}
-	protected static void sendToClientRankEvent(final List<Map<String, Object>> rankList) {
-//		Runnable run = new Runnable() {
-//			
-//			@Override
-//			public void run() {
-//				xiaoTMatchTopics.rankList(rankList);
-//				xiaoTMatchTopics.userRealtimeInfo(rankList);
-//			}
-//		};
-//		MatchServiceHelper.executorService.execute(run);
-		xiaoTMatchTopics.rankList(rankList);
-		xiaoTMatchTopics.userRealtimeInfo(rankList);
+	private static void sendTopicClientInfoAll(List<GameUserExtBean> list, String gameId) {
+		Collections.sort(list, (item1, item2) -> {
+			return item1.returnRate > item2.returnRate ? -1 : 1;
+		});
+		xiaoTMatchTopics.rankList(list,gameId);
+		xiaoTMatchTopics.userRealtimeInfo(list,gameId);
 	}
 
 }

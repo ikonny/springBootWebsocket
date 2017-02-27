@@ -8,14 +8,15 @@ import cn.hkfdt.xiaot.mybatis.model.ltschina.Auth;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGame;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
 import cn.hkfdt.xiaot.util.ImageUtil;
-import cn.hkfdt.xiaot.util.MapUtil;
 import cn.hkfdt.xiaot.web.Filters.LoginFilter;
+import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
 import cn.hkfdt.xiaot.web.common.redis.RedisClient;
 import cn.hkfdt.xiaot.web.common.service.AuthService;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTGameService;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTService;
 import cn.hkfdt.xiaot.web.xiaot.util.XiaoTUserType;
 import com.google.gson.Gson;
+import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -129,8 +130,9 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 						tQuestions.setJsonData(null);
 						cacheBean.tQuestions = tQuestions;
 						cacheBean.tGame = tGame;
-						//设置6分钟超时
-						RedisClient.setex(gameId, cacheBean, 60 * 6);
+						//设置30分钟超时
+						MatchServiceHelper.createGameAsy(cacheBean);
+						RedisClient.setex(gameId, cacheBean, 60 * GlobalInfo.gameOvertimeM);
 					}
 				}
 			}catch (Exception e){

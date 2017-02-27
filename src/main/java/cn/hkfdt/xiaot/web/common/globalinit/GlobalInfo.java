@@ -27,6 +27,7 @@ public class GlobalInfo {
     public static String wxToken;
     public static String serverDomain;
     public static String gameClientUrl="http://dev.forexmaster.cn/xiaoth/xiaot/game?type=battle";
+    public static int gameOvertimeM;
 
     public static void printInfo() {
         Map<String,Object> mapTar = new LinkedHashMap<>(20);

@@ -1,10 +1,11 @@
 package cn.hkfdt.xiaot.websocket.controllers.match;
 
+import cn.hkfdt.xiaot.common.beans.ReqCommonBean;
+import cn.hkfdt.xiaot.common.beans.RspCommonBean;
 import cn.hkfdt.xiaot.websocket.conmng.WebSocketConnectionListener;
-import cn.hkfdt.xiaot.websocket.protocol.ProtocolHelper;
-import cn.hkfdt.xiaot.websocket.service.MatchService;
-import cn.hkfdt.xiaot.websocket.utils.GameUrlHelp;
+import cn.hkfdt.xiaot.websocket.service.GameService;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
+import cn.hkfdt.xiaot.websocket.utils.GameUrlHelp;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import java.util.Map;
 public class XiaoTMatchController {
 
 	@Autowired
-	MatchService matchService;
+	GameService gameService;
 	@Autowired
 	XiaoTMatchTopics xiaoTMatchTopics;
 
@@ -34,20 +35,6 @@ public class XiaoTMatchController {
 		System.err.println(str);
 	}
 	//==================================================
-	@SuppressWarnings("unchecked")
-	@MessageMapping("/match/getMatch") //这个不同于@RequestMapping 是专门用于websoket的
-//	@SendTo("/queue/xiaot/match/getMatch")  //广播
-	@SendToUser("/queue/match/getMatch")    //需要订阅的时候前面加个
-	public String getMatch(SimpMessageHeaderAccessor headerAccessor,String msg) {
-		
-		Map<String, Object>  paraMap = getParaMap(headerAccessor,msg);
-		String jsonRsp = matchService.getMatch(paraMap);
-		Map<String, Object>  mapTar = JSON.parseObject(jsonRsp, paraMap.getClass());
-		mapTar.put("fdtId", paraMap.get("fdtId"));
-//		simpMessagingTemplate.convertAndSend("/topic/entries", message);
-//		simpMessagingTemplate.convertAndSendToUser(user, destination, payload)
-		return JSON.toJSONString(mapTar);
-	}
 	/**
 	 * 把jaon转化成map 并增加sessionId,fdtId
 	 * @param headerAccessor
@@ -57,21 +44,34 @@ public class XiaoTMatchController {
 	 * 2017-1-11 下午3:42:36
 	 */
 	@SuppressWarnings("unchecked")
-	public static HashMap<String, Object> getParaMap(SimpMessageHeaderAccessor headerAccessor, String msg) {
-		HashMap<String, Object> tar = JSON.parseObject(msg, HashMap.class);
+	public static ReqCommonBean getParaMap(SimpMessageHeaderAccessor headerAccessor, String msg) {
+		Map<String, Object> tar = JSON.parseObject(msg);
 		String sessionId = headerAccessor.getSessionId(); // Session ID
 		String fdtId = WebSocketConnectionListener.mapSession2FdtId.get(sessionId);
-		tar.put("sessionId", sessionId);
-		tar.put("fdtId", fdtId);
-//		System.out.println(tar);
-		return tar;
+
+		ReqCommonBean reqCommonBean = new ReqCommonBean();
+		reqCommonBean.sessionId = sessionId;
+		reqCommonBean.data = tar;
+		reqCommonBean.fdtId = fdtId;
+
+		return reqCommonBean;
 	}
 
 	@MessageMapping(GameUrlHelp.queue_userDoReady)
 	@SendToUser(GameUrlHelp.queue_userDoReady)
 	public String ready(SimpMessageHeaderAccessor headerAccessor,String msg) {
-		Map<String, Object>  paraMap = getParaMap(headerAccessor, msg);
-		int flag = matchService.ready(paraMap);
+		Map<String, Object>  paraMap = JSON.parseObject(msg);
+		String userId = paraMap.get("userId").toString();
+		String sessionId = headerAccessor.getSessionId(); // Session ID
+		WebSocketConnectionListener.removeUserId(sessionId);
+		WebSocketConnectionListener.setUserIds(userId,sessionId);//重建sessionId和userId对应关系
+
+		ReqCommonBean reqCommonBean = new ReqCommonBean();
+		reqCommonBean.sessionId = sessionId;
+		reqCommonBean.data = paraMap;
+		reqCommonBean.fdtId = userId;
+
+		int flag = gameService.ready(reqCommonBean);
 		String msg2 ="";
 		int rspCode = 200;
 		if(flag==-2){
@@ -82,16 +82,31 @@ public class XiaoTMatchController {
 			rspCode = 201;
 			msg2 = "比赛人数已满";
 		}
-		String str = ProtocolHelper.getCommonJson(rspCode,msg2);
-		logger.info("ready:"+str);
+		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(rspCode,msg2);
+		String str = JSON.toJSONString(rspCommonBean);
+		return str;
+	}
+	@MessageMapping(GameUrlHelp.queue_gameStart)
+	@SendToUser(GameUrlHelp.queue_gameStart)
+	public String gameStart(SimpMessageHeaderAccessor headerAccessor,String msg) {
+		ReqCommonBean reqCommonBean = getParaMap(headerAccessor,msg);
+		int flag = gameService.gameStart(reqCommonBean);
+		String msg2 ="";
+		int rspCode = 200;
+		if(flag==-1){
+			msg2="人数未满";
+			rspCode = 201;
+		}
+		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(rspCode,msg2);
+		String str = JSON.toJSONString(rspCommonBean);
 		return str;
 	}
 	
 	
-	@MessageMapping("/match/sendClientMatchInfo")
+	@MessageMapping(GameUrlHelp.queue_gameclientInfo)
 	public void sendClientMatchInfo(SimpMessageHeaderAccessor headerAccessor,String msg) {
-		Map<String, Object>  paraMap = getParaMap(headerAccessor, msg);
-		matchService.sendClientMatchInfo(paraMap);
+		ReqCommonBean reqCommonBean = getParaMap(headerAccessor,msg);
+		gameService.sendClientMatchInfo(reqCommonBean);
 	}
 
 }
