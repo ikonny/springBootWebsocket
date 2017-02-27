@@ -12,10 +12,9 @@
 
 	<section id="J-klinetc" class="m-activity j-klinetc"></section>
 	<script src="${baseUrl}/assets/fdt/lib/${lib_version}/js/common.min.js"></script>
-	<script src="${baseUrl}/assets/fdt/lib/${lib_version}/js/react.min.js"></script>
-	<script src="${baseUrl}/assets/fdt/lib/${lib_version}/js/react-dom.min.js"></script>
-	<script src="${baseUrl}/assets/fdt/lib/${lib_version}/js/ReactRouter.min.js"></script>
-	<script src="${baseUrl}/assets/fdt/lib/${lib_version}/js/sockjs.min.js"></script>
+	<script src="${baseUrl}/assets/fdt/lib/${lib_version}/js/react@15.4.0/react.min.js"></script>
+	<script src="${baseUrl}/assets/fdt/lib/${lib_version}/js/react@15.4.0/react-dom.min.js"></script>
+	<script src="${baseUrl}/assets/fdt/lib/${lib_version}/js/react@15.4.0/ReactRouter.min.js"></script>
 	<script src="${baseUrl}/assets/fdt/lib/${lib_version}/js/stomp.min.js"></script>
 	<script>
     window.scriptPath = '${baseUrl}/assets/fdt/klinetc/${xiaoT_version}/';

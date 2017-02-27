@@ -95,6 +95,12 @@
 			<version>1.9.2</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -119,7 +125,19 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			
+
+			<!--使用1.8打包-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<verbose>true</verbose>
+					<fork>true</fork>
+					<executable>/Library/Java/JavaVirtualMachines/jdk1.8.0_121.jdk/Contents/Home/bin/javac</executable>
+				</configuration>
+			</plugin>
+
 			<!-- mybatis自动生成代码 -->
             <plugin>
                 <groupId>org.mybatis.generator</groupId>

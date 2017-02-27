@@ -2,6 +2,7 @@ package cn.hkfdt.xiaot.web.xiaot.service.impl;
 
 import cn.hkfdt.xiaot.common.XiaoTCommon;
 import cn.hkfdt.xiaot.common.beans.GameCacheBean;
+import cn.hkfdt.xiaot.common.beans.RspCommonBean;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameMapper;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.Auth;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGame;
@@ -14,6 +15,7 @@ import cn.hkfdt.xiaot.web.common.service.AuthService;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTGameService;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTService;
 import cn.hkfdt.xiaot.web.xiaot.util.XiaoTUserType;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,10 +39,11 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 	@Autowired
 	XiaoTService xiaoTService;
 
+	Gson gson = new Gson();
 
 	//=================================================
 	@Override
-	public Map<String, Object> getGameUser(String fdtId) {
+	public Map<String, Object> getGameUser(String fdtId, String gameId) {
 		Map<String, Object>  mapTar = new HashMap<>(3);
 		if(LoginFilter.isNotLogin(fdtId)){
 			fdtId = XiaoTHelp.xiaoTGuest;
@@ -55,12 +58,13 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 			String headimgurl = ImageUtil.transAndResizeImg(auth.getServingUrl(),100,100);
 			mapTar.put("headimgurl",headimgurl);
 		}
+		mapTar.put("gameId", gameId);
 		return mapTar;
 	}
 
 	@Override
-	public Map<String, Object> gameCreate(Map<String, Object> mapPara) {
-
+	public RspCommonBean gameCreate(Map<String, Object> mapPara) {
+		RspCommonBean rcb = new RspCommonBean();
 		String gameId = UUID.randomUUID().toString();
 		Future future = createGameAsy(mapPara,gameId,true);
 		Map<String, Object> resultMap = XiaoTGameHelp.genQRinfo(mapPara,gameId);
@@ -68,13 +72,21 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 			//生成二维码成功
 			try {
 				if(future.get() == null){
-                    resultMap = MapUtil.getErrorMap(202,"数据库操作失败");
-                }
+                    rcb.msg = "数据库操作失败！";
+					rcb.rspCode = 202;
+                }else{
+					rcb.rspCode = 200;
+					rcb.data = resultMap;
+				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				rcb.msg = "系统异常";
+				rcb.rspCode = 203;
 			}
+		}else{
+			rcb.msg = "二维码生成出错";
+			rcb.rspCode = 201;
 		}
-		return resultMap;
+		return rcb;
 	}
 
 	/**

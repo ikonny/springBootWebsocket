@@ -1,5 +1,6 @@
 package cn.hkfdt.xiaot.web.xiaot.web;
 
+import cn.hkfdt.xiaot.common.beans.RspCommonBean;
 import cn.hkfdt.xiaot.web.common.UserContext;
 import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
 import cn.hkfdt.xiaot.web.weixin.WXHelper;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,25 +52,32 @@ public class XiaotGameController {
     public Object gameIndex(String gameId,
                             HttpServletRequest request, HttpServletResponse response) {
         if(WXHelper.isFromWx(request)){
-//            logger.info("微信:"+GlobalInfo.wxLoginUrl);
+ //           logger.info("微信:"+GlobalInfo.wxLoginUrl);
             try {
-                response.sendRedirect(GlobalInfo.wxLoginUrl);
+                response.sendRedirect(GlobalInfo.wxLoginUrl.replace("theGameId", gameId));
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
         }
+        RspCommonBean rcb = RspCommonBean.getCommonRspBean(200, null);
         String fdtId = UserContext.getUserInfo().get().getFdtId();
-        Map<String,Object> mapTar =  xiaoTGameService.getGameUser(fdtId);
-        return mapTar;
+        Map<String,Object> mapTar =  xiaoTGameService.getGameUser(fdtId, gameId);
+        rcb.data = mapTar;
+        return rcb;
     }
 
     @RequestMapping(value = "/xiaoth/game/create")
     @ResponseBody
     public Object gameCreate(@RequestBody String body) {
         Map<String,Object> mapPara = JSON.parseObject(body);
-        Map<String, Object> resultMap = xiaoTGameService.gameCreate(mapPara);
-        return resultMap;
+        RspCommonBean result = xiaoTGameService.gameCreate(mapPara);
+        return result;
+    }
+
+    @RequestMapping(value = "/xiaoth/game/getGameInfo")
+    public Object getGameInfo(@RequestParam String body){
+        return null;
     }
 
 }

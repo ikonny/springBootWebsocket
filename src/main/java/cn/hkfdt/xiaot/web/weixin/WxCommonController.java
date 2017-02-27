@@ -1,5 +1,6 @@
 package cn.hkfdt.xiaot.web.weixin;
 
+import cn.hkfdt.xiaot.common.beans.RspCommonBean;
 import cn.hkfdt.xiaot.util.MapUtil;
 import cn.hkfdt.xiaot.util.SHAUtil;
 import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
@@ -10,6 +11,7 @@ import com.mysql.jdbc.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -65,13 +67,13 @@ headimgurl	用户头像，最后一个数值代表正方形头像大小（有0�
 privilege	用户特权信息，json 数组，如微信沃卡用户为（chinaunicom）
 unionid	只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段。详见：获取用户个人信息（UnionID机制）
     */
-    @RequestMapping("/white/wx/getuserinfo")
+    @RequestMapping("/white/wx/getuserinfo_{gameId}")
     @ResponseBody
-    public Object getuserinfo(String code, @RequestParam(required = true)String state) {
+    public Object getuserinfo(@PathVariable String gameId, String code, @RequestParam(required = true)String state) {
         Map<String,Object>  mapTar = new HashMap<>(4);
         if(StringUtils.isNullOrEmpty(code)){
-            mapTar = MapUtil.getErrorMap(201,"微信用户不同意授权");
-            return mapTar;
+            RspCommonBean rcb = RspCommonBean.getCommonRspBean(201,"微信用户不同意授权");
+            return rcb;
         }
         //2.获取通过code换取网页授权access_token
         String url = WXHelper.getReqAccTokenUrl(code);
@@ -97,11 +99,16 @@ unionid	只有在用户将公众号绑定到微信开放平台帐号后，才会
                 mapTar.put("userId",openid);
                 mapTar.put("userType", XiaoTUserType.WxUser.getType());
                 mapTar.put("headimgurl",headimgurl);
+                mapTar.put("gameId", gameId);
 
-                return mapTar;
+
+                RspCommonBean rcb = RspCommonBean.getCommonRspBean(200, null);
+                rcb.data = mapTar;
+
+                return rcb;
             }
         }
-        mapTar = MapUtil.getErrorMap(202,"微信授权未知错误");
-        return mapTar;
+        RspCommonBean rcb = RspCommonBean.getCommonRspBean(202,"微信授权未知错误");
+        return rcb;
     }
 }
