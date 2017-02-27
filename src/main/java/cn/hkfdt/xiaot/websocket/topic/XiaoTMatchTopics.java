@@ -1,6 +1,7 @@
 package cn.hkfdt.xiaot.websocket.topic;
 
-import cn.hkfdt.xiaot.common.beans.GameUser;
+import cn.hkfdt.xiaot.common.beans.GameUserBean;
+import cn.hkfdt.xiaot.common.beans.RspCommonBean;
 import cn.hkfdt.xiaot.web.xiaot.util.XiaoTUserType;
 import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
 import cn.hkfdt.xiaot.websocket.utils.GameUrlHelp;
@@ -43,14 +44,17 @@ public class XiaoTMatchTopics {
 		map.put("matchId", "adsffgcsdf");
 		map.put("url", "");
 
-		List<GameUser> listUser = new ArrayList<>();
-		GameUser item = new GameUser();
+		List<GameUserBean> listUser = new ArrayList<>();
+		GameUserBean item = new GameUserBean();
 		item.userId="sfddg";
 		item.userName="李雷";
 		item.userType=2;
 		item.headimgurl="https://sdfdf";
 		listUser.add(item);
-		System.err.println(JSON.toJSONString(map));
+
+		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
+//		rspCommonBean.data = listUser;
+		System.err.println(JSON.toJSONString(rspCommonBean));
 	}
 	//==================================================================== 
 	@PostConstruct
@@ -64,7 +68,7 @@ public class XiaoTMatchTopics {
 	 */
 	public void readyInfo(String gameId) {
 		String destination = GameUrlHelp.getReadyInfo(gameId);
-		List<GameUser> listUser = new ArrayList<>();
+		List<GameUserBean> listUser = new ArrayList<>();
 		simpMessagingTemplate.convertAndSend(destination, listUser);
 	}
 	/**

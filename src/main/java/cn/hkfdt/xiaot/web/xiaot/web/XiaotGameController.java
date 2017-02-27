@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +47,7 @@ public class XiaotGameController {
      */
     @RequestMapping("/xiaoth/game/getUserInfo")
     @ResponseBody
-    public Object gameIndex(@RequestParam(required = true) String gameId,
+    public Object gameIndex(String gameId,
                             HttpServletRequest request, HttpServletResponse response) {
         if(WXHelper.isFromWx(request)){
 //            logger.info("微信:"+GlobalInfo.wxLoginUrl);

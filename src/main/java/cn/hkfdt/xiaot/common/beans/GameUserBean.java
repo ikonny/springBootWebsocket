@@ -7,7 +7,7 @@ import java.io.Serializable;
  * Created by whyse
  * on 2017/2/24 12:14
  */
-public class GameUser implements Serializable {
+public class GameUserBean implements Serializable {
     /**
      * 不同的userType，对应不同的id意义
      */
