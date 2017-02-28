@@ -33,7 +33,7 @@ public interface TRecordExtendsMapper extends TRecordMapper {
 	@Select("select * from xiaot_record where createTime < #{time} and `status` = 0")
 	List<TRecord> getTimeOutRecord(@Param("time") Long time);
 
-	@Update("update xiaot_record set score = #{para.score}, volatility = #{para.volatility}, createTime = #{para.createTime} where recordId = #{para.id}")
+	@Update("update xiaot_record set `status` = 1, score = #{para.score}, volatility = #{para.volatility}, createTime = #{para.createTime} where recordId = #{para.id}")
 	void updateScore(@Param("para") Map<String, Object> mapPara);
 
 }

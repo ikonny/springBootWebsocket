@@ -7,7 +7,7 @@ public class TQuestions implements Serializable {
 
     /**
      * <pre>
-     * 表字段注释 : 交易所"CF"中金 "SHF"上期 "DCE"大商 "CZC"郑商
+     * 表字段注释 : äº¤æ˜“æ‰€"CF"ä¸­é‡‘ "SHF"ä¸ŠæœŸ "DCE"å¤§å•† "CZC"éƒ‘å•†
      * 表字段 : xiaot_questions.exchangeCode
      * </pre>
      */
@@ -15,7 +15,7 @@ public class TQuestions implements Serializable {
 
     /**
      * <pre>
-     * 表字段注释 : 代码缩写，比如A    实际我们表中JM1601.DCE 
+     * 表字段注释 : ä»£ç ç¼©å†™ï¼Œæ¯”å¦‚A    å®žé™…æˆ‘ä»¬è¡¨ä¸­JM1601.DCE 
      * 表字段 : xiaot_questions.shortSymbol
      * </pre>
      */
@@ -23,7 +23,7 @@ public class TQuestions implements Serializable {
 
     /**
      * <pre>
-     * 表字段注释 : 2016-08-12.   如果是股票就是一个时间段（A;B）
+     * 表字段注释 : 2016-08-12.   å¦‚æžœæ˜¯è‚¡ç¥¨å°±æ˜¯ä¸€ä¸ªæ—¶é—´æ®µï¼ˆA;Bï¼‰
      * 表字段 : xiaot_questions.tradeDay
      * </pre>
      */
@@ -31,7 +31,7 @@ public class TQuestions implements Serializable {
 
     /**
      * <pre>
-     * 表字段注释 : 创建时间
+     * 表字段注释 : åˆ›å»ºæ—¶é—´
      * 表字段 : xiaot_questions.createTime
      * </pre>
      */
@@ -39,7 +39,7 @@ public class TQuestions implements Serializable {
 
     /**
      * <pre>
-     * 表字段注释 : 类型，0：期货战绩  1:股票  2：外汇
+     * 表字段注释 : ç±»åž‹ï¼Œ0ï¼šæœŸè´§æˆ˜ç»©  1:è‚¡ç¥¨  2ï¼šå¤–æ±‡
      * 表字段 : xiaot_questions.type
      * </pre>
      */
@@ -47,7 +47,7 @@ public class TQuestions implements Serializable {
 
     /**
      * <pre>
-     * 表字段注释 : 题目类型：up,down,shock  上涨，下跌，震荡
+     * 表字段注释 : é¢˜ç›®ç±»åž‹ï¼šup,down,shock  ä¸Šæ¶¨ï¼Œä¸‹è·Œï¼Œéœ‡è¡
      * 表字段 : xiaot_questions.topicType
      * </pre>
      */
@@ -71,7 +71,15 @@ public class TQuestions implements Serializable {
 
     /**
      * <pre>
-     * 表字段注释 : 传给前端的行情数据总和.第一次为空，有人请求后创建。数据经过压缩
+     * 表字段注释 : 振幅
+     * 表字段 : xiaot_questions.volatility
+     * </pre>
+     */
+    private Double volatility;
+
+    /**
+     * <pre>
+     * 表字段注释 : ä¼ ç»™å‰ç«¯çš„è¡Œæƒ…æ•°æ®æ€»å’Œ.ç¬¬ä¸€æ¬¡ä¸ºç©ºï¼Œæœ‰äººè¯·æ±‚åŽåˆ›å»º
      * 表字段 : xiaot_questions.jsonData
      * </pre>
      */
@@ -149,6 +157,14 @@ public class TQuestions implements Serializable {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public Double getVolatility() {
+        return volatility;
+    }
+
+    public void setVolatility(Double volatility) {
+        this.volatility = volatility;
     }
 
     public byte[] getJsonData() {

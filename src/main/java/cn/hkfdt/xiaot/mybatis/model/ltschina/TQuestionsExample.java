@@ -684,6 +684,66 @@ public class TQuestionsExample {
             return (Criteria) this;
         }
 
+        public Criteria andVolatilityIsNull() {
+            addCriterion("volatility is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVolatilityIsNotNull() {
+            addCriterion("volatility is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVolatilityEqualTo(Double value) {
+            addCriterion("volatility =", value, "volatility");
+            return (Criteria) this;
+        }
+
+        public Criteria andVolatilityNotEqualTo(Double value) {
+            addCriterion("volatility <>", value, "volatility");
+            return (Criteria) this;
+        }
+
+        public Criteria andVolatilityGreaterThan(Double value) {
+            addCriterion("volatility >", value, "volatility");
+            return (Criteria) this;
+        }
+
+        public Criteria andVolatilityGreaterThanOrEqualTo(Double value) {
+            addCriterion("volatility >=", value, "volatility");
+            return (Criteria) this;
+        }
+
+        public Criteria andVolatilityLessThan(Double value) {
+            addCriterion("volatility <", value, "volatility");
+            return (Criteria) this;
+        }
+
+        public Criteria andVolatilityLessThanOrEqualTo(Double value) {
+            addCriterion("volatility <=", value, "volatility");
+            return (Criteria) this;
+        }
+
+        public Criteria andVolatilityIn(List<Double> values) {
+            addCriterion("volatility in", values, "volatility");
+            return (Criteria) this;
+        }
+
+        public Criteria andVolatilityNotIn(List<Double> values) {
+            addCriterion("volatility not in", values, "volatility");
+            return (Criteria) this;
+        }
+
+        public Criteria andVolatilityBetween(Double value1, Double value2) {
+            addCriterion("volatility between", value1, value2, "volatility");
+            return (Criteria) this;
+        }
+
+        public Criteria andVolatilityNotBetween(Double value1, Double value2) {
+            addCriterion("volatility not between", value1, value2, "volatility");
+            return (Criteria) this;
+        }
+
         public Criteria andExchangeCodeLikeInsensitive(String value) {
             addCriterion("upper(exchangeCode) like", value.toUpperCase(), "exchangeCode");
             return (Criteria) this;

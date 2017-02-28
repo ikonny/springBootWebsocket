@@ -190,7 +190,7 @@ public class XiaoTMDHelp {
 		int flag = 0;
 		try {
 			setHisDayData(mapTar,listMapDay);
-			setHisMinData(mapTar,listMapMin,listMapDay);
+			item.setVolatility(setHisMinData(mapTar,listMapMin,listMapDay));
 		} catch (Exception e) {
 			flag = -1;
 			e.printStackTrace();
@@ -198,7 +198,7 @@ public class XiaoTMDHelp {
 		return flag;
 	}
 	//----------------------------------------------------------------------------------
-	private static void setHisMinData(Map<String, Object> mapTar,
+	private static double setHisMinData(Map<String, Object> mapTar,
 			List<Map<String, Object>> listMapMin, List<Map<String, Object>> listMapDay) {
 		Map<String, Object> today = new HashMap<String, Object>(8);
 		mapTar.put("today", today);// ---------->一级菜单
@@ -212,7 +212,7 @@ public class XiaoTMDHelp {
 		emaShort = new ArrayList<>(size);
 		emaLone = new ArrayList<>(size);
 		emaDea = new ArrayList<>(size);
-		double maxClose=0,minClose=0;
+		double maxClose=0,minClose=0,maxv=0;
 		for(int i=0;i<size;i++){
 			Map<String, Object> item = getMinItem(i,listMapMin,items,preClosePrice);//获取了最早一个点的历史比如60
 			double closePrice = (double) item.get("closePrice");
@@ -227,9 +227,10 @@ public class XiaoTMDHelp {
 			}
 			double volatility = (maxClose-minClose)*100.00/preClosePrice;
 			item.put("volatility", XiaoTHelp.get2Point(volatility));// 振幅 (目前最高-目前最低)/昨收价 *100
-			
+			maxv = volatility;
 			items.add(item);
 		}
+		return maxv;
 	}
 
 	private static Map<String, Object> getMinItem(int index,

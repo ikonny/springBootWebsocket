@@ -50,15 +50,15 @@ public class XiaotGameController {
     public Object gameIndex(String gameId,
                             HttpServletRequest request, HttpServletResponse response) {
 
-        int status = xiaoTGameService.getGameStatus(gameId);
-        if(status == GameStatus.OVER.getStatus()){
-            //TODO: 返回比赛结果
-            return RspCommonBean.getCommonRspBean(301, "比赛已结束");
-        }else if(status == GameStatus.UNDERWAY.getStatus()){
-            return RspCommonBean.getCommonRspBean(302, "比赛已开始");
-        }else if(status == GameStatus.FULL.getStatus()){
-            return RspCommonBean.getCommonRspBean(303, "参赛人数已满");
-        }
+//        int status = xiaoTGameService.getGameStatus(gameId);
+//        if(status == GameStatus.OVER.getStatus()){
+//            //TODO: 返回比赛结果
+//            return RspCommonBean.getCommonRspBean(301, "比赛已结束");
+//        }else if(status == GameStatus.UNDERWAY.getStatus()){
+//            return RspCommonBean.getCommonRspBean(302, "比赛已开始");
+//        }else if(status == GameStatus.FULL.getStatus()){
+//            return RspCommonBean.getCommonRspBean(303, "参赛人数已满");
+//        }
 
 
         if(WXHelper.isFromWx(request)){//微信用打开

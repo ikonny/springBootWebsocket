@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
 
 /**
  * author:xumin 
@@ -264,13 +265,10 @@ public class XiaoTServiceImpl implements XiaoTService {
 					int code = (int) temp.get("code");
 					if (code == 200) {
 						double score = 0.0;
-						float volatility = 0f;
 						if (temp.get("score") != null) {
 							score = Double.parseDouble(temp.get("score").toString());
 						}
-						if(temp.get("volatility") != null){
-							volatility = Float.parseFloat(temp.get("volatility").toString());
-						}
+
 						boolean win = (boolean) temp.get("win");
 						setXiaotDoScoreRtnMap(mapTar, score, tempMap, win);
 						if (fdtId.equals(XiaoTHelp.xiaoTGuest))
@@ -287,7 +285,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 						record.setCreateTime(System.currentTimeMillis());
 						record.setScore(score);
 						record.setUniqueId(unId);
-						record.setVolatility(volatility);
+						record.setVolatility(Float.parseFloat(tempMap.get("volatility").toString()));
 						record.setVERSION(XiaoTHelp.version);//新数据需要加上
 						record.setStatus(status);
 						record.setReqBody(JSON.toJSONString(tempMap));
@@ -461,7 +459,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 	@Scheduled(cron = "0 0/2 * * * ?")
 	public void checkTimeOutRecord(){
 		Calendar beforeTime = Calendar.getInstance();
-		beforeTime.add(Calendar.MINUTE, -5);// 5分钟之前的时间
+		beforeTime.add(Calendar.MINUTE, -1);// 5分钟之前的时间
 		long time =beforeTime.getTimeInMillis();
 		List<TRecord> recordList = tRecordExtendsMapper.getTimeOutRecord(time);
 		if(recordList != null && recordList.size() > 0){
@@ -472,11 +470,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 				while (count <= tryNum) {
 					Map<String, Object> tempMap = new HashMap<String, Object>(1);
 					tempMap = JSON.parseObject(tRecord.getReqBody());
-					try {
-						BeanUtils.copyProperties(tempMap, tRecord);//
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+
 					String[] strs = tempMap.get("key").toString().split("#");
 					tempMap.put("exchangeCode", strs[0]);
 					tempMap.put("symbol", strs[1]);
@@ -491,16 +485,14 @@ public class XiaoTServiceImpl implements XiaoTService {
 							if (temp.get("score") != null) {
 								score = Double.parseDouble(temp.get("score").toString());
 							}
-							if(temp.get("volatility") != null){
-								volatility = Float.parseFloat(temp.get("volatility").toString());
-							}
+
 							boolean win = (boolean) temp.get("win");
 
 							//更新score
 							Map<String, Object> para = new HashMap<>();
 							para.put("score", score);
 							para.put("id", tRecord.getRecordId());
-							para.put("volatility", volatility);
+							para.put("volatility", Float.parseFloat(tempMap.get("volatility").toString()));
 							para.put("createTime", System.currentTimeMillis());
 							tRecordExtendsMapper.updateScore(para);
 
