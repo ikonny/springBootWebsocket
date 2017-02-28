@@ -1104,6 +1104,76 @@ public class TGameUserExample {
             return (Criteria) this;
         }
 
+        public Criteria andHeadimgurlIsNull() {
+            addCriterion("headimgurl is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeadimgurlIsNotNull() {
+            addCriterion("headimgurl is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeadimgurlEqualTo(String value) {
+            addCriterion("headimgurl =", value, "headimgurl");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeadimgurlNotEqualTo(String value) {
+            addCriterion("headimgurl <>", value, "headimgurl");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeadimgurlGreaterThan(String value) {
+            addCriterion("headimgurl >", value, "headimgurl");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeadimgurlGreaterThanOrEqualTo(String value) {
+            addCriterion("headimgurl >=", value, "headimgurl");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeadimgurlLessThan(String value) {
+            addCriterion("headimgurl <", value, "headimgurl");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeadimgurlLessThanOrEqualTo(String value) {
+            addCriterion("headimgurl <=", value, "headimgurl");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeadimgurlLike(String value) {
+            addCriterion("headimgurl like", value, "headimgurl");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeadimgurlNotLike(String value) {
+            addCriterion("headimgurl not like", value, "headimgurl");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeadimgurlIn(List<String> values) {
+            addCriterion("headimgurl in", values, "headimgurl");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeadimgurlNotIn(List<String> values) {
+            addCriterion("headimgurl not in", values, "headimgurl");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeadimgurlBetween(String value1, String value2) {
+            addCriterion("headimgurl between", value1, value2, "headimgurl");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeadimgurlNotBetween(String value1, String value2) {
+            addCriterion("headimgurl not between", value1, value2, "headimgurl");
+            return (Criteria) this;
+        }
+
         public Criteria andGameIdLikeInsensitive(String value) {
             addCriterion("upper(gameId) like", value.toUpperCase(), "gameId");
             return (Criteria) this;
@@ -1121,6 +1191,11 @@ public class TGameUserExample {
 
         public Criteria andActionsLikeInsensitive(String value) {
             addCriterion("upper(actions) like", value.toUpperCase(), "actions");
+            return (Criteria) this;
+        }
+
+        public Criteria andHeadimgurlLikeInsensitive(String value) {
+            addCriterion("upper(headimgurl) like", value.toUpperCase(), "headimgurl");
             return (Criteria) this;
         }
     }

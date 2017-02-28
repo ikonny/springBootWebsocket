@@ -15,7 +15,6 @@
 </div>
 
 <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1.11.2/jquery.min.js"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
 <script type="text/javascript">
@@ -27,8 +26,8 @@
             return "<li><p>Received: " + date + "</p><div>" + message.content + "</li>";
         };
 
-        var socket = new SockJS('https://devxiaot.forexmaster.cn/xiaots');
-        var stompClient = Stomp.over(socket);
+        var url = 'wss://devxiaot.forexmaster.cn/xiaots';
+        var stompClient = Stomp.client(url);
         stompClient.connect({ }, function(frame) {
             // subscribe to the /topic/entries endpoint which feeds newly added messages
             stompClient.subscribe('/topic/test/send', function(data) {

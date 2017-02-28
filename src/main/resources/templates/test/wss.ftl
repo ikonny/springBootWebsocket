@@ -26,7 +26,7 @@
             return "<li><p>Received: " + date + "</p><div>" + message.content + "</li>";
         };
 
-        var url = 'wss://devxiaot.forexmaster.cn/xiaots';
+        var url = 'ws://192.168.21.138:12306/xiaots';
         var stompClient = Stomp.client(url);
         stompClient.connect({ }, function(frame) {
             // subscribe to the /topic/entries endpoint which feeds newly added messages

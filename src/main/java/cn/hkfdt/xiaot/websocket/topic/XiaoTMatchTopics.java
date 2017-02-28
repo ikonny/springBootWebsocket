@@ -153,4 +153,11 @@ public class XiaoTMatchTopics {
 		return str;
 	}
 
+	public void gameEndTopic(String gameId) {
+		String destination = GameUrlHelp.topic_gameEnd+gameId;
+		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
+		rspCommonBean.data = gameId;
+		String str = JSON.toJSONString(rspCommonBean);
+		simpMessagingTemplate.convertAndSend(destination, str);
+	}
 }

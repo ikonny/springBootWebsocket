@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 public class CacheMapXM {
     public ConcurrentHashMap<String, XmItem> mapMatchInfo = null;
     int revoverTime = 60;//回收间隔时间
+    CahceXMListen cahceXMListen;
     /**
      * @param size  可存放对象大小
      * @param revoverTime 回收间隔时间
@@ -35,6 +36,13 @@ public class CacheMapXM {
                     XmItem xmItem = item.getValue();
                     if(xmItem.endTime<=time){
                         mapMatchInfo.remove(xmItem.key);
+                        try {
+                            if (cahceXMListen != null) {
+                                cahceXMListen.timeOverEvent(xmItem.item,xmItem.key);
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
 //                    System.err.println("回收一次，结束时间:"+xmItem.endTime+"   现在时间:"+time);
                 });
@@ -44,6 +52,11 @@ public class CacheMapXM {
         // 第二个参数为首次执行的延时时间，第三个参数为定时执行的间隔时间
         service.scheduleAtFixedRate(runnable, 10, revoverTime, TimeUnit.SECONDS);
     }
+    //==========================================================================================
+    public void addListener(CahceXMListen cahceXMListen){
+        this.cahceXMListen = cahceXMListen;
+    }
+    //==========================================================================================
     /**
      * 如果有相同key，覆盖后，时间也同时计算
      * @param key

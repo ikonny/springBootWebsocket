@@ -34,5 +34,18 @@ public class GameUrlHelp {
      */
     final public static String queue_gameclientInfo = "/queue/game/clientInfo";//客户端监听/user/queue/game/clientInfo
 
+    /**
+     * 请求，比赛结束
+     */
+    final public static String queue_gameOver = "/queue/game/end";//客户端监听/user/queue/game/end
+    /**
+     * 比赛完全结束后会通知订阅者
+     */
+    final public static String topic_gameEnd = "/topic/game/end/";
+    /**
+     * 请求，比赛持续时间
+     */
+//    final public static String queue_gameStayTime = "/queue/game/stayTime";//客户端监听/user/queue/game/stayTime
+
     //================================================
 }

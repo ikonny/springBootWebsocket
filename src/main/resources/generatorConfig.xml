@@ -92,9 +92,9 @@
 		<!--<columnOverride column="group_id" jdbcType="VARCHAR"  />-->
 		<!--</table>-->
 
-		<table tableName="xiaot_game"  domainObjectName="TGame">
-			<property name="useActualColumnNames" value="true" />
-		</table>
+		<!--<table tableName="xiaot_game"  domainObjectName="TGame">-->
+			<!--<property name="useActualColumnNames" value="true" />-->
+		<!--</table>-->
 		<table tableName="xiaot_game_user"  domainObjectName="TGameUser">
 			<property name="useActualColumnNames" value="true" />
 			<columnOverride column="actions" jdbcType="VARCHAR"  />

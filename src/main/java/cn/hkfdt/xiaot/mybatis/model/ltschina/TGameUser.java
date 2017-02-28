@@ -114,6 +114,14 @@ public class TGameUser implements Serializable {
      */
     private Integer version;
 
+    /**
+     * <pre>
+     * 表字段注释 : 头像地址
+     * 表字段 : xiaot_game_user.headimgurl
+     * </pre>
+     */
+    private String headimgurl;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -242,5 +250,13 @@ public class TGameUser implements Serializable {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public String getHeadimgurl() {
+        return headimgurl;
+    }
+
+    public void setHeadimgurl(String headimgurl) {
+        this.headimgurl = headimgurl == null ? null : headimgurl.trim();
     }
 }

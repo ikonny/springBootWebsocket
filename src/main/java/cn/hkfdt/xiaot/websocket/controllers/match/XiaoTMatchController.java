@@ -108,5 +108,19 @@ public class XiaoTMatchController {
 		ReqCommonBean reqCommonBean = getParaMap(headerAccessor,msg);
 		gameService.sendClientMatchInfo(reqCommonBean);
 	}
+	//比赛结束，主动，入库，回收资源
+	@MessageMapping(GameUrlHelp.queue_gameOver)
+	@SendToUser(GameUrlHelp.queue_gameOver)
+	public String gameOver(SimpMessageHeaderAccessor headerAccessor,String msg) {
+		ReqCommonBean reqCommonBean = getParaMap(headerAccessor,msg);
+		int flag = gameService.gameEnd(reqCommonBean);
+		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
+		if(flag==-1){
+			rspCommonBean.rspCode = 201;
+			rspCommonBean.msg = "异常结束";
+		}
+		String str = JSON.toJSONString(rspCommonBean);
+		return str;
+	}
 
 }

@@ -1,6 +1,7 @@
 package cn.hkfdt.xiaot.websocket.service;
 
 import cn.hkfdt.xiaot.common.beans.ReqCommonBean;
+import cn.hkfdt.xiaot.websocket.Beans.GameRuntimeBean;
 
 public interface GameService {
 	/**
@@ -24,4 +25,13 @@ public interface GameService {
 	 * @return 0启动成功  -1：人数没有满
 	 */
 	int gameStart(ReqCommonBean reqCommonBean);
+
+	/**
+	 * 客户端回调比赛结束
+	 * @param reqCommonBean
+	 * @return 0成功 1比赛正常结束  -1失败
+	 */
+	int gameEnd(ReqCommonBean reqCommonBean);
+
+	int endTheGame(GameRuntimeBean gameRuntimeBean);
 }
