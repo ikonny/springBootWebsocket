@@ -10,7 +10,6 @@ import cn.hkfdt.xiaot.websocket.Beans.GameUserExtBean;
 import cn.hkfdt.xiaot.websocket.service.GameService;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 import com.alibaba.fastjson.JSON;
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
@@ -114,11 +113,11 @@ public class MatchServiceHelper {
 	// "headimgurl":"https://sdf.ico","gameId":"asfddhgh"}
 	private static GameUserExtBean getReadyUser(ReqCommonBean reqCommonBean) {
 		GameUserExtBean gameUserExtBean = new GameUserExtBean();
-		try {
-			BeanUtils.copyProperties(gameUserExtBean,reqCommonBean.data);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		gameUserExtBean.userId = reqCommonBean.data.get("userId").toString();
+		gameUserExtBean.userName = reqCommonBean.data.get("userName").toString();
+		gameUserExtBean.userType = Integer.parseInt(reqCommonBean.data.get("userType").toString());
+		gameUserExtBean.headimgurl = reqCommonBean.data.get("headimgurl").toString();
+		gameUserExtBean.gameId = reqCommonBean.data.get("gameId").toString();
 		return gameUserExtBean;
 	}
 
