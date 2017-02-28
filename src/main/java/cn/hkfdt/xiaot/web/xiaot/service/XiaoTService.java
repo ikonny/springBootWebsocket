@@ -67,4 +67,6 @@ public interface XiaoTService {
 	 */
 	int initTQuestions(int market, Map<String, Object> mapTar);
 
+
+
 }

@@ -7,6 +7,7 @@
     <result column="gameName" property="gameName" jdbcType="VARCHAR" />
     <result column="marketType" property="marketType" jdbcType="INTEGER" />
     <result column="userNum" property="userNum" jdbcType="INTEGER" />
+    <result column="realNum" property="realNum" jdbcType="INTEGER" />
     <result column="createTime" property="createTime" jdbcType="BIGINT" />
     <result column="updateTime" property="updateTime" jdbcType="BIGINT" />
     <result column="state" property="state" jdbcType="INTEGER" />
@@ -71,7 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, gameId, gameName, marketType, userNum, createTime, updateTime, state, questionId
+    id, gameId, gameName, marketType, userNum, realNum, createTime, updateTime, state, 
+    questionId
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TGameExample" >
     select
@@ -105,13 +107,13 @@
   </delete>
   <insert id="insert" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TGame" >
     insert into xiaot_game (id, gameId, gameName, 
-      marketType, userNum, createTime, 
-      updateTime, state, questionId
-      )
+      marketType, userNum, realNum, 
+      createTime, updateTime, state, 
+      questionId)
     values (#{id,jdbcType=INTEGER}, #{gameId,jdbcType=VARCHAR}, #{gameName,jdbcType=VARCHAR}, 
-      #{marketType,jdbcType=INTEGER}, #{userNum,jdbcType=INTEGER}, #{createTime,jdbcType=BIGINT}, 
-      #{updateTime,jdbcType=BIGINT}, #{state,jdbcType=INTEGER}, #{questionId,jdbcType=INTEGER}
-      )
+      #{marketType,jdbcType=INTEGER}, #{userNum,jdbcType=INTEGER}, #{realNum,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=BIGINT}, #{updateTime,jdbcType=BIGINT}, #{state,jdbcType=INTEGER}, 
+      #{questionId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TGame" >
     insert into xiaot_game
@@ -130,6 +132,9 @@
       </if>
       <if test="userNum != null" >
         userNum,
+      </if>
+      <if test="realNum != null" >
+        realNum,
       </if>
       <if test="createTime != null" >
         createTime,
@@ -159,6 +164,9 @@
       </if>
       <if test="userNum != null" >
         #{userNum,jdbcType=INTEGER},
+      </if>
+      <if test="realNum != null" >
+        #{realNum,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=BIGINT},
@@ -198,6 +206,9 @@
       <if test="record.userNum != null" >
         userNum = #{record.userNum,jdbcType=INTEGER},
       </if>
+      <if test="record.realNum != null" >
+        realNum = #{record.realNum,jdbcType=INTEGER},
+      </if>
       <if test="record.createTime != null" >
         createTime = #{record.createTime,jdbcType=BIGINT},
       </if>
@@ -222,6 +233,7 @@
       gameName = #{record.gameName,jdbcType=VARCHAR},
       marketType = #{record.marketType,jdbcType=INTEGER},
       userNum = #{record.userNum,jdbcType=INTEGER},
+      realNum = #{record.realNum,jdbcType=INTEGER},
       createTime = #{record.createTime,jdbcType=BIGINT},
       updateTime = #{record.updateTime,jdbcType=BIGINT},
       state = #{record.state,jdbcType=INTEGER},
@@ -245,6 +257,9 @@
       <if test="userNum != null" >
         userNum = #{userNum,jdbcType=INTEGER},
       </if>
+      <if test="realNum != null" >
+        realNum = #{realNum,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null" >
         createTime = #{createTime,jdbcType=BIGINT},
       </if>
@@ -266,6 +281,7 @@
       gameName = #{gameName,jdbcType=VARCHAR},
       marketType = #{marketType,jdbcType=INTEGER},
       userNum = #{userNum,jdbcType=INTEGER},
+      realNum = #{realNum,jdbcType=INTEGER},
       createTime = #{createTime,jdbcType=BIGINT},
       updateTime = #{updateTime,jdbcType=BIGINT},
       state = #{state,jdbcType=INTEGER},

@@ -5,6 +5,7 @@ import cn.hkfdt.xiaot.mybatis.model.ltschina.TRecord;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 import java.util.Map;
@@ -31,5 +32,8 @@ public interface TRecordExtendsMapper extends TRecordMapper {
 
 	@Select("select * from xiaot_record where createTime < #{time} and `status` = 0")
 	List<TRecord> getTimeOutRecord(@Param("time") Long time);
+
+	@Update("update xiaot_record set score = #{para.score}, volatility = #{para.volatility}, createTime = #{para.createTime} where recordId = #{para.id}")
+	void updateScore(@Param("para") Map<String, Object> mapPara);
 
 }

@@ -14,4 +14,12 @@ public interface XiaoTGameService {
      * @return {"errorCode":"201","errorMsg":"ss"}
      */
     RspCommonBean gameCreate(Map<String, Object> mapPara);
+
+
+    /**
+     * 获取比赛状态
+     * @param gameId
+     * @return 0:未开始  1:进行中  2:结束  3:已满员
+     */
+    int getGameStatus(String gameId);
 }

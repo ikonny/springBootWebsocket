@@ -424,6 +424,66 @@ public class TGameExample {
             return (Criteria) this;
         }
 
+        public Criteria andRealNumIsNull() {
+            addCriterion("realNum is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRealNumIsNotNull() {
+            addCriterion("realNum is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRealNumEqualTo(Integer value) {
+            addCriterion("realNum =", value, "realNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andRealNumNotEqualTo(Integer value) {
+            addCriterion("realNum <>", value, "realNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andRealNumGreaterThan(Integer value) {
+            addCriterion("realNum >", value, "realNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andRealNumGreaterThanOrEqualTo(Integer value) {
+            addCriterion("realNum >=", value, "realNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andRealNumLessThan(Integer value) {
+            addCriterion("realNum <", value, "realNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andRealNumLessThanOrEqualTo(Integer value) {
+            addCriterion("realNum <=", value, "realNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andRealNumIn(List<Integer> values) {
+            addCriterion("realNum in", values, "realNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andRealNumNotIn(List<Integer> values) {
+            addCriterion("realNum not in", values, "realNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andRealNumBetween(Integer value1, Integer value2) {
+            addCriterion("realNum between", value1, value2, "realNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andRealNumNotBetween(Integer value1, Integer value2) {
+            addCriterion("realNum not between", value1, value2, "realNum");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("createTime is null");
             return (Criteria) this;

@@ -3,6 +3,7 @@ package cn.hkfdt.xiaot.web.xiaot.service.impl;
 import cn.hkfdt.xiaot.common.XiaoTCommon;
 import cn.hkfdt.xiaot.common.beans.GameCacheBean;
 import cn.hkfdt.xiaot.common.beans.RspCommonBean;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameMapper;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.Auth;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGame;
@@ -10,10 +11,12 @@ import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
 import cn.hkfdt.xiaot.util.ImageUtil;
 import cn.hkfdt.xiaot.web.Filters.LoginFilter;
 import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
+import cn.hkfdt.xiaot.web.common.meta.GameStatus;
 import cn.hkfdt.xiaot.web.common.redis.RedisClient;
 import cn.hkfdt.xiaot.web.common.service.AuthService;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTGameService;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTService;
+import cn.hkfdt.xiaot.web.xiaot.service.md.XiaoTMDHelp;
 import cn.hkfdt.xiaot.web.xiaot.util.XiaoTUserType;
 import com.google.gson.Gson;
 import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
@@ -39,6 +42,8 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 	TGameMapper tGameMapper;
 	@Autowired
 	XiaoTService xiaoTService;
+	@Autowired
+	TGameExtendsMapper tGameExtendsMapper;
 
 	Gson gson = new Gson();
 
@@ -47,8 +52,9 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 	public Map<String, Object> getGameUser(String fdtId, String gameId) {
 		Map<String, Object>  mapTar = new HashMap<>(3);
 		if(LoginFilter.isNotLogin(fdtId)){
-			fdtId = XiaoTHelp.xiaoTGuest;
-			mapTar.put("userName","游客");
+			//fdtId = XiaoTHelp.xiaoTGuest;
+			fdtId = "g-" + XiaoTMDHelp.getRandomString(11);
+			//mapTar.put("userName","游客");
 			mapTar.put("userId",fdtId);
 			mapTar.put("userType",XiaoTUserType.OtherUser.getType());
 		}else{
@@ -60,6 +66,7 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 			mapTar.put("headimgurl",headimgurl);
 		}
 		mapTar.put("gameId", gameId);
+		//TODO: 插入参赛用户信息
 		return mapTar;
 	}
 
@@ -142,5 +149,20 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 			return mapTar;
 		});
 		return tar;
+	}
+
+
+	@Override
+	public int getGameStatus(String gameId) {
+		TGame tg = tGameExtendsMapper.selectGameByGameId(gameId);
+		if(tg.getState() > 0){
+			return tg.getState();
+		}else{
+			if(tg.getRealNum() >= tg.getUserNum()){//满员
+				return GameStatus.FULL.getStatus();
+			}else{
+				return tg.getState();
+			}
+		}
 	}
 }

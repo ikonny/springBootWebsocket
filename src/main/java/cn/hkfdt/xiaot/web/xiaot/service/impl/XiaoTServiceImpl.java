@@ -57,7 +57,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 	 	try {
 			XiaoTMDDBHelper.jdbcTemplate = jdbcTemplate;
 			XiaoTHelp.init(jdbcTemplate);//初始化一些配置信息
-			checkTimeOutRecord();
+		//	checkTimeOutRecord();
 		}catch (Exception e){
 	 		e.printStackTrace();
 		}
@@ -211,59 +211,91 @@ public class XiaoTServiceImpl implements XiaoTService {
 		}
 		return tQuestions;
 	}
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public int  xiaotDoScore(final String fdtId, final String body,
-			Map<String, Object> mapTar) {
-		int count=0;
+	public int xiaotDoScore(final String fdtId, final String body,
+							Map<String, Object> mapTar) {
+
 		Map<String, Object> tempMap = new HashMap<String, Object>(1);
 		tempMap = JSON.parseObject(body);//(Map<String, Object>) JsonUtil.JsonToOb(body, tempMap.getClass());
 		String[] strs = tempMap.get("key").toString().split("#");
 		String unId = tempMap.get("uniqueId").toString();
 		int status = 1;
-        if(tempMap.get("status")!=null){
-            status = Integer.parseInt(tempMap.get("status").toString());
-        }
+		if (tempMap.get("status") != null) {
+			status = Integer.parseInt(tempMap.get("status").toString());
+		}
 		tempMap.put("exchangeCode", strs[0]);
 		tempMap.put("symbol", strs[1]);
 		tempMap.put("fdtId", fdtId);
-		if(tempMap.containsKey("version")){
+		if (tempMap.containsKey("version")) {
 			XiaoTHelp.version = (int) tempMap.get("version");
 		}
 		mapTar.put("status", 200);
-		while(count<=tryNum){
-			Map<String, Object> temp = XiaoTHelp.xiaotDoScore(JSON.toJSONString(tempMap));
-			if(temp!=null && !temp.isEmpty()){
-				int code = (int) temp.get("code");
-				if(code==200){
-					double score = 0.0;
-					if(temp.get("score")!=null)
-						score = Double.parseDouble(temp.get("score").toString());
-					boolean win = (boolean) temp.get("win");
-					setXiaotDoScoreRtnMap(mapTar,score,tempMap,win);
-					if(fdtId.equals(XiaoTHelp.xiaoTGuest))
-						return 0;
-					//---------登录用户才可以记录战绩---------------------
-					TRecord record = new TRecord();
-					try {
-						BeanUtils.copyProperties(record, tempMap);//
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					record.setActions(tempMap.get("actions").toString());
-					record.setQuestionKey(tempMap.get("key").toString());
-					record.setCreateTime(System.currentTimeMillis());
-					record.setScore(score);
-					record.setUniqueId(unId);
-					record.setVERSION(XiaoTHelp.version);//新数据需要加上
-					record.setStatus(status);
-					record.setReqBody(body);
-					if(record.getType()==null){
-						record.setType(0);
-					}
-					tRecordExtendsMapper.replaceXiaotRecord(record);
-					//当status为1时请求战力分析
-					if(status == 1) {
+		if (!fdtId.equals(XiaoTHelp.xiaoTGuest) && status == 0) {
+
+			//---------登录用户才可以记录战绩---------------------
+			TRecord record = new TRecord();
+			try {
+				BeanUtils.copyProperties(record, tempMap);//
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			record.setActions(tempMap.get("actions").toString());
+			record.setQuestionKey(tempMap.get("key").toString());
+			record.setCreateTime(System.currentTimeMillis());
+			record.setScore(0d);
+			record.setUniqueId(unId);
+			record.setVolatility(0f);
+			record.setVERSION(XiaoTHelp.version);//新数据需要加上
+			record.setStatus(status);
+			record.setReqBody(JSON.toJSONString(tempMap));
+			if (record.getType() == null) {
+				record.setType(0);
+			}
+			tRecordExtendsMapper.replaceXiaotRecord(record);
+		}
+		//当status为1时请求战力打分
+		int count = 0;
+		if (status == 1) {
+			while (count <= tryNum) {
+				Map<String, Object> temp = XiaoTHelp.xiaotDoScore(JSON.toJSONString(tempMap));
+				if (temp != null && !temp.isEmpty()) {
+					int code = (int) temp.get("code");
+					if (code == 200) {
+						double score = 0.0;
+						float volatility = 0f;
+						if (temp.get("score") != null) {
+							score = Double.parseDouble(temp.get("score").toString());
+						}
+						if(temp.get("volatility") != null){
+							volatility = Float.parseFloat(temp.get("volatility").toString());
+						}
+						boolean win = (boolean) temp.get("win");
+						setXiaotDoScoreRtnMap(mapTar, score, tempMap, win);
+						if (fdtId.equals(XiaoTHelp.xiaoTGuest))
+							return 0;
+
+						TRecord record = new TRecord();
+						try {
+							BeanUtils.copyProperties(record, tempMap);//
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						record.setActions(tempMap.get("actions").toString());
+						record.setQuestionKey(tempMap.get("key").toString());
+						record.setCreateTime(System.currentTimeMillis());
+						record.setScore(score);
+						record.setUniqueId(unId);
+						record.setVolatility(volatility);
+						record.setVERSION(XiaoTHelp.version);//新数据需要加上
+						record.setStatus(status);
+						record.setReqBody(JSON.toJSONString(tempMap));
+						if (record.getType() == null) {
+							record.setType(0);
+						}
+						tRecordExtendsMapper.replaceXiaotRecord(record);
+
 						//-----请求战力分析，并且更新数据库-----------
 						Runnable run = new Runnable() {
 
@@ -279,18 +311,19 @@ public class XiaoTServiceImpl implements XiaoTService {
 						};
 						XiaoTHelp.executorService.execute(run);
 						//----------------------------------------------
+
+						return 0;
 					}
-					return 0;
 				}
-			}
-			++count;
-			if(count>=tryNum){
-				if(temp!=null && !temp.isEmpty()){
-					String msg = temp.get("msg").toString();
-					mapTar.put("msg", msg);
-					return -2;
+				++count;
+				if (count >= tryNum) {
+					if (temp != null && !temp.isEmpty()) {
+						String msg = temp.get("msg").toString();
+						mapTar.put("msg", msg);
+						return -2;
+					}
+					return -1;
 				}
-				return -1;
 			}
 		}
 		return 0;
@@ -433,23 +466,71 @@ public class XiaoTServiceImpl implements XiaoTService {
 		List<TRecord> recordList = tRecordExtendsMapper.getTimeOutRecord(time);
 		if(recordList != null && recordList.size() > 0){
 			for (final TRecord tRecord : recordList) {
-				//-----请求战力分析，并且更新数据库-----------
-				Runnable run = new Runnable() {
-
-					@Override
-					public void run() {
-						try {
-							Thread.sleep(500);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						setxiaoTZL(tRecord.getFdtId(), tRecord.getReqBody());
+				if (tRecord.getFdtId().equals(XiaoTHelp.xiaoTGuest))
+					return ;
+				int count = 0;
+				while (count <= tryNum) {
+					Map<String, Object> tempMap = new HashMap<String, Object>(1);
+					tempMap = JSON.parseObject(tRecord.getReqBody());
+					try {
+						BeanUtils.copyProperties(tempMap, tRecord);//
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-				};
-				XiaoTHelp.executorService.execute(run);
+					String[] strs = tempMap.get("key").toString().split("#");
+					tempMap.put("exchangeCode", strs[0]);
+					tempMap.put("symbol", strs[1]);
+					tempMap.put("fdtId", tRecord.getFdtId());
+					Map<String, Object> temp = XiaoTHelp.xiaotDoScore(tRecord.getReqBody());
+					if (temp != null && !temp.isEmpty()) {
+						int code = (int) temp.get("code");
+						if (code == 200) {
+							double score = 0.0;
+
+							float volatility = 0f;
+							if (temp.get("score") != null) {
+								score = Double.parseDouble(temp.get("score").toString());
+							}
+							if(temp.get("volatility") != null){
+								volatility = Float.parseFloat(temp.get("volatility").toString());
+							}
+							boolean win = (boolean) temp.get("win");
+
+							//更新score
+							Map<String, Object> para = new HashMap<>();
+							para.put("score", score);
+							para.put("id", tRecord.getRecordId());
+							para.put("volatility", volatility);
+							para.put("createTime", System.currentTimeMillis());
+							tRecordExtendsMapper.updateScore(para);
+
+
+							//-----请求战力分析，并且更新数据库-----------
+							Runnable run = new Runnable() {
+
+								@Override
+								public void run() {
+									try {
+										Thread.sleep(500);
+									} catch (InterruptedException e) {
+										e.printStackTrace();
+									}
+									setxiaoTZL(tRecord.getFdtId(), tRecord.getReqBody());
+								}
+							};
+							XiaoTHelp.executorService.execute(run);
+							//----------------------------------------------
+
+
+						}
+					}
+					count++;
+
+				}
 			}
 		}
 
 	}
+
 
 }

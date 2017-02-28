@@ -3,6 +3,7 @@ package cn.hkfdt.xiaot.web.xiaot.web;
 import cn.hkfdt.xiaot.common.beans.RspCommonBean;
 import cn.hkfdt.xiaot.web.common.UserContext;
 import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
+import cn.hkfdt.xiaot.web.common.meta.GameStatus;
 import cn.hkfdt.xiaot.web.weixin.WXHelper;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTGameService;
 import cn.hkfdt.xiaot.web.xiaot.util.XiaoTUserType;
@@ -11,10 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,7 +49,19 @@ public class XiaotGameController {
     @ResponseBody
     public Object gameIndex(String gameId,
                             HttpServletRequest request, HttpServletResponse response) {
-        if(WXHelper.isFromWx(request)){
+
+        int status = xiaoTGameService.getGameStatus(gameId);
+        if(status == GameStatus.OVER.getStatus()){
+            //TODO: 返回比赛结果
+            return RspCommonBean.getCommonRspBean(301, "比赛已结束");
+        }else if(status == GameStatus.UNDERWAY.getStatus()){
+            return RspCommonBean.getCommonRspBean(302, "比赛已开始");
+        }else if(status == GameStatus.FULL.getStatus()){
+            return RspCommonBean.getCommonRspBean(303, "参赛人数已满");
+        }
+
+
+        if(WXHelper.isFromWx(request)){//微信用打开
  //           logger.info("微信:"+GlobalInfo.wxLoginUrl);
             try {
                 response.sendRedirect(GlobalInfo.wxLoginUrl.replace("theGameId", gameId));
@@ -62,8 +72,16 @@ public class XiaotGameController {
         }
         RspCommonBean rcb = RspCommonBean.getCommonRspBean(200, null);
         String fdtId = UserContext.getUserInfo().get().getFdtId();
-        Map<String,Object> mapTar =  xiaoTGameService.getGameUser(fdtId, gameId);
+        Map<String, Object> mapTar = xiaoTGameService.getGameUser(fdtId, gameId);
         rcb.data = mapTar;
+        return rcb;
+    }
+
+    @RequestMapping(value = "/xiaoth/game/updateGuestNick")
+    @ResponseBody
+    public Object updateGuestNick(@RequestParam String gameId, @RequestParam String fdtId, @RequestParam String newNick){
+        //TODO: 更新游客昵称
+        RspCommonBean rcb = RspCommonBean.getCommonRspBean(200, null);
         return rcb;
     }
 

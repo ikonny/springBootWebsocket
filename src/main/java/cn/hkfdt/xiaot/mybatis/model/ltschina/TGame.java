@@ -37,6 +37,14 @@ public class TGame implements Serializable {
      */
     private Integer userNum;
 
+    /**
+     * <pre>
+     * 表字段注释 : 实际参数人数
+     * 表字段 : xiaot_game.realNum
+     * </pre>
+     */
+    private Integer realNum;
+
     private Long createTime;
 
     private Long updateTime;
@@ -97,6 +105,14 @@ public class TGame implements Serializable {
 
     public void setUserNum(Integer userNum) {
         this.userNum = userNum;
+    }
+
+    public Integer getRealNum() {
+        return realNum;
+    }
+
+    public void setRealNum(Integer realNum) {
+        this.realNum = realNum;
     }
 
     public Long getCreateTime() {

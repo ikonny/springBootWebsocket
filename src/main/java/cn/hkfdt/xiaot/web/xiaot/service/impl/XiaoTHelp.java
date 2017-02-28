@@ -57,7 +57,7 @@ public class XiaoTHelp {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		xiaoTBigDataServer = "http://192.168.4.139:8082";//192.168.4.139  121.43.73.191:8082
+		xiaoTBigDataServer = "http://121.43.73.191:8082";//192.168.4.139  121.43.73.191:8082
 		urlPickTrade = xiaoTBigDataServer+urlPickTrade;
 		urlGetScore = xiaoTBigDataServer+urlGetScore;
 		urlForceAnalysis = xiaoTBigDataServer+urlForceAnalysis;
@@ -113,7 +113,7 @@ public class XiaoTHelp {
 		
 		
 		String str = JSON.toJSONString(mapTar);//JsonUtil.ObToJson(mapTar);
-		
+		System.out.println(str);
 //		str = URLEncoder.encode(str);
 		
 		return xiaotDoScore(str);
