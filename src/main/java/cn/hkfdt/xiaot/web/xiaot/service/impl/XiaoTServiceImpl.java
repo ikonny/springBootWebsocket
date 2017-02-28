@@ -459,7 +459,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 	@Scheduled(cron = "0 0/2 * * * ?")
 	public void checkTimeOutRecord(){
 		Calendar beforeTime = Calendar.getInstance();
-		beforeTime.add(Calendar.MINUTE, -1);// 5分钟之前的时间
+		beforeTime.add(Calendar.MINUTE, -5);// 5分钟之前的时间
 		long time =beforeTime.getTimeInMillis();
 		List<TRecord> recordList = tRecordExtendsMapper.getTimeOutRecord(time);
 		if(recordList != null && recordList.size() > 0){
