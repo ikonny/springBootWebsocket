@@ -27,7 +27,7 @@ public class XiaoTHelp {
 	/**
 	 * 如果xiaoT本次修改影响打分等历史数据，则该字段+1
 	 */
-	public static int version = 0;
+	public static int version = 1;
 	private static  String urlPickTrade = "/api/puzzle";//选题地址
 	private static  String urlGetScore = "/api/scoring";//打分
 	private static  String urlForceAnalysis = "/api/profile";//战力分析
@@ -70,17 +70,18 @@ public class XiaoTHelp {
 //		TQuestions date = getTQuestion("test", 0);
 //		System.err.println(date);
 		
-//		
-		final String name = "mb00aaaa";
-		Map<String, Object> mapDF = testxiaotDoScore(name);
-		System.err.println(mapDF);
+//
+
+//		final String name = "mb00aaaa";
+//		Map<String, Object> mapDF = testxiaotDoScore(name);
+//		System.err.println(mapDF);
 		
 //		
 		Runnable run = new Runnable() {
 			
 			@Override
 			public void run() {
-				Map<String, Object> mapZL = getXiaoTZL(name, "");//战力
+				Map<String, Object> mapZL = getXiaoTZL("mb000001001", "");//战力
 				System.err.println(mapZL);
 			}
 		};
@@ -99,6 +100,7 @@ public class XiaoTHelp {
 		mapTar.put("exchangeCode", "DCE");
 		mapTar.put("symbol", "A");
 		mapTar.put("key", "DCE#A#2016-05-19");
+		mapTar.put("version", version);
 		
 		List<Map<String, Object>>  actions = new ArrayList<Map<String,Object>>(2);
 		mapTar.put("actions", actions);

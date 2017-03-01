@@ -3,7 +3,6 @@ package cn.hkfdt.xiaot.websocket.service.impl;
 import cn.hkfdt.xiaot.common.beans.ReqCommonBean;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameMapper;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameUserExtendsMapper;
-import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameUserMapper;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGame;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGameExample;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGameUser;
@@ -51,7 +50,10 @@ public class GameServiceImpl implements GameService {
 		synchronized(gameId){
 			flag = MatchServiceHelper.ready(reqCommonBean);
 		}
-		xiaoTMatchTopics.readyInfo(gameId);
+		if(flag>=0) {
+			//准备成功才通知
+			xiaoTMatchTopics.readyInfo(gameId);
+		}
 		return flag;
 	}
 	@Override
@@ -60,6 +62,9 @@ public class GameServiceImpl implements GameService {
 		String gameId = reqCommonBean.data.get("gameId").toString();
 		int stayTime = Integer.parseInt(reqCommonBean.data.get("stayTime").toString());
 		GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) cacheMapXM.get(gameId);
+		if(gameRuntimeBean==null){
+			return -2;
+		}
 		if(gameRuntimeBean.canJoinGame()){
 			return -1;
 		}

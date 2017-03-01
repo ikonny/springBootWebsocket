@@ -97,6 +97,10 @@ public class XiaoTMatchController {
 			msg2="人数未满";
 			rspCode = 201;
 		}
+		if(flag==-2){
+			msg2="比赛超时回收";
+			rspCode = 202;
+		}
 		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(rspCode,msg2);
 		String str = JSON.toJSONString(rspCommonBean);
 		return str;
