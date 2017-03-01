@@ -57,6 +57,7 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 			mapTar.put("userName","游客");
 			mapTar.put("userId",fdtId);
 			mapTar.put("userType",XiaoTUserType.OtherUser.getType());
+			mapTar.put("headimgurl", XiaoTMDHelp.getGuestAvator());
 		}else{
 			Auth auth = authService.getAuthByFdtId(fdtId);
 			mapTar.put("userName",auth.getUsername());

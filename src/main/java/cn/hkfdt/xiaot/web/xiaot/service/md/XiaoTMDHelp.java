@@ -22,7 +22,20 @@ public class XiaoTMDHelp {
 	static String sqJYSSt =  "SHF";//上期
 	static String dsJYSSt =  "DCE";//大商
 	static String zsJYSSt =  "CZC";//郑商
+	static List<String> GUEST_HEAD_LIST = new ArrayList<>();
 	static{
+		//游客随机头像列表
+		GUEST_HEAD_LIST.add("http://img.investmaster.cn/c89e1b3db79f49fb8d5d8a384e516c06.png");
+		GUEST_HEAD_LIST.add("http://img.investmaster.cn/998af7f38430482bb74fdc0f0a8171fe.png");
+		GUEST_HEAD_LIST.add("http://img.investmaster.cn/46215762d1e64761ac67fd66db537a29.png");
+		GUEST_HEAD_LIST.add("http://img.investmaster.cn/8085160498a647ac909f7dce94d339a4.png");
+		GUEST_HEAD_LIST.add("http://img.investmaster.cn/0870afb156e4422e980199634beb5988.png");
+		GUEST_HEAD_LIST.add("http://img.investmaster.cn/09d8a25374e64d60a3e87430374cc526.png");
+		GUEST_HEAD_LIST.add("http://img.investmaster.cn/136dfde1ed424e16a479893dc5b3380e.png");
+		GUEST_HEAD_LIST.add("http://img.investmaster.cn/1172af55f1da4b368b850955c15fd8d9.png");
+		GUEST_HEAD_LIST.add("http://img.investmaster.cn/b2409c5719374b7fbb7d9238dc9369ac.png");
+		GUEST_HEAD_LIST.add("http://img.investmaster.cn/d529bcddc2ff45df9f845d9ec9320e61.png");
+
 		//中金
 		nM2JYS.put("IH", getADMap(zjJYSSt,"上证",300));
 		nM2JYS.put("IC", getADMap(zjJYSSt,"中证",200));
@@ -403,6 +416,11 @@ public class XiaoTMDHelp {
 			sb.append(base.charAt(number));
 		}
 		return sb.toString();
+	}
+
+	public static String getGuestAvator(){
+		Collections.shuffle(GUEST_HEAD_LIST);
+		return GUEST_HEAD_LIST.get(0);
 	}
 
 }

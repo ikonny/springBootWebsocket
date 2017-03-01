@@ -77,13 +77,13 @@ public class XiaotGameController {
         return rcb;
     }
 
-    @RequestMapping(value = "/xiaoth/game/updateGuestNick")
-    @ResponseBody
-    public Object updateGuestNick(@RequestParam String gameId, @RequestParam String fdtId, @RequestParam String newNick){
-        //TODO: 更新游客昵称
-        RspCommonBean rcb = RspCommonBean.getCommonRspBean(200, null);
-        return rcb;
-    }
+//    @RequestMapping(value = "/xiaoth/game/updateGuestNick")
+//    @ResponseBody
+//    public Object updateGuestNick(@RequestParam String gameId, @RequestParam String fdtId, @RequestParam String newNick){
+//        //TODO: 更新游客昵称
+//        RspCommonBean rcb = RspCommonBean.getCommonRspBean(200, null);
+//        return rcb;
+//    }
 
     @RequestMapping(value = "/xiaoth/game/create")
     @ResponseBody
