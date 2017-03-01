@@ -16,6 +16,7 @@ import cn.hkfdt.xiaot.web.common.redis.RedisClient;
 import cn.hkfdt.xiaot.web.common.service.AuthService;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTGameService;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTService;
+import cn.hkfdt.xiaot.web.xiaot.service.md.XiaoTMDHelp;
 import cn.hkfdt.xiaot.web.xiaot.util.XiaoTUserType;
 import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
 import com.google.gson.Gson;
