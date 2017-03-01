@@ -52,8 +52,8 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 	public Map<String, Object> getGameUser(String fdtId, String gameId) {
 		Map<String, Object>  mapTar = new HashMap<>(3);
 		if(LoginFilter.isNotLogin(fdtId)){
-			fdtId = XiaoTHelp.xiaoTGuest;
-			//fdtId = "g-" + XiaoTMDHelp.getRandomString(11);
+			//fdtId = XiaoTHelp.xiaoTGuest;
+			fdtId = "g-" + XiaoTMDHelp.getRandomString(20);
 			mapTar.put("userName","游客");
 			mapTar.put("userId",fdtId);
 			mapTar.put("userType",XiaoTUserType.OtherUser.getType());
@@ -166,5 +166,10 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 				return tg.getState();
 			}
 		}
+	}
+
+	@Override
+	public RspCommonBean getGameInfo(Map<String, Object> mapPara) {
+		return null;
 	}
 }

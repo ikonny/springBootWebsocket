@@ -93,8 +93,18 @@ public class XiaotGameController {
         return result;
     }
 
+    /**
+     * 查询比赛信息和比赛对应的question信息
+     * @param gameId
+     * @return
+     */
     @RequestMapping(value = "/xiaoth/game/getGameInfo")
-    public Object getGameInfo(@RequestParam String body){
+    public Object getGameInfo(@RequestParam String gameId){
+        return null;
+    }
+
+    @RequestMapping(value = "/xiaoth/game/getGameResult")
+    public Object getGameResult(@RequestParam String body){
         return null;
     }
 

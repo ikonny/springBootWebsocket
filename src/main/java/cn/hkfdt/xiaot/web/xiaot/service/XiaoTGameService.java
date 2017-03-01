@@ -22,4 +22,6 @@ public interface XiaoTGameService {
      * @return 0:未开始  1:进行中  2:结束  3:已满员
      */
     int getGameStatus(String gameId);
+
+    RspCommonBean getGameInfo(Map<String, Object> mapPara);
 }
