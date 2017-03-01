@@ -2,6 +2,7 @@ package cn.hkfdt.xiaot.websocket.topic;
 
 import cn.hkfdt.xiaot.common.beans.GameUserBean;
 import cn.hkfdt.xiaot.common.beans.RspCommonBean;
+import cn.hkfdt.xiaot.websocket.Beans.GameRuntimeBean;
 import cn.hkfdt.xiaot.websocket.Beans.GameUserExtBean;
 import cn.hkfdt.xiaot.websocket.Beans.GameUserListBean;
 import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
@@ -67,14 +68,14 @@ public class XiaoTMatchTopics {
 		rankList.forEach(itemT->{
 			GameUserListBean itemTemp = new GameUserListBean();
 			itemTemp.userId = itemT.userId;
-			itemTemp.headimgurl = itemT.headimgurl;
-			itemTemp.userName = itemT.userName;
-			itemTemp.userType = itemT.userType;
-			itemTemp.returnRate = itemT.returnRate;
+//			itemTemp.headimgurl = itemT.headimgurl;
+//			itemTemp.userName = itemT.userName;
+//			itemTemp.userType = itemT.userType;
+//			itemTemp.returnRate = itemT.returnRate;
 			listTar.add(itemTemp);
 		});
 		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
-		rspCommonBean.data = rankList;
+		rspCommonBean.data = listTar;
 		String str = JSON.toJSONString(rspCommonBean);
 //		System.out.println("send rankList: " + str);
 		System.err.println(str);
@@ -92,8 +93,28 @@ public class XiaoTMatchTopics {
 	 */
 	public void readyInfo(String gameId) {
 		String destination = GameUrlHelp.topic_userReadyInfo+gameId;
+		GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) MatchServiceHelper.cacheMapXM.get(gameId);
+		if(gameRuntimeBean==null){
+			RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(201,"没有这个比赛");
+			String str = JSON.toJSONString(rspCommonBean);
+			simpMessagingTemplate.convertAndSend(destination, str);
+			return ;
+		}
 		List<GameUserBean> listUser = new ArrayList<>();
-		simpMessagingTemplate.convertAndSend(destination, listUser);
+		gameRuntimeBean.mapUsers.values().forEach(itme->{
+			GameUserBean itemNew = new GameUserBean();
+			itemNew.userId = itme.userId;
+			itemNew.headimgurl = itme.headimgurl;
+			itemNew.userName = itme.userName;
+			itemNew.userType = itme.userType;
+
+			listUser.add(itemNew);
+		});
+		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
+		rspCommonBean.data = listUser;
+		String str = JSON.toJSONString(rspCommonBean);
+
+		simpMessagingTemplate.convertAndSend(destination, str);
 	}
 	/**
 	 * 通知本次比赛参加人开始比赛

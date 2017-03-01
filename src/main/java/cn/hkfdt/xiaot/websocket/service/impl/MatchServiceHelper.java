@@ -10,6 +10,7 @@ import cn.hkfdt.xiaot.websocket.Beans.GameUserExtBean;
 import cn.hkfdt.xiaot.websocket.service.GameService;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 import com.alibaba.fastjson.JSON;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
@@ -27,7 +28,7 @@ public class MatchServiceHelper {
 	public static CacheMapXM cacheMapXM = new CacheMapXM();
 	public static XiaoTMatchTopics xiaoTMatchTopics = null;//被动注入的
 	public static GameService gameService = null;
-	private static org.slf4j.Logger logger = LoggerFactory.getLogger(MatchServiceHelper.class);
+	private static Logger logger = LoggerFactory.getLogger(MatchServiceHelper.class);
 
 	/**
 	 * @param args
@@ -73,7 +74,7 @@ public class MatchServiceHelper {
 		GameRuntimeBean gameRuntimeBean = new GameRuntimeBean();
 		gameRuntimeBean.userNum = cacheBean.tGame.getUserNum();
 		gameRuntimeBean.gameId = cacheBean.tGame.getGameId();
-		gameRuntimeBean.mapUsers = new HashMap<>(gameRuntimeBean.userNum);
+		gameRuntimeBean.mapUsers = new LinkedHashMap<>(gameRuntimeBean.userNum);
 		gameRuntimeBean.mapUsersEnd = new HashMap<>(gameRuntimeBean.userNum);
 		gameRuntimeBean.tGame = cacheBean.tGame;
 		gameRuntimeBean.tQuestions = cacheBean.tQuestions;

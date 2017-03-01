@@ -50,6 +50,7 @@ public class GameServiceImpl implements GameService {
 		synchronized(gameId){
 			flag = MatchServiceHelper.ready(reqCommonBean);
 		}
+		xiaoTMatchTopics.readyInfo(gameId);
 		return flag;
 	}
 	@Override

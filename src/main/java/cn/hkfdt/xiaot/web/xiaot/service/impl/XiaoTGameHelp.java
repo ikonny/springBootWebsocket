@@ -24,7 +24,7 @@ public class XiaoTGameHelp {
 		try {
 			resultMap = new HashMap<>(3);
 			int num = Integer.parseInt(mapPara.get("userNum").toString());
-			String url = GlobalInfo.gameClientUrl + "&gameId=" + gameId + "&num=" + num;
+			String url = GlobalInfo.gameClientUrl + "?gameId=" + gameId + "&num=" + num;
 			resultMap.put("img", QrCodeUtil.createImage2Base64(url));
 			resultMap.put("gameId", gameId);
 			resultMap.put("url", url);
