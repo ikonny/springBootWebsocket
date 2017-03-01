@@ -99,12 +99,14 @@ public class XiaotGameController {
      * @return
      */
     @RequestMapping(value = "/xiaoth/game/getGameInfo")
+    @ResponseBody
     public Object getGameInfo(@RequestParam String gameId){
-        return null;
+        return xiaoTGameService.getGameInfo(gameId);
     }
 
     @RequestMapping(value = "/xiaoth/game/getGameResult")
-    public Object getGameResult(@RequestParam String body){
+    @ResponseBody
+    public Object getGameResult(@RequestParam String gameId){
         return null;
     }
 

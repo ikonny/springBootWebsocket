@@ -5,6 +5,7 @@ import cn.hkfdt.xiaot.common.beans.GameCacheBean;
 import cn.hkfdt.xiaot.common.beans.RspCommonBean;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameMapper;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TQuestionsExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.Auth;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGame;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
@@ -18,11 +19,14 @@ import cn.hkfdt.xiaot.web.xiaot.service.XiaoTGameService;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTService;
 import cn.hkfdt.xiaot.web.xiaot.service.md.XiaoTMDHelp;
 import cn.hkfdt.xiaot.web.xiaot.util.XiaoTUserType;
+import cn.hkfdt.xiaot.web.xiaot.util.YSUtils;
 import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
+import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -44,6 +48,8 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 	XiaoTService xiaoTService;
 	@Autowired
 	TGameExtendsMapper tGameExtendsMapper;
+	@Autowired
+	TQuestionsExtendsMapper tQuestionsExtendsMapper;
 
 	Gson gson = new Gson();
 
@@ -169,7 +175,34 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 	}
 
 	@Override
-	public RspCommonBean getGameInfo(Map<String, Object> mapPara) {
-		return null;
+	public RspCommonBean getGameInfo(String gameId) {
+		RspCommonBean rcb = new RspCommonBean();
+		TGame tg = tGameExtendsMapper.selectGameByGameId(gameId);
+		int questionId = tg.getQuestionId();
+		TQuestions tq = tQuestionsExtendsMapper.selectByPrimaryKey(questionId);
+		byte[] jsonData = tq.getJsonData();
+		Map<String, Object> mapTar = new HashMap<>();
+		try {
+			//获取解压后的真实数据json
+			jsonData = YSUtils.uncompress(jsonData);
+			Map<String, Object> jsonDataMap = new HashMap<String, Object>(6);
+			jsonDataMap = JSON.parseObject(new String(jsonData));//(Map<String, Object>) JsonUtil.JsonToOb(new String(jsonData), jsonDataMap.getClass());
+
+			mapTar.put("jsonData",jsonDataMap );
+
+			mapTar.put("key", XiaoTHelp.getTKey(tq));
+			mapTar.put("market", XiaoTHelp.getMarketCode(tq));
+
+			String tradeTime = tq.getTradeDay();
+			mapTar.put("tradeTime", tradeTime.replace("-", "."));
+			rcb.rspCode = 200;
+			rcb.data = mapTar;
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			rcb.rspCode = 201;
+			rcb.msg = "获取比赛信息出错！";
+		}
+		return rcb;
 	}
 }

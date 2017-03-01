@@ -23,5 +23,5 @@ public interface XiaoTGameService {
      */
     int getGameStatus(String gameId);
 
-    RspCommonBean getGameInfo(Map<String, Object> mapPara);
+    RspCommonBean getGameInfo(String gameId);
 }
