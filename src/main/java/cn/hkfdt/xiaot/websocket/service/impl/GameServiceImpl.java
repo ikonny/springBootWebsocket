@@ -2,6 +2,7 @@ package cn.hkfdt.xiaot.websocket.service.impl;
 
 import cn.hkfdt.xiaot.common.beans.ReqCommonBean;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameMapper;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameUserExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameUserMapper;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGame;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGameExample;
@@ -34,7 +35,7 @@ public class GameServiceImpl implements GameService {
 	@Autowired
 	TGameMapper tGameMapper;
 	@Autowired
-	TGameUserMapper tGameUserMapper;
+	TGameUserExtendsMapper tGameUserExtendsMapper;
 	@Autowired
 	GameService gameService;
 	//==================================================================
@@ -117,12 +118,12 @@ public class GameServiceImpl implements GameService {
 		TGameUserExample tGameUserExample = new TGameUserExample();
 		tGameUserExample.createCriteria().andGameIdEqualTo(tGameUser.getGameId())
 				.andUserIdEqualTo(tGameUser.getUserId());
-		List<TGameUser> listGameUser = tGameUserMapper.selectByExample(tGameUserExample);
+		List<TGameUser> listGameUser = tGameUserExtendsMapper.selectByExample(tGameUserExample);
 		if(listGameUser.isEmpty()){
-			return tGameUserMapper.insert(tGameUser);
+			return tGameUserExtendsMapper.insert(tGameUser);
 		}else{
 			tGameUser.setId(listGameUser.get(0).getId());
-			return tGameUserMapper.updateByPrimaryKey(tGameUser);
+			return tGameUserExtendsMapper.updateByPrimaryKey(tGameUser);
 		}
 	}
 

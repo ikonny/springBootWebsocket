@@ -5,9 +5,11 @@ import cn.hkfdt.xiaot.common.beans.GameCacheBean;
 import cn.hkfdt.xiaot.common.beans.RspCommonBean;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameMapper;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameUserExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TQuestionsExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.Auth;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGame;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.TGameUser;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
 import cn.hkfdt.xiaot.util.ImageUtil;
 import cn.hkfdt.xiaot.web.Filters.LoginFilter;
@@ -27,9 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Future;
 
 /**
@@ -50,6 +50,8 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 	TGameExtendsMapper tGameExtendsMapper;
 	@Autowired
 	TQuestionsExtendsMapper tQuestionsExtendsMapper;
+	@Autowired
+	TGameUserExtendsMapper tGameUserExtendsMapper;
 
 	Gson gson = new Gson();
 
@@ -203,6 +205,32 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 			rcb.rspCode = 201;
 			rcb.msg = "获取比赛信息出错！";
 		}
+		return rcb;
+	}
+
+	@Override
+	public RspCommonBean getGameResult(String gameId) {
+		RspCommonBean rcb = new RspCommonBean();
+		List<TGameUser> tguList = tGameUserExtendsMapper.selectGameUserByGameId(gameId);
+		List<Map<String,Object>> userInfoList = new ArrayList<>();
+		if(tguList != null){
+			for (TGameUser tgu : tguList) {
+				Map<String, Object> resultMap = new HashMap<>();
+				resultMap.put("ranking", tgu.getRanking());
+				resultMap.put("userName", tgu.getNickName());
+				resultMap.put("returnRate", tgu.getReturnRate()+"%");
+				String action = tgu.getActions();
+				String keyWord = "side";
+				int orgLength = action.length();
+				int cutLength = action.replace(keyWord, "").length();
+				int count = (orgLength - cutLength) / keyWord.length();
+				resultMap.put("count", count);
+				resultMap.put("headimgurl", tgu.getHeadimgurl());
+				userInfoList.add(resultMap);
+			}
+		}
+		rcb.rspCode = 200;
+		rcb.data = userInfoList;
 		return rcb;
 	}
 }

@@ -23,5 +23,17 @@ public interface XiaoTGameService {
      */
     int getGameStatus(String gameId);
 
+    /**
+     * 获取比赛信息
+     * @param gameId
+     * @return
+     */
     RspCommonBean getGameInfo(String gameId);
+
+    /**
+     * 获取比赛结果
+     * @param gameId
+     * @return
+     */
+    RspCommonBean getGameResult(String gameId);
 }

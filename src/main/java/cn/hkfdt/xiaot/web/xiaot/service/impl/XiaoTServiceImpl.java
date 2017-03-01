@@ -1,9 +1,6 @@
 package cn.hkfdt.xiaot.web.xiaot.service.impl;
 
-import cn.hkfdt.xiaot.mybatis.mapper.ltschina.ForceAnalysisExtendsMapper;
-import cn.hkfdt.xiaot.mybatis.mapper.ltschina.SchoolMapper;
-import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TQuestionsExtendsMapper;
-import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TRecordExtendsMapper;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.*;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.*;
 import cn.hkfdt.xiaot.util.ImageUtil;
 import cn.hkfdt.xiaot.web.common.redis.RedisClient;

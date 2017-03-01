@@ -107,7 +107,7 @@ public class XiaotGameController {
     @RequestMapping(value = "/xiaoth/game/getGameResult")
     @ResponseBody
     public Object getGameResult(@RequestParam String gameId){
-        return null;
+        return xiaoTGameService.getGameResult(gameId);
     }
 
 }
