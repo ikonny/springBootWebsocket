@@ -1,7 +1,6 @@
 package cn.hkfdt.xiaot.websocket.Beans;
 
 import cn.hkfdt.xiaot.common.beans.GameUserBean;
-import org.apache.commons.beanutils.BeanUtils;
 
 import java.io.Serializable;
 
@@ -18,11 +17,12 @@ public class GameUserListBean extends GameUserBean implements Serializable {
 
     public GameUserListBean deepCopy() {
         GameUserListBean item = new GameUserListBean();
-        try {
-            BeanUtils.copyProperties(item,this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        item.returnRate = this.returnRate;
+        item.userType = this.userType;
+
+        item.userName = this.userName;
+        item.headimgurl = this.headimgurl;
+        item.userId = this.userId;
         return item;
     }
 }

@@ -16,10 +16,9 @@ import cn.hkfdt.xiaot.web.common.redis.RedisClient;
 import cn.hkfdt.xiaot.web.common.service.AuthService;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTGameService;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTService;
-import cn.hkfdt.xiaot.web.xiaot.service.md.XiaoTMDHelp;
 import cn.hkfdt.xiaot.web.xiaot.util.XiaoTUserType;
-import com.google.gson.Gson;
 import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -144,6 +143,7 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 					}
 				}
 			}catch (Exception e){
+				e.printStackTrace();
 				mapTar = null;
 			}
 
