@@ -75,7 +75,6 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 			mapTar.put("headimgurl",headimgurl);
 		}
 		mapTar.put("gameId", gameId);
-		//TODO: 插入参赛用户信息
 		return mapTar;
 	}
 
