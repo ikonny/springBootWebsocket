@@ -65,7 +65,7 @@ public class GameServiceImpl implements GameService {
 		if(gameRuntimeBean==null){
 			return -2;
 		}
-		if(gameRuntimeBean.canJoinGame()){
+		if(!gameRuntimeBean.isUserAllReady()){
 			return -1;
 		}
 		cacheMapXM.put(gameId,gameRuntimeBean,stayTime+5);//开始后调整时间
@@ -125,6 +125,7 @@ public class GameServiceImpl implements GameService {
 				.andUserIdEqualTo(tGameUser.getUserId());
 		List<TGameUser> listGameUser = tGameUserExtendsMapper.selectByExample(tGameUserExample);
 		if(listGameUser.isEmpty()){
+			tGameUser.setCreateTime(tGameUser.getUpdateTime());
 			return tGameUserExtendsMapper.insert(tGameUser);
 		}else{
 			tGameUser.setId(listGameUser.get(0).getId());

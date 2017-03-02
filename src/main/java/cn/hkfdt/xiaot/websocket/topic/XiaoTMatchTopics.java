@@ -8,6 +8,7 @@ import cn.hkfdt.xiaot.websocket.Beans.GameUserListBean;
 import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
 import cn.hkfdt.xiaot.websocket.utils.GameUrlHelp;
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.collections.map.LinkedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,7 +129,6 @@ public class XiaoTMatchTopics {
 		simpMessagingTemplate.convertAndSend(destination, matchGo);
 	}
 	/**
-	 * 某比赛选手成绩更新后触发
 	 * 排行榜计算完毕，并通知订阅此接口的用户.注意后面区分比赛id
 	 * @param rankList
 	 * @param gameId
@@ -138,15 +138,18 @@ public class XiaoTMatchTopics {
 	 */
 	public String rankList(List<GameUserExtBean> rankList, String gameId) {
 		String destination = GameUrlHelp.topic_gameListInfo+gameId;
-		List<GameUserListBean> listTar = new ArrayList<>(rankList.size());
+		List<Map<String,Object>> listTar = new ArrayList<>(rankList.size());
 		rankList.forEach(item->{
-			GameUserListBean itemTemp = new GameUserListBean();
-			itemTemp.userId = item.userId;
-			itemTemp.headimgurl = item.headimgurl;
-			itemTemp.userName = item.userName;
-			itemTemp.userType = item.userType;
-			itemTemp.returnRate = item.returnRate;
-			listTar.add(itemTemp);
+//			GameUserListBean itemTemp = new GameUserListBean();
+//			itemTemp.userId = item.userId;
+//			itemTemp.headimgurl = item.headimgurl;
+//			itemTemp.userName = item.userName;
+//			itemTemp.userType = item.userType;
+//			itemTemp.returnRate = item.returnRate;
+
+			Map<String,Object> itemNew = new LinkedMap(1);
+			itemNew.put("userId",item.userId);
+			listTar.add(itemNew);
 		});
 		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
 		rspCommonBean.data = listTar;

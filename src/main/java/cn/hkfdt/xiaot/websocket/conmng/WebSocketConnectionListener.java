@@ -131,6 +131,7 @@ public class WebSocketConnectionListener implements
 		if(!StringUtils.isEmpty(fdtId)){
 			mapSession2FdtId.remove(sessionId);
 			mapFdtId2Session.remove(fdtId);
+			ConnectEventHelper.disConnectAndAfterRmove(fdtId,sessionId);
 			logger.info("-------断开:fdtId "+fdtId);
 		}
 	}
