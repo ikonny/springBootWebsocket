@@ -217,7 +217,7 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 				Map<String, Object> resultMap = new HashMap<>();
 				resultMap.put("rankIdx", tgu.getRanking());
 				resultMap.put("name", tgu.getNickName());
-				resultMap.put("percent", tgu.getReturnRate()+"%");
+				resultMap.put("percent", tgu.getReturnRate());
 				String action = tgu.getActions();
 				String keyWord = "side";
 				int orgLength = action.length();
