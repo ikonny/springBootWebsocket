@@ -215,16 +215,16 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 		if(tguList != null){
 			for (TGameUser tgu : tguList) {
 				Map<String, Object> resultMap = new HashMap<>();
-				resultMap.put("ranking", tgu.getRanking());
-				resultMap.put("userName", tgu.getNickName());
-				resultMap.put("returnRate", tgu.getReturnRate()+"%");
+				resultMap.put("rankIdx", tgu.getRanking());
+				resultMap.put("name", tgu.getNickName());
+				resultMap.put("percent", tgu.getReturnRate()+"%");
 				String action = tgu.getActions();
 				String keyWord = "side";
 				int orgLength = action.length();
 				int cutLength = action.replace(keyWord, "").length();
 				int count = (orgLength - cutLength) / keyWord.length();
 				resultMap.put("count", count);
-				resultMap.put("headimgurl", tgu.getHeadimgurl());
+				resultMap.put("header_url", tgu.getHeadimgurl());
 				userInfoList.add(resultMap);
 			}
 		}
