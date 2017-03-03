@@ -96,12 +96,13 @@ public class XiaotGameController {
     /**
      * 查询比赛信息和比赛对应的question信息
      * @param gameId
+     * @param type all or history or today
      * @return
      */
     @RequestMapping(value = "/xiaoth/game/getGameInfo")
     @ResponseBody
-    public Object getGameInfo(@RequestParam String gameId){
-        return xiaoTGameService.getGameInfo(gameId);
+    public Object getGameInfo(@RequestParam String gameId, @RequestParam(defaultValue = "all") String type){
+        return xiaoTGameService.getGameInfo(gameId, type);
     }
 
     @RequestMapping(value = "/xiaoth/game/getGameResult")

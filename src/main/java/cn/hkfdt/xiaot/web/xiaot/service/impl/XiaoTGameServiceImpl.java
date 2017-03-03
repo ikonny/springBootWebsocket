@@ -176,7 +176,7 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 	}
 
 	@Override
-	public RspCommonBean getGameInfo(String gameId) {
+	public RspCommonBean getGameInfo(String gameId, String type) {
 		RspCommonBean rcb = new RspCommonBean();
 		TGame tg = tGameExtendsMapper.selectGameByGameId(gameId);
 		int questionId = tg.getQuestionId();
@@ -188,7 +188,11 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 			jsonData = YSUtils.uncompress(jsonData);
 			Map<String, Object> jsonDataMap = new HashMap<String, Object>(6);
 			jsonDataMap = JSON.parseObject(new String(jsonData));//(Map<String, Object>) JsonUtil.JsonToOb(new String(jsonData), jsonDataMap.getClass());
-
+			if("today".equalsIgnoreCase(type)){
+				jsonDataMap.put("history", null);
+			}else if("history".equalsIgnoreCase(type)){
+				jsonDataMap.put("today", null);
+			}
 			mapTar.put("jsonData",jsonDataMap );
 
 			mapTar.put("key", XiaoTHelp.getTKey(tq));
