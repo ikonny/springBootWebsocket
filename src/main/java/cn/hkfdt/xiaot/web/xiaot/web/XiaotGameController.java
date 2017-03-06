@@ -64,6 +64,7 @@ public class XiaotGameController {
         if(WXHelper.isFromWx(request)){//微信用打开
  //           logger.info("微信:"+GlobalInfo.wxLoginUrl);
             try {
+                response.setHeader("Access-Control-Allow-Origin", "*");
                 response.sendRedirect(GlobalInfo.wxLoginUrl.replace("theGameId", gameId));
             } catch (IOException e) {
                 e.printStackTrace();

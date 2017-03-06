@@ -1,12 +1,14 @@
 package cn.hkfdt.xiaot.web.weixin;
 
 import cn.hkfdt.xiaot.common.beans.RspCommonBean;
+import cn.hkfdt.xiaot.util.HttpClientUtil;
 import cn.hkfdt.xiaot.util.MapUtil;
 import cn.hkfdt.xiaot.util.SHAUtil;
 import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
 import cn.hkfdt.xiaot.web.xiaot.util.XiaoTUserType;
 import cn.hkfdt.xiaot.websocket.utils.HttpUtils;
 import com.alibaba.fastjson.JSON;
+import com.google.gson.Gson;
 import com.mysql.jdbc.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,13 +72,13 @@ headimgurl	用户头像，最后一个数值代表正方形头像大小（有0�
 privilege	用户特权信息，json 数组，如微信沃卡用户为（chinaunicom）
 unionid	只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段。详见：获取用户个人信息（UnionID机制）
     */
-    @RequestMapping("/white/wx/getuserinfo_{gameId}")
-    @ResponseBody
-    public Object getuserinfo(@PathVariable String gameId, String code, @RequestParam(required = true)String state) {
+    @RequestMapping("/white/wx/getuserinfo_{gameId}_{num}")
+    public void getuserinfo (@PathVariable String gameId, @PathVariable String num, String code, @RequestParam(required = true)String state, HttpServletResponse response)
+    throws Exception{
         Map<String,Object>  mapTar = new HashMap<>(4);
         if(StringUtils.isNullOrEmpty(code)){
             RspCommonBean rcb = RspCommonBean.getCommonRspBean(201,"微信用户不同意授权");
-            return rcb;
+
         }
         //2.获取通过code换取网页授权access_token
         String url = WXHelper.getReqAccTokenUrl(code);
@@ -99,16 +104,17 @@ unionid	只有在用户将公众号绑定到微信开放平台帐号后，才会
                 mapTar.put("userId",openid);
                 mapTar.put("userType", XiaoTUserType.WxUser.getType());
                 mapTar.put("headimgurl",headimgurl);
-                mapTar.put("gameId", gameId);
 
 
                 RspCommonBean rcb = RspCommonBean.getCommonRspBean(200, null);
                 rcb.data = mapTar;
 
-                return rcb;
             }
         }
         RspCommonBean rcb = RspCommonBean.getCommonRspBean(202,"微信授权未知错误");
-        return rcb;
+        HttpClientUtil http=new HttpClientUtil (response);
+        http.setParameter("userInfo", URLEncoder.encode(new Gson().toJson(mapTar)));
+        http.sendByPost("http://" + GlobalInfo.serverDomain + "/xiaoth/xiaot/battle?gameId="+ gameId + "&num=" + num);
+
     }
 }

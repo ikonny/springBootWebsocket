@@ -5,9 +5,12 @@ import cn.hkfdt.xiaot.web.Filters.LoginFilter;
 import cn.hkfdt.xiaot.web.common.UserContext;
 import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
 import cn.hkfdt.xiaot.web.common.service.CommonService;
+import cn.hkfdt.xiaot.web.weixin.WXHelper;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTService;
 import cn.hkfdt.xiaot.web.xiaot.service.impl.XiaoTHelp;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.apache.catalina.util.URLEncoder;
+import org.apache.tomcat.util.codec.binary.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,14 +91,31 @@ public class XiaoTController {
 	 * 2016-12-15 下午5:02:06
 	 */
 	@RequestMapping(value="/xiaoth/xiaot/{other}")
-    public String xiaot(HttpServletRequest request, @PathVariable String other, Model model){
+    public String xiaot(HttpServletRequest request, @PathVariable String other, Model model,
+						HttpServletResponse response, @RequestParam(required = false) String userInfo, @RequestParam(required = false) String gameId,
+						@RequestParam(required = false) String num ){
+		if(WXHelper.isFromWx(request) && (userInfo == null || "".equalsIgnoreCase(userInfo))){//微信用打开,且没有用户信息
+			//           logger.info("微信:"+GlobalInfo.wxLoginUrl);
+			try {
+				response.setHeader("Access-Control-Allow-Origin", "*");
+				System.out.println(GlobalInfo.wxLoginUrl);
+				String targetUrl = GlobalInfo.wxLoginUrl.replace("theGameId", gameId).replace("theNum", num);
+				System.out.println(targetUrl);
+				response.sendRedirect(targetUrl);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
 		//{"lib":"1.1.10", "liveVideo":"1.1.10"}
 //		String str = request.getRequestURI();
 		Map<String,Object>  mapTar = commonService.getSystemSettingValueAsMap("xiaoT_version");
         model.addAttribute("lib_version", mapTar.get("lib"));
         model.addAttribute("xiaoT_version", mapTar.get("xiaoT"));
+
 		String baseUrl = GlobalInfo.imDomain;
         model.addAttribute("baseUrl", baseUrl);
+		model.addAttribute("userInfo", URLDecoder.decode(userInfo));
 		return "xiaot/index";
     }
 

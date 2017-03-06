@@ -63,7 +63,7 @@ public class GlobalInfoHelperServer {
         //============================================
         GlobalInfo.wxToken = wxToken;
         GlobalInfo.wxAppid = wxAppid;
-        String xwRedUrl = "https://"+serverDomain+"/white/wx/getuserinfo_theGameId";
+        String xwRedUrl = "https://"+serverDomain+"/white/wx/getuserinfo_theGameId_theNum";
         try {
             xwRedUrl = URLEncoder.encode(xwRedUrl, "utf-8");
         }catch (Exception e){

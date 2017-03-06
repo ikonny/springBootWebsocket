@@ -20,5 +20,8 @@
     window.scriptPath = '${baseUrl}/assets/fdt/klinetc/${xiaoT_version}/';
   </script>
   <script src="${baseUrl}/assets/fdt/klinetc/${xiaoT_version}/index.js" charset="utf-8"></script>
+<script>
+	var wxUserInfo = '${userInfo}';
+</script>
 </body>
 </html>
