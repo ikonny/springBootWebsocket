@@ -117,7 +117,7 @@ public class QrCodeUtil {
         hints.put(EncodeHintType.MARGIN, 1);
         BitMatrix bitMatrix = new MultiFormatWriter().encode(content,
                 BarcodeFormat.QR_CODE, QRCODE_SIZE, QRCODE_SIZE, hints);
-        bitMatrix = deleteWhite(bitMatrix);//删除白边
+      //  bitMatrix = deleteWhite(bitMatrix);//删除白边
         int width = bitMatrix.getWidth();
         int height = bitMatrix.getHeight();
         BufferedImage image = new BufferedImage(width, height,
