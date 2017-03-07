@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.groups.Default;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.HashMap;
@@ -92,7 +93,7 @@ public class XiaoTController {
 	 */
 	@RequestMapping(value="/xiaoth/xiaot/{other}")
     public String xiaot(HttpServletRequest request, @PathVariable String other, Model model,
-						HttpServletResponse response, @RequestParam(required = false) String userInfo, @RequestParam(required = false) String gameId,
+						HttpServletResponse response, @RequestParam(defaultValue = "") String userInfo, @RequestParam(required = false) String gameId,
 						@RequestParam(required = false) String num ){
 		if(WXHelper.isFromWx(request) && (userInfo == null || "".equalsIgnoreCase(userInfo))){//微信用打开,且没有用户信息
 			//           logger.info("微信:"+GlobalInfo.wxLoginUrl);
