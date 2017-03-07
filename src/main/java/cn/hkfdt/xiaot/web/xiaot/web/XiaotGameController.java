@@ -73,7 +73,7 @@ public class XiaotGameController {
         }
         RspCommonBean rcb = RspCommonBean.getCommonRspBean(200, null);
         String fdtId = UserContext.getUserInfo().get().getFdtId();
-        Map<String, Object> mapTar = xiaoTGameService.getGameUser(fdtId, gameId);
+        Map<String, Object> mapTar = xiaoTGameService.getGameUser(fdtId, gameId, request, response);
         rcb.data = mapTar;
         return rcb;
     }

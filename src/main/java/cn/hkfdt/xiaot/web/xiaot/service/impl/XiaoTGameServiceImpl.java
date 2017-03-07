@@ -11,6 +11,7 @@ import cn.hkfdt.xiaot.mybatis.model.ltschina.Auth;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGame;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGameUser;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
+import cn.hkfdt.xiaot.util.CookieUtil;
 import cn.hkfdt.xiaot.util.ImageUtil;
 import cn.hkfdt.xiaot.web.Filters.LoginFilter;
 import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
@@ -25,9 +26,12 @@ import cn.hkfdt.xiaot.web.xiaot.util.YSUtils;
 import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
 import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Future;
@@ -55,17 +59,29 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 
 	Gson gson = new Gson();
 
+	private static final String GUEST_COOKIE_KEY = "fdt_xiaot_guest_info";
+
 	//=================================================
 	@Override
-	public Map<String, Object> getGameUser(String fdtId, String gameId) {
+	public Map<String, Object> getGameUser(String fdtId, String gameId, HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object>  mapTar = new HashMap<>(3);
 		if(LoginFilter.isNotLogin(fdtId)){
-			//fdtId = XiaoTHelp.xiaoTGuest;
-			fdtId = "g-" + XiaoTMDHelp.getRandomString(20);
-			mapTar.put("userName","游客");
-			mapTar.put("userId",fdtId);
-			mapTar.put("userType",XiaoTUserType.OtherUser.getType());
-			mapTar.put("headimgurl", XiaoTMDHelp.getGuestAvator());
+			//游客先获取cookie
+			String guestJson = CookieUtil.getCookie(GUEST_COOKIE_KEY, request);
+			if (guestJson != null && !"".equals(guestJson)) {
+				mapTar = gson.fromJson(guestJson, new TypeToken<Map<String, Object>>() {
+				}.getType());
+			}else{//没有cookie，生成用户信息，放入cookie
+				fdtId = "g-" + XiaoTMDHelp.getRandomString(20);
+				mapTar.put("userName","游客");
+				mapTar.put("userId",fdtId);
+				mapTar.put("userType",XiaoTUserType.OtherUser.getType());
+				mapTar.put("headimgurl", XiaoTMDHelp.getGuestAvator());
+				CookieUtil.setCookie(response, Integer.MAX_VALUE, GlobalInfo.serverDomain, "/", GUEST_COOKIE_KEY, gson.toJson(mapTar));
+			}
+
+
+
 		}else{
 			Auth auth = authService.getAuthByFdtId(fdtId);
 			mapTar.put("userName",auth.getUsername());

@@ -3,11 +3,13 @@ package cn.hkfdt.xiaot.web.xiaot.service;
 
 import cn.hkfdt.xiaot.common.beans.RspCommonBean;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 public interface XiaoTGameService {
 
-    Map<String,Object> getGameUser(String fdtId, String gameId);
+    Map<String,Object> getGameUser(String fdtId, String gameId, HttpServletRequest request, HttpServletResponse response);
 
     /**
      * @param mapPara {"userNum":10,"gameName":"aa对抗赛","marketType":0}
