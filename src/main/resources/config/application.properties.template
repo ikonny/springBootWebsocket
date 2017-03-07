@@ -1,0 +1,68 @@
+#/config包下的配置文件优于根目录下
+spring.profiles.active=dev
+
+#jdbc datasource
+
+#spring.datasource.ltsChina.url=jdbc:mysql://192.168.4.71:3306/LTS_China?useUnicode=true&characterEncoding=utf8
+#spring.datasource.ltsChina.username=tqt001
+#spring.datasource.ltsChina.password=tqt002
+spring.datasource.ltsChina.driver-class-name=com.mysql.jdbc.Driver
+
+#default is tomcat jdbc connection pool
+spring.datasource.ltsChina.dbcp.initial-size=2
+spring.datasource.ltsChina.tomcat.min-idle=2
+spring.datasource.ltsChina.tomcat.max-idle=10
+spring.datasource.ltsChina.tomcat.max-wait=10000
+spring.datasource.ltsChina.tomcat.validation-query=SELECT 1
+
+spring.datasource.ltsChina.tomcat.test-while-idle=true
+spring.datasource.ltsChina.tomcat.time-between-eviction-runs-millis=27800
+
+#=======================================================================
+
+#spring.datasource.fxChina.url=jdbc:mysql://192.168.4.71:3306/LTS_China_FX?useUnicode=true&characterEncoding=utf8
+#spring.datasource.fxChina.username=tqt001
+#spring.datasource.fxChina.password=tqt002
+spring.datasource.fxChina.driver-class-name=com.mysql.jdbc.Driver
+
+#default is tomcat jdbc connection pool
+spring.datasource.fxChina.dbcp.initial-size=1
+spring.datasource.fxChina.tomcat.min-idle=1
+spring.datasource.fxChina.tomcat.max-idle=6
+spring.datasource.fxChina.tomcat.max-wait=10000
+spring.datasource.fxChina.tomcat.validation-query=SELECT 1
+
+spring.datasource.fxChina.tomcat.test-while-idle=true
+spring.datasource.fxChina.tomcat.time-between-eviction-runs-millis=27800
+
+
+#mybatis\u914D\u7F6E
+#TRecordMapper + @Mapper 加一个mapper
+#mybatis.mapper-locations=classpath:mapper/*.xml
+
+# EMBEDDED SERVER CONFIGURATION (ServerProperties)
+#server.port=12306
+server.tomcat.max-threads=300
+
+# JACKSON (JacksonProperties)
+spring.jackson.date-format=yyyy-MM-dd HH:mm:ss
+
+# thymeleaf
+#spring.thymeleaf.cache=false
+#spring.thymeleaf.check-template-location=false
+#spring.thymeleaf.content-type=text/html
+#spring.thymeleaf.enabled=true
+#spring.thymeleaf.encoding=UTF-8
+#spring.thymeleaf.mode=HTML5
+#spring.thymeleaf.prefix=classpath:/templates/
+#spring.thymeleaf.suffix=.html
+
+#模板约定在templates下面
+spring.freemarker.cache=false
+#spring.freemarker.settings.auto_import=spring.ftl as spring, layout.ftl as layout
+
+# SPRING RESOURCES HANDLING (ResourceProperties)
+spring.resources.chain.cache=false
+spring.devtools.restart.enabled =false
+
+xiaot.game.overtime.minute=30
