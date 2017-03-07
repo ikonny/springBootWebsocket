@@ -115,6 +115,9 @@ public class Auth implements Serializable {
     }
 
     public String getUsername() {
+        if(username == null || "".equals(username)){
+            return userid;
+        }
         return username;
     }
 
