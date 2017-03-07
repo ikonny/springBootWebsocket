@@ -315,6 +315,9 @@ public class Auth implements Serializable {
     }
 
     public String getServingUrl() {
+        if(servingUrl == null || "".equals(servingUrl)){
+            return "//img.investmaster.cn/1622b30e579e4d448403ed805023bb5e.png";
+        }
         return servingUrl;
     }
 
