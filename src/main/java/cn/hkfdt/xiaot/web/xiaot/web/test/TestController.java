@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -100,17 +99,22 @@ public class TestController {
 	}
 
 	@MessageMapping("/topic/test/send")
-	@SendTo("/topic/test/send")
+	@SendToUser("/topic/test/send")
 	public String testTopic(StompHeaderAccessor headerAccessor,@Payload(required = false)String msg) {
 		if(StringUtils.isNullOrEmpty(msg)){
 			return null;
 		}
-//		Map<String, Object>  paraMap = getParaMap(headerAccessor,msg);
 		Map<String, Object>  mapTar = new HashMap<>(2);
 		mapTar.put("topic server Had Rec",msg);
 		String str = JSON.toJSONString(mapTar);
 		logger.info(str);
 //		simpMessagingTemplate.convertAndSend("/topic/test/send", str);
+		String userName = headerAccessor.getSessionId();
+		String des = "/topic/test/send";///user/queue/test/send
+
+		simpMessagingTemplate.convertAndSendToUser(userName,des,"我是数据");
+		simpMessagingTemplate.convertAndSend("/user/"+userName+des,"我是数据222");
+
 		return str;
 	}
 	//@Payload(required = false) 默认是true，如果没有数据就会报错

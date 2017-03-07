@@ -184,4 +184,20 @@ public class XiaoTMatchTopics {
 		String str = JSON.toJSONString(rspCommonBean);
 		simpMessagingTemplate.convertAndSend(destination, str);
 	}
+
+	/**
+	 * 裁判端和客户端同步时间轴
+	 * @param gameId
+	 * @param xNow
+	 */
+	public void sendGameTimeLine(String gameId, int xNow) {
+		String destination = GameUrlHelp.topic_gameTimeLine+gameId;
+		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
+		Map<String,Object>  map = new HashMap<>(1);
+		map.put("curIdx",xNow);
+		rspCommonBean.data = map;
+		String str = JSON.toJSONString(rspCommonBean);
+//		logger.info(str);
+		simpMessagingTemplate.convertAndSend(destination, str);
+	}
 }

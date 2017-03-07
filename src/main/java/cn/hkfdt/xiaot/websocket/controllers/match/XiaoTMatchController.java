@@ -83,7 +83,7 @@ public class XiaoTMatchController {
 		}
 		if(flag==-1){
 			rspCode = 201;
-			msg2 = "比赛人数已满";
+			msg2 = "房间人数已满，不可加入比赛";
 		}
 		if(flag>=0){
 			mapTar = new HashMap<>(1);
@@ -104,10 +104,10 @@ public class XiaoTMatchController {
 		int flag = gameService.gameStart(reqCommonBean);
 		String msg2 ="";
 		int rspCode = 200;
-		if(flag==-1){
-			msg2="人数未满";
-			rspCode = 201;
-		}
+//		if(flag==-1){
+//			msg2="人数未满";
+//			rspCode = 201;
+//		}
 		if(flag==-2){
 			msg2="比赛超时回收";
 			rspCode = 202;

@@ -65,11 +65,17 @@ public class GameServiceImpl implements GameService {
 		if(gameRuntimeBean==null){
 			return -2;
 		}
-		if(!gameRuntimeBean.isUserAllReady()){
-			return -1;
-		}
-		cacheMapXM.put(gameId,gameRuntimeBean,stayTime+5);//开始后调整时间
-		xiaoTMatchTopics.start(gameId);
+//		if(!gameRuntimeBean.isUserAllReady()){
+//			return -1;
+//		}
+		gameRuntimeBean.userNum = gameRuntimeBean.mapUsers.size();//修改比赛开始人数
+		cacheMapXM.put(gameId,gameRuntimeBean,stayTime+50);//开始后调整时间
+		xiaoTMatchTopics.start(gameId);//通知各端比赛开始
+		//比赛计时，通知开始
+		gameRuntimeBean.start(xiaoTMatchTopics);
+		//更新比赛状态
+		gameRuntimeBean.tGame.setState(1);
+		gameInsertOrUpdate(gameRuntimeBean.tGame);
 		return 0;
 	}
 

@@ -2,10 +2,13 @@ package cn.hkfdt.xiaot.websocket.Beans;
 
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGame;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
+import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+
+import static cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper.cacheMapXM;
 
 /**
  * 比赛运行时数据
@@ -17,7 +20,7 @@ public class GameRuntimeBean {
     /**
      * 比赛人数
      */
-    public int userNum;
+    public volatile  int userNum;
     public String gameId;
     /**
      * 排过序的list,里面引用的对象一样
@@ -49,6 +52,11 @@ public class GameRuntimeBean {
      * 比赛数据，含有比赛id，人数，比赛名称等
      */
     public TGame tGame;
+    /**
+     * 服务端计时比赛状态字段
+     * 0创建未开始 1：开始未结束  2：已经结束
+     */
+    private volatile int state=0;
     //================================================================================
 
     public void insertGameUser(GameUserExtBean gameUserExtBean) {
@@ -103,5 +111,39 @@ public class GameRuntimeBean {
         }
     }
 
+    //=============================================================
 
+    /**
+     * 根据比赛类型，每秒发送比赛x点位置，直到发完，回收线程
+     * @param xiaoTMatchTopics
+     */
+    public synchronized void start(XiaoTMatchTopics xiaoTMatchTopics) {
+        int xPoints = 200;//XiaoTMarketType.FC.getType()
+//        if(tGame.getMarketType()== XiaoTMarketType.FC.getType()){
+//
+//        }
+        if(state>0){
+            return;
+        }
+        state = 1;
+        Thread td = new Thread(()->{
+            int xNow = 1;
+            while(xNow<=xPoints){
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                //1.发送本次x坐标
+                xiaoTMatchTopics.sendGameTimeLine(gameId,xNow);
+                //2.
+                ++xNow;
+            }
+            //-------------------
+            cacheMapXM.put(gameId,this,3);//比赛结束后，3秒后结束
+            state = 2;
+        });
+        td.setName("game_:"+gameId);
+        td.start();
+    }
 }

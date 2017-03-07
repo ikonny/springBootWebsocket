@@ -47,5 +47,9 @@ public class GameUrlHelp {
      */
 //    final public static String queue_gameStayTime = "/queue/game/stayTime";//客户端监听/user/queue/game/stayTime
 
+    /**
+     * 每秒通知裁判端和客户端时间
+     */
+    final public static String topic_gameTimeLine = "/topic/game/timePoint/";
     //================================================
 }

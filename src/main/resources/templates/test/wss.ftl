@@ -30,7 +30,7 @@
         var stompClient = Stomp.client(url);
         stompClient.connect({ }, function(frame) {
             // subscribe to the /topic/entries endpoint which feeds newly added messages
-            stompClient.subscribe('/topic/test/send', function(data) {
+            stompClient.subscribe('/user/topic/test/send', function(data) {
                 // when a message is received add it to the end of the list
                 var body = data.body;
                 var message = JSON.parse(body);
