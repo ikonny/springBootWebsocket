@@ -33,6 +33,8 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.*;
 import java.util.concurrent.Future;
 
@@ -69,15 +71,23 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 			//游客先获取cookie
 			String guestJson = CookieUtil.getCookie(GUEST_COOKIE_KEY, request);
 			if (guestJson != null && !"".equals(guestJson)) {
-				mapTar = gson.fromJson(guestJson, new TypeToken<Map<String, Object>>() {
-				}.getType());
-			}else{//没有cookie，生成用户信息，放入cookie
+				try {
+					mapTar = gson.fromJson(URLDecoder.decode(guestJson, "utf-8"), new TypeToken<Map<String, Object>>() {
+					}.getType());
+				}catch (Exception e){
+					e.printStackTrace();
+				}
+			}else {//没有cookie，生成用户信息，放入cookie
 				fdtId = "g-" + XiaoTMDHelp.getRandomString(20);
-				mapTar.put("userName","游客");
-				mapTar.put("userId",fdtId);
-				mapTar.put("userType",XiaoTUserType.OtherUser.getType());
+				mapTar.put("userName", "游客");
+				mapTar.put("userId", fdtId);
+				mapTar.put("userType", XiaoTUserType.OtherUser.getType());
 				mapTar.put("headimgurl", XiaoTMDHelp.getGuestAvator());
-				CookieUtil.setCookie(response, Integer.MAX_VALUE, GlobalInfo.serverDomain, "/", GUEST_COOKIE_KEY, gson.toJson(mapTar));
+				try {
+					CookieUtil.setCookie(response, Integer.MAX_VALUE, GlobalInfo.serverDomain, "/", GUEST_COOKIE_KEY, URLEncoder.encode(gson.toJson(mapTar), "utf-8"));
+				}catch (Exception e){
+					e.printStackTrace();
+				}
 			}
 
 
