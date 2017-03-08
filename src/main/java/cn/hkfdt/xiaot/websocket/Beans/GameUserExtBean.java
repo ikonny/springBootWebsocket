@@ -3,6 +3,7 @@ package cn.hkfdt.xiaot.websocket.Beans;
 import cn.hkfdt.xiaot.common.beans.GameUserBean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * 比赛用户交互对象
@@ -35,7 +36,9 @@ public class GameUserExtBean extends GameUserBean implements Serializable {
         item.userName = this.userName;
         item.userType = this.userType;
         item.actions = this.actions;
-
+        if(this.actions==null){
+            item.actions = new ArrayList<>(1);
+        }
         return item;
     }
 }
