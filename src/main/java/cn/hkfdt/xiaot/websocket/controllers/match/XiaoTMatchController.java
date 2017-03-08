@@ -104,10 +104,10 @@ public class XiaoTMatchController {
 		int flag = gameService.gameStart(reqCommonBean);
 		String msg2 ="";
 		int rspCode = 200;
-//		if(flag==-1){
-//			msg2="人数未满";
-//			rspCode = 201;
-//		}
+		if(flag==-1){
+			msg2="没人参赛";
+			rspCode = 201;
+		}
 		if(flag==-2){
 			msg2="比赛超时回收";
 			rspCode = 202;

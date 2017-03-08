@@ -65,18 +65,36 @@ public class GameServiceImpl implements GameService {
 		if(gameRuntimeBean==null){
 			return -2;
 		}
-//		if(!gameRuntimeBean.isUserAllReady()){
-//			return -1;
-//		}
+		if(!gameRuntimeBean.isGameCanGo()){
+			//一个人也没有
+			return -1;
+		}
 		gameRuntimeBean.userNum = gameRuntimeBean.mapUsers.size();//修改比赛开始人数
 		cacheMapXM.put(gameId,gameRuntimeBean,stayTime+50);//开始后调整时间
+		//-------------------------------------------
+		//更新比赛状态
+		updateGameAndInsertUserWithStart(gameRuntimeBean);//执行失败就报错，就不会通知开始
+		//-----------------------------------------------
 		xiaoTMatchTopics.start(gameId);//通知各端比赛开始
 		//比赛计时，通知开始
 		gameRuntimeBean.start(xiaoTMatchTopics);
-		//更新比赛状态
-		gameRuntimeBean.tGame.setState(1);
-		gameInsertOrUpdate(gameRuntimeBean.tGame);
 		return 0;
+	}
+
+	/**
+	 * 比赛开始时更新比赛状态，插入本次比赛选手
+	 * @param gameRuntimeBean
+	 * @return
+	 */
+	private int updateGameAndInsertUserWithStart(GameRuntimeBean gameRuntimeBean) {
+		gameRuntimeBean.tGame.setState(1);
+		updateGameSelect(gameRuntimeBean.tGame);
+
+		gameRuntimeBean.mapUsers.values().forEach(item->{
+			TGameUser tGameUser = MatchServiceHelper.getGameUser(item,gameRuntimeBean,1);
+			tGameUserExtendsMapper.insert(tGameUser);
+		});
+		return 1;
 	}
 
 	@Override
@@ -88,8 +106,10 @@ public class GameServiceImpl implements GameService {
 		int flag = MatchServiceHelper.gameUserEnd(gameId,userId);
 		if(flag==0){
 			GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) cacheMapXM.get(gameId);
+			GameUserExtBean item = gameRuntimeBean.mapUsers.get(userId);
+			TGameUser tGameUser = MatchServiceHelper.getGameUser(item,gameRuntimeBean,2);
 			//主动结束的选手记录到数据库
-			gameService.gameUserInsertOrUpdate(gameRuntimeBean,userId);
+			gameUserUpdate(tGameUser);
 		}
 		if(flag==1){
 			//该用户结束后，比赛结束
@@ -120,10 +140,10 @@ public class GameServiceImpl implements GameService {
 			TGameUser tGameUser = MatchServiceHelper.getGameUser(item,gameRuntimeBean,2);
 			tGameUser.setRanking(i+1);
 
-			gameUserInsertOrUpdate(tGameUser);
+			gameUserUpdate(tGameUser);
 		}
 
-		gameInsertOrUpdate(tGame);
+		updateGameSelect(tGame);
 		//比赛结束时，再次排序通知各订阅者
 		MatchServiceHelper.sendTopicClientInfoAll(list,gameRuntimeBean.gameId);
 		xiaoTMatchTopics.gameEndTopic(gameRuntimeBean.gameId);
@@ -131,43 +151,22 @@ public class GameServiceImpl implements GameService {
 	}
 
 	@Override
-	public int gameUserInsertOrUpdate(GameRuntimeBean gameRuntimeBean, String userId) {
-		GameUserExtBean item = gameRuntimeBean.mapUsers.get(userId);
-		TGameUser tGameUser = MatchServiceHelper.getGameUser(item,gameRuntimeBean,2);
-		return gameUserInsertOrUpdate(tGameUser);
-	}
-
-	private int gameUserInsertOrUpdate(TGameUser tGameUser) {
-		TGameUserExample tGameUserExample = new TGameUserExample();
-		tGameUserExample.createCriteria().andGameIdEqualTo(tGameUser.getGameId())
-				.andUserIdEqualTo(tGameUser.getUserId());
-		List<TGameUser> listGameUser = tGameUserExtendsMapper.selectByExample(tGameUserExample);
-		if(listGameUser.isEmpty()){
-			tGameUser.setCreateTime(tGameUser.getUpdateTime());
-			return tGameUserExtendsMapper.insert(tGameUser);
-		}else{
-			tGameUser.setId(listGameUser.get(0).getId());
-			return tGameUserExtendsMapper.updateByPrimaryKey(tGameUser);
-		}
-	}
-
-	private int gameInsertOrUpdate(TGame tGame) {
-		TGameExample tGameExample = new TGameExample();
-		tGameExample.createCriteria().andGameIdEqualTo(tGame.getGameId());
-		List<TGame> listGame = tGameMapper.selectByExample(tGameExample);
-		if(listGame.isEmpty()){
-			return tGameMapper.insert(tGame);
-		}else{
-			tGame.setId(listGame.get(0).getId());
-			return tGameMapper.updateByPrimaryKey(tGame);
-		}
-	}
-
-	@Override
 	public void sendClientMatchInfo(ReqCommonBean reqCommonBean) {
 		MatchServiceHelper.sendClientMatchInfo(reqCommonBean);
 	}
 
+	//==========================================================================
+	private int gameUserUpdate(TGameUser tGameUser) {
+		TGameUserExample tGameUserExample = new TGameUserExample();
+		tGameUserExample.createCriteria().andGameIdEqualTo(tGameUser.getGameId())
+				.andUserIdEqualTo(tGameUser.getUserId());
+		return tGameUserExtendsMapper.updateByExampleSelective(tGameUser,tGameUserExample);
+	}
+	private int updateGameSelect(TGame tGame) {
+		TGameExample tGameExample = new TGameExample();
+		tGameExample.createCriteria().andGameIdEqualTo(tGame.getGameId());
+		return tGameMapper.updateByExampleSelective(tGame,tGameExample);
+	}
 
 
 }

@@ -116,10 +116,6 @@ public class MatchServiceHelper {
 
 		logger.info("比赛gameId:"+gameRuntimeBean.gameId+"_num:"+gameRuntimeBean.userNum
 				+"__加入一人fdtId:"+gameUserExtBean.userId);
-		if(gameRuntimeBean.isUserAllReady()){
-			logger.info("比赛gameId:"+gameRuntimeBean.gameId+"_num:"+gameRuntimeBean.userNum+"__人齐了");
-			return 1;
-		}
 		return 0;
 	}
 	// {"userName":"小李","userType":2,"userId":"sagfcdgthgjk",

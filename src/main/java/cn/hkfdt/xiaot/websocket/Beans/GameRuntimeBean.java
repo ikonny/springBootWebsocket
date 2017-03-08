@@ -89,11 +89,11 @@ public class GameRuntimeBean {
     }
 
     /**
-     * 判断是否游戏人数已经满了
+     * 判断游戏是否可以开始
      * @return
      */
-    public boolean isUserAllReady() {
-        return mapUsers.size()==userNum;
+    public boolean isGameCanGo() {
+        return mapUsers.size()>0;
     }
     /**
      * 用户主动结束比赛操作
