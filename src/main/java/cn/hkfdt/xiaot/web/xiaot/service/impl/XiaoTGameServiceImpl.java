@@ -214,6 +214,21 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 			jsonData = YSUtils.uncompress(jsonData);
 			Map<String, Object> jsonDataMap = new HashMap<String, Object>(6);
 			jsonDataMap = JSON.parseObject(new String(jsonData));//(Map<String, Object>) JsonUtil.JsonToOb(new String(jsonData), jsonDataMap.getClass());
+			List<Map<String, Object>> hiList = (List<Map<String,Object>>) (((Map<String,Object>)jsonDataMap.get("history")).get("items"));
+			Collections.reverse(hiList);
+
+			Map<String, Object> hMap = (Map<String,Object>)jsonDataMap.get("history");
+			List<Map<String, Object>> needHistoryList = new ArrayList<>();
+			int index = 0;
+			for (Map<String, Object> som : hiList) {
+				needHistoryList.add(0, som);
+				index++;
+				if(index >= 40){
+					break;
+				}
+			}
+			hMap.put("items", needHistoryList);
+			jsonDataMap.put("history", hMap);
 			if("today".equalsIgnoreCase(type)){
 				jsonDataMap.put("history", null);
 			}else if("history".equalsIgnoreCase(type)){

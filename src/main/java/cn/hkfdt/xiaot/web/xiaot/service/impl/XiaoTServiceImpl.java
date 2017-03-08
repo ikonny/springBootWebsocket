@@ -12,7 +12,10 @@ import cn.hkfdt.xiaot.web.xiaot.service.md.XiaoTMDHelp;
 import cn.hkfdt.xiaot.web.xiaot.util.XiaoTMarketType;
 import cn.hkfdt.xiaot.web.xiaot.util.YSUtils;
 import com.alibaba.fastjson.JSON;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -44,6 +48,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 	AuthService authService;
 	@Autowired
 	SchoolMapper schoolMapper;
+	Gson gson = new Gson();
 	
 	
 	AtomicBoolean isInitingTQ = new AtomicBoolean(false);
@@ -189,6 +194,21 @@ public class XiaoTServiceImpl implements XiaoTService {
 			jsonData = YSUtils.uncompress(jsonData);
 			Map<String, Object> jsonDataMap = new HashMap<String, Object>(6);
 			jsonDataMap = JSON.parseObject(new String(jsonData));//(Map<String, Object>) JsonUtil.JsonToOb(new String(jsonData), jsonDataMap.getClass());
+			List<Map<String, Object>> hiList = (List<Map<String,Object>>) (((Map<String,Object>)jsonDataMap.get("history")).get("items"));
+			Collections.reverse(hiList);
+
+			Map<String, Object> hMap = (Map<String,Object>)jsonDataMap.get("history");
+			List<Map<String, Object>> needHistoryList = new ArrayList<>();
+			int index = 0;
+			for (Map<String, Object> som : hiList) {
+				needHistoryList.add(0, som);
+				index++;
+				if(index >= 40){
+					break;
+				}
+			}
+			hMap.put("items", needHistoryList);
+			jsonDataMap.put("history", hMap);
 			if("history".equalsIgnoreCase(type)){
 				jsonDataMap.put("today", null);
 			}else if("today".equalsIgnoreCase(type)){
@@ -217,12 +237,20 @@ public class XiaoTServiceImpl implements XiaoTService {
 
 		Map<String, Object> tempMap = new HashMap<String, Object>(1);
 		tempMap = JSON.parseObject(body);//(Map<String, Object>) JsonUtil.JsonToOb(body, tempMap.getClass());
-		String[] strs = tempMap.get("key").toString().split("#");
-		String unId = tempMap.get("uniqueId").toString();
 		int status = 1;
+		String unId = tempMap.get("uniqueId").toString();
+
 		if (tempMap.get("status") != null) {
 			status = Integer.parseInt(tempMap.get("status").toString());
 		}
+		if(status == 3){//超时5分钟到30分钟之间，返回联系结果
+			TRecord t = tRecordExtendsMapper.getXiaotRecordByUnid(unId);
+			mapTar = JSON.parseObject(t.getScoreResult());
+			return 0;
+		}
+		String[] strs = tempMap.get("key").toString().split("#");
+
+
 		tempMap.put("exchangeCode", strs[0]);
 		tempMap.put("symbol", strs[1]);
 		tempMap.put("fdtId", fdtId);
@@ -239,7 +267,38 @@ public class XiaoTServiceImpl implements XiaoTService {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			record.setActions(tempMap.get("actions").toString());
+			//判断action的最后一个点是否是平仓，如果不是，添加用最后一根线的价格平仓的数据
+			String actionJson = tempMap.get("actions").toString();
+			List<TraningAction> acList = gson.fromJson(actionJson, new TypeToken<List<TraningAction>>(){}.getType());
+			TraningAction lastAction = acList.get(acList.size() - 1);
+			if(!lastAction.getSide().equals("close")){
+				TraningAction closeAction = new TraningAction();
+				closeAction.setSide("close");
+				closeAction.setCurIdx(199);
+				closeAction.setTimestamp(System.currentTimeMillis());
+				//获取题目
+				TQuestions para = new TQuestions();
+				para.setExchangeCode(strs[0]);
+				para.setShortSymbol(strs[1]);
+				para.setTradeDay(strs[2]);
+				TQuestions tq = tQuestionsExtendsMapper.getByUnionKey(para);
+				byte[] jsonData = tq.getJsonData();
+				try {
+					//获取解压后的真实数据json
+					jsonData = YSUtils.uncompress(jsonData);
+					Map<String, Object> jsonDataMap = new HashMap<String, Object>(6);
+					jsonDataMap = JSON.parseObject(new String(jsonData));//(Map<String, Object>) JsonUtil.JsonToOb(new String(jsonData), jsonDataMap.getClass());
+					Map<String, Object> todayMap = (Map<String, Object>) jsonDataMap.get("today");
+					List<Map<String, Object>> infoList = (List<Map<String, Object>>)todayMap.get("items");
+					Map<String, Object> lastInfo = infoList.get(infoList.size() - 1);
+					closeAction.setPrice(Integer.parseInt(lastInfo.get("volume").toString()));
+					acList.add(closeAction);
+				} catch (IOException e) {
+					e.printStackTrace();
+
+				}
+			}
+			record.setActions(gson.toJson(acList));
 			record.setQuestionKey(tempMap.get("key").toString());
 			record.setCreateTime(System.currentTimeMillis());
 			record.setScore(0d);
@@ -461,8 +520,11 @@ public class XiaoTServiceImpl implements XiaoTService {
 		List<TRecord> recordList = tRecordExtendsMapper.getTimeOutRecord(time);
 		if(recordList != null && recordList.size() > 0){
 			for (final TRecord tRecord : recordList) {
-				if (tRecord.getFdtId().equals(XiaoTHelp.xiaoTGuest))
-					return ;
+				if (tRecord.getFdtId().equals(XiaoTHelp.xiaoTGuest)) {
+					return;
+				}
+				Map<String, Object> mapTar = new HashMap<>();
+				mapTar.put("status", 200);
 				int count = 0;
 				while (count <= tryNum) {
 					Map<String, Object> tempMap = new HashMap<String, Object>(1);
@@ -484,13 +546,14 @@ public class XiaoTServiceImpl implements XiaoTService {
 							}
 
 							boolean win = (boolean) temp.get("win");
-
+							setXiaotDoScoreRtnMap(mapTar, score, tempMap, win);
 							//更新score
 							Map<String, Object> para = new HashMap<>();
 							para.put("score", score);
 							para.put("id", tRecord.getRecordId());
 							para.put("volatility", Float.parseFloat(tempMap.get("volatility").toString()));
 							para.put("createTime", System.currentTimeMillis());
+							para.put("scoreResult", gson.toJson(mapTar));
 							tRecordExtendsMapper.updateScore(para);
 
 
@@ -521,5 +584,42 @@ public class XiaoTServiceImpl implements XiaoTService {
 
 	}
 
+	class TraningAction implements Serializable {
+		private String side;
+		private int price;
+		private int curIdx;
+		private long timestamp;
 
+		public String getSide() {
+			return side;
+		}
+
+		public void setSide(String side) {
+			this.side = side;
+		}
+
+		public int getPrice() {
+			return price;
+		}
+
+		public void setPrice(int price) {
+			this.price = price;
+		}
+
+		public int getCurIdx() {
+			return curIdx;
+		}
+
+		public void setCurIdx(int curIdx) {
+			this.curIdx = curIdx;
+		}
+
+		public long getTimestamp() {
+			return timestamp;
+		}
+
+		public void setTimestamp(long timestamp) {
+			this.timestamp = timestamp;
+		}
+	}
 }

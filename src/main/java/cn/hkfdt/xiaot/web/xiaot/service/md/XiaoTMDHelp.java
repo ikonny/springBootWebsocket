@@ -316,12 +316,12 @@ public class XiaoTMDHelp {
 		double todayOpenPrice = (double) listMapDay.get(0).get("OPEN_PRICE");
 		history.put("todayOpenPrice", todayOpenPrice);// 当日开盘价格
 		history.put("macdName", "MACD(12,26,9)");// 名字
-		List<Map<String, Object>> items = new ArrayList<Map<String, Object>>(40);
+		List<Map<String, Object>> items = new ArrayList<Map<String, Object>>(60);
 		history.put("items", items);
 
 		//处理后list第一个节点是最老的数据
-		for(int i=1;i<41;i++){
-			Map<String, Object> item = getHistoryItem(41-i,listMapDay);//获取了最早一个点的历史比如60
+		for(int i=1;i<61;i++){
+			Map<String, Object> item = getHistoryItem(61-i,listMapDay);//获取了最早一个点的历史比如60
 			items.add(item);
 		}
 		emaShort = new ArrayList<>();

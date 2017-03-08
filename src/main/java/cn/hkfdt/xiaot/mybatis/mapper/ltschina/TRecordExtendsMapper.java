@@ -15,6 +15,9 @@ public interface TRecordExtendsMapper extends TRecordMapper {
 			" ORDER BY createTime DESC LIMIT #{para.offset},#{para.count}")
 	List<TRecord> getXiaotRecord(@Param("para") Map<String, Object> mapPara);
 
+	@Select("select * from xiaot_record WHERE uniqueId = #{uniqueId}")
+	TRecord getXiaotRecordByUnid(@Param("uniqueId") String uniqueId);
+
 	@Select("select COUNT(1) from xiaot_record WHERE fdtId = #{para.fdtId} and type = #{para.market}")
 	int getXiaotRecordTotal(@Param("para") Map<String, Object> mapPara);
 
@@ -33,7 +36,8 @@ public interface TRecordExtendsMapper extends TRecordMapper {
 	@Select("select * from xiaot_record where createTime < #{time} and `status` = 0")
 	List<TRecord> getTimeOutRecord(@Param("time") Long time);
 
-	@Update("update xiaot_record set `status` = 1, score = #{para.score}, volatility = #{para.volatility}, createTime = #{para.createTime} where recordId = #{para.id}")
+	@Update("update xiaot_record set `status` = 1, score = #{para.score}, volatility = #{para.volatility}, " +
+			"createTime = #{para.createTime}, scoreResult = #{para.scoreResult} where recordId = #{para.id}")
 	void updateScore(@Param("para") Map<String, Object> mapPara);
 
 }

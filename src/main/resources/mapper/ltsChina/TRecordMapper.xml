@@ -17,6 +17,7 @@
     <result column="status" property="status" jdbcType="INTEGER" />
     <result column="reqBody" property="reqBody" jdbcType="VARCHAR" />
     <result column="uniqueId" property="uniqueId" jdbcType="VARCHAR" />
+    <result column="scoreResult" property="scoreResult" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -78,7 +79,7 @@
   </sql>
   <sql id="Base_Column_List" >
     recordId, symbol, fdtId, tradeTime, returnRate, volatility, type, createTime, actions, 
-    score, questionKey, VERSION, status, reqBody, uniqueId
+    score, questionKey, VERSION, status, reqBody, uniqueId, scoreResult
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TRecordExample" >
     select
@@ -115,14 +116,14 @@
       tradeTime, returnRate, volatility, 
       type, createTime, actions, 
       score, questionKey, VERSION, 
-      status, reqBody, uniqueId
-      )
+      status, reqBody, uniqueId, 
+      scoreResult)
     values (#{recordId,jdbcType=INTEGER}, #{symbol,jdbcType=VARCHAR}, #{fdtId,jdbcType=VARCHAR}, 
       #{tradeTime,jdbcType=VARCHAR}, #{returnRate,jdbcType=REAL}, #{volatility,jdbcType=REAL}, 
       #{type,jdbcType=INTEGER}, #{createTime,jdbcType=BIGINT}, #{actions,jdbcType=VARCHAR}, 
       #{score,jdbcType=DOUBLE}, #{questionKey,jdbcType=VARCHAR}, #{VERSION,jdbcType=INTEGER}, 
-      #{status,jdbcType=INTEGER}, #{reqBody,jdbcType=VARCHAR}, #{uniqueId,jdbcType=VARCHAR}
-      )
+      #{status,jdbcType=INTEGER}, #{reqBody,jdbcType=VARCHAR}, #{uniqueId,jdbcType=VARCHAR}, 
+      #{scoreResult,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TRecord" >
     insert into xiaot_record
@@ -172,6 +173,9 @@
       <if test="uniqueId != null" >
         uniqueId,
       </if>
+      <if test="scoreResult != null" >
+        scoreResult,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="recordId != null" >
@@ -218,6 +222,9 @@
       </if>
       <if test="uniqueId != null" >
         #{uniqueId,jdbcType=VARCHAR},
+      </if>
+      <if test="scoreResult != null" >
+        #{scoreResult,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -275,6 +282,9 @@
       <if test="record.uniqueId != null" >
         uniqueId = #{record.uniqueId,jdbcType=VARCHAR},
       </if>
+      <if test="record.scoreResult != null" >
+        scoreResult = #{record.scoreResult,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -296,7 +306,8 @@
       VERSION = #{record.VERSION,jdbcType=INTEGER},
       status = #{record.status,jdbcType=INTEGER},
       reqBody = #{record.reqBody,jdbcType=VARCHAR},
-      uniqueId = #{record.uniqueId,jdbcType=VARCHAR}
+      uniqueId = #{record.uniqueId,jdbcType=VARCHAR},
+      scoreResult = #{record.scoreResult,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -346,6 +357,9 @@
       <if test="uniqueId != null" >
         uniqueId = #{uniqueId,jdbcType=VARCHAR},
       </if>
+      <if test="scoreResult != null" >
+        scoreResult = #{scoreResult,jdbcType=VARCHAR},
+      </if>
     </set>
     where recordId = #{recordId,jdbcType=INTEGER}
   </update>
@@ -364,7 +378,8 @@
       VERSION = #{VERSION,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
       reqBody = #{reqBody,jdbcType=VARCHAR},
-      uniqueId = #{uniqueId,jdbcType=VARCHAR}
+      uniqueId = #{uniqueId,jdbcType=VARCHAR},
+      scoreResult = #{scoreResult,jdbcType=VARCHAR}
     where recordId = #{recordId,jdbcType=INTEGER}
   </update>
   <select resultMap="BaseResultMap" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TRecordExample" id="selectByExampleWithRowbounds" >

@@ -1074,6 +1074,76 @@ public class TRecordExample {
             return (Criteria) this;
         }
 
+        public Criteria andScoreResultIsNull() {
+            addCriterion("scoreResult is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreResultIsNotNull() {
+            addCriterion("scoreResult is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreResultEqualTo(String value) {
+            addCriterion("scoreResult =", value, "scoreResult");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreResultNotEqualTo(String value) {
+            addCriterion("scoreResult <>", value, "scoreResult");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreResultGreaterThan(String value) {
+            addCriterion("scoreResult >", value, "scoreResult");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreResultGreaterThanOrEqualTo(String value) {
+            addCriterion("scoreResult >=", value, "scoreResult");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreResultLessThan(String value) {
+            addCriterion("scoreResult <", value, "scoreResult");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreResultLessThanOrEqualTo(String value) {
+            addCriterion("scoreResult <=", value, "scoreResult");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreResultLike(String value) {
+            addCriterion("scoreResult like", value, "scoreResult");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreResultNotLike(String value) {
+            addCriterion("scoreResult not like", value, "scoreResult");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreResultIn(List<String> values) {
+            addCriterion("scoreResult in", values, "scoreResult");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreResultNotIn(List<String> values) {
+            addCriterion("scoreResult not in", values, "scoreResult");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreResultBetween(String value1, String value2) {
+            addCriterion("scoreResult between", value1, value2, "scoreResult");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreResultNotBetween(String value1, String value2) {
+            addCriterion("scoreResult not between", value1, value2, "scoreResult");
+            return (Criteria) this;
+        }
+
         public Criteria andSymbolLikeInsensitive(String value) {
             addCriterion("upper(symbol) like", value.toUpperCase(), "symbol");
             return (Criteria) this;
@@ -1106,6 +1176,11 @@ public class TRecordExample {
 
         public Criteria andUniqueIdLikeInsensitive(String value) {
             addCriterion("upper(uniqueId) like", value.toUpperCase(), "uniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreResultLikeInsensitive(String value) {
+            addCriterion("upper(scoreResult) like", value.toUpperCase(), "scoreResult");
             return (Criteria) this;
         }
     }

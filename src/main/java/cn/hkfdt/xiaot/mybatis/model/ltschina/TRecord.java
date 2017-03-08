@@ -117,6 +117,14 @@ public class TRecord implements Serializable {
      */
     private String uniqueId;
 
+    /**
+     * <pre>
+     * 表字段注释 : 超时打分记录打分结果
+     * 表字段 : xiaot_record.scoreResult
+     * </pre>
+     */
+    private String scoreResult;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getRecordId() {
@@ -237,5 +245,13 @@ public class TRecord implements Serializable {
 
     public void setUniqueId(String uniqueId) {
         this.uniqueId = uniqueId == null ? null : uniqueId.trim();
+    }
+
+    public String getScoreResult() {
+        return scoreResult;
+    }
+
+    public void setScoreResult(String scoreResult) {
+        this.scoreResult = scoreResult == null ? null : scoreResult.trim();
     }
 }
