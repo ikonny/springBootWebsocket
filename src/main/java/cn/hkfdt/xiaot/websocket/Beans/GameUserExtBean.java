@@ -25,6 +25,10 @@ public class GameUserExtBean extends GameUserBean implements Serializable {
      * 透传数据
      */
     public Object actions;
+    /**
+     * 0: 正常  1：已经确认退出（不得重连）  2:断线
+     */
+    public int state=0;
 
     public GameUserExtBean deepCopy() {
         GameUserExtBean item = new GameUserExtBean();

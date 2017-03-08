@@ -59,8 +59,20 @@ public class GameRuntimeBean {
     private volatile int state=0;
     //================================================================================
 
+    /**
+     * 用户准备，或者重连准备
+     * @param gameUserExtBean
+     */
     public void insertGameUser(GameUserExtBean gameUserExtBean) {
-        mapUsers.put(gameUserExtBean.userId,gameUserExtBean);
+        GameUserExtBean temp = mapUsers.get(gameUserExtBean.userId);
+        if(temp==null) {
+            //新人
+            temp = gameUserExtBean;
+        }else{
+            //老人重新准备
+        }
+        temp.state = 0;
+        mapUsers.put(temp.userId, temp);
 //        listUser.add(gameUserExtBean);
     }
 
@@ -85,6 +97,7 @@ public class GameRuntimeBean {
     }
     /**
      * 用户主动结束比赛操作
+     * 不能再次进入
      * @param userId
      * @return 1所有用户都告诉比赛结束  0成功
      */
@@ -93,6 +106,7 @@ public class GameRuntimeBean {
         if(gameUserExtBean!=null){
             synchronized (mapUsersEnd) {
                 mapUsersEnd.put(userId, gameUserExtBean);
+                gameUserExtBean.state = 1;
                 if(mapUsersEnd.size()==userNum){
                     return 1;
                 }
@@ -101,10 +115,16 @@ public class GameRuntimeBean {
         return 0;
     }
 
+    /**
+     * 用户断线，可以再次进入，注意超时回收类似主动结束
+     * @param fdtId
+     * @param sessionId
+     */
     public void disConnectAndAfterRmove(String fdtId, String sessionId) {
         GameUserExtBean gameUserExtBean = mapUsers.get(fdtId);
         if(gameUserExtBean!=null){
             synchronized (mapUsersEnd) {
+                gameUserExtBean.state = 2;
                 mapUsersEnd.put(fdtId, gameUserExtBean);
                 logger.info("比赛运行时断线fdtId："+fdtId);
             }

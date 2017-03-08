@@ -34,4 +34,12 @@ public interface GameService {
 	int gameEnd(ReqCommonBean reqCommonBean);
 
 	int endTheGame(GameRuntimeBean gameRuntimeBean);
+
+	/**
+	 * 用户主动确认退出的场景
+	 * @param gameRuntimeBean
+	 * @param userId
+	 * @return
+	 */
+	int gameUserInsertOrUpdate(GameRuntimeBean gameRuntimeBean, String userId);
 }

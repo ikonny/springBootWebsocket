@@ -86,6 +86,11 @@ public class GameServiceImpl implements GameService {
 		String userId = reqCommonBean.data.get("userId").toString();
 		Map<String,Object>  mapRt = new LinkedMap(2);
 		int flag = MatchServiceHelper.gameUserEnd(gameId,userId);
+		if(flag==0){
+			GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) cacheMapXM.get(gameId);
+			//主动结束的选手记录到数据库
+			gameService.gameUserInsertOrUpdate(gameRuntimeBean,userId);
+		}
 		if(flag==1){
 			//该用户结束后，比赛结束
 			GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) cacheMapXM.get(gameId);
@@ -123,6 +128,13 @@ public class GameServiceImpl implements GameService {
 		MatchServiceHelper.sendTopicClientInfoAll(list,gameRuntimeBean.gameId);
 		xiaoTMatchTopics.gameEndTopic(gameRuntimeBean.gameId);
 		return 0;
+	}
+
+	@Override
+	public int gameUserInsertOrUpdate(GameRuntimeBean gameRuntimeBean, String userId) {
+		GameUserExtBean item = gameRuntimeBean.mapUsers.get(userId);
+		TGameUser tGameUser = MatchServiceHelper.getGameUser(item,gameRuntimeBean,2);
+		return gameUserInsertOrUpdate(tGameUser);
 	}
 
 	private int gameUserInsertOrUpdate(TGameUser tGameUser) {
