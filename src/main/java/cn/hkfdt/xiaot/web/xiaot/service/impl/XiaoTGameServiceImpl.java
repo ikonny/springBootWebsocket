@@ -190,6 +190,9 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 	@Override
 	public int getGameStatus(String gameId) {
 		TGame tg = tGameExtendsMapper.selectGameByGameId(gameId);
+		if(tg.getState() == null){
+			tg.setState(0);
+		}
 		return tg.getState();
 	}
 
