@@ -94,7 +94,7 @@ public class XiaoTController {
 	@RequestMapping(value="/xiaoth/xiaot/{other}")
     public String xiaot(HttpServletRequest request, @PathVariable String other, Model model,
 						HttpServletResponse response, @RequestParam(defaultValue = "") String userInfo, @RequestParam(required = false) String gameId,
-						@RequestParam(required = false) String num ){
+						@RequestParam(required = false) String num){
 		if(WXHelper.isFromWx(request) && (userInfo == null || "".equalsIgnoreCase(userInfo))){//微信用打开,且没有用户信息
 			//           logger.info("微信:"+GlobalInfo.wxLoginUrl);
 			try {

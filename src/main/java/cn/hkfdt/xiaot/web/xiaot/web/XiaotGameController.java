@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,36 +49,44 @@ public class XiaotGameController {
      */
     @RequestMapping("/xiaoth/game/getUserInfo")
     @ResponseBody
-    public Object gameIndex(String gameId,
+    public Object gameIndex(String gameId, @RequestParam(required = false) String userInfo,
                             HttpServletRequest request, HttpServletResponse response) {
 
-        int status = xiaoTGameService.getGameStatus(gameId);
-        if (status == GameStatus.OVER.getStatus()) {
-            RspCommonBean rcb = xiaoTGameService.getGameResult(gameId);
-            rcb.rspCode = 301;
-            rcb.msg = "比赛已结束";
-            return rcb;
-        }
+
 // else if(status == GameStatus.UNDERWAY.getStatus()){
 //            return RspCommonBean.getCommonRspBean(302, "比赛已开始");
 //        }else if(status == GameStatus.FULL.getStatus()){
 //            return RspCommonBean.getCommonRspBean(303, "参赛人数已满");
 //        }
 
-
-        if(WXHelper.isFromWx(request)){//微信用打开
- //           logger.info("微信:"+GlobalInfo.wxLoginUrl);
-            try {
-                response.setHeader("Access-Control-Allow-Origin", "*");
-                response.sendRedirect(GlobalInfo.wxLoginUrl.replace("theGameId", gameId));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
         RspCommonBean rcb = RspCommonBean.getCommonRspBean(200, null);
         String fdtId = UserContext.getUserInfo().get().getFdtId();
-        Map<String, Object> mapTar = xiaoTGameService.getGameUser(fdtId, gameId, request, response);
+        Map<String, Object> mapTar = new HashMap<>();
+        String userId = null;
+        if(userInfo == null || "".equals(userInfo)){//不是微信
+            mapTar = xiaoTGameService.getGameUser(fdtId, gameId, request, response);
+
+        }else{//是微信
+            mapTar = JSON.parseObject(userInfo);
+        }
+        userId = mapTar.get("userId").toString();
+
+        int status = xiaoTGameService.getGameStatus(gameId);
+        if (status == GameStatus.OVER.getStatus()) {
+            List<Map<String, Object>> rankList = (List)xiaoTGameService.getGameResult(gameId).data;
+            for (Map<String, Object> som : rankList) {
+                String tId = som.get("userId").toString();
+                if(userId.equals(tId)){
+                    String rk = som.get("rankIdx").toString();
+                    mapTar.put("rankIdx", Integer.parseInt(rk));
+                }
+            }
+            rcb.rspCode = 301;
+            rcb.msg = "比赛已结束";
+        }else if(status == GameStatus.UNDERWAY.getStatus()){
+            rcb.rspCode = 302;
+            rcb.msg = "比赛已开始";
+        }
         rcb.data = mapTar;
         return rcb;
     }

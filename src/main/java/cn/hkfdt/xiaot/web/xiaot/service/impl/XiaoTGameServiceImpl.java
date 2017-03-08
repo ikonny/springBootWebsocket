@@ -190,15 +190,7 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 	@Override
 	public int getGameStatus(String gameId) {
 		TGame tg = tGameExtendsMapper.selectGameByGameId(gameId);
-		if(tg.getState() > 0){
-			return tg.getState();
-		}else{
-			if(tg.getRealNum() >= tg.getUserNum()){//满员
-				return GameStatus.FULL.getStatus();
-			}else{
-				return tg.getState();
-			}
-		}
+		return tg.getState();
 	}
 
 	@Override
@@ -262,6 +254,7 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 				Map<String, Object> resultMap = new HashMap<>();
 				resultMap.put("rankIdx", tgu.getRanking());
 				resultMap.put("name", tgu.getNickName());
+				resultMap.put("userId", tgu.getUserId());
 				resultMap.put("percent", tgu.getReturnRate());
 				String action = tgu.getActions();
 				String keyWord = "side";

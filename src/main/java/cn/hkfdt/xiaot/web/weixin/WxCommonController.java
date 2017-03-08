@@ -84,7 +84,7 @@ unionid	只有在用户将公众号绑定到微信开放平台帐号后，才会
         String url = WXHelper.getReqAccTokenUrl(code);
         String jsonStr = HttpUtils.httpGet(url);
         Map<String,Object> mapTemp = JSON.parseObject(jsonStr);
-
+        String userId = "";
         //3.刷新access_token
         if(!mapTemp.containsKey("errcode")){
             url = WXHelper.getAccTokenRefUrl(mapTemp);
@@ -102,6 +102,7 @@ unionid	只有在用户将公众号绑定到微信开放平台帐号后，才会
                 String headimgurl = mapTemp.get("headimgurl").toString();
                 mapTar.put("userName",nickname);
                 mapTar.put("userId",openid);
+                userId = openid;
                 mapTar.put("userType", XiaoTUserType.WxUser.getType());
                 mapTar.put("headimgurl",headimgurl);
 
