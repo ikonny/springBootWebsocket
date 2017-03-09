@@ -28,9 +28,9 @@ public class XiaoTHelp {
 	 * 如果xiaoT本次修改影响打分等历史数据，则该字段+1
 	 */
 	public static int version = 1;
-	private static  String urlPickTrade = "/api/puzzle";//选题地址
-	private static  String urlGetScore = "/api/scoring";//打分
-	private static  String urlForceAnalysis = "/api/profile";//战力分析
+	public static  String urlPickTrade = "/api/puzzle";//选题地址
+	public static  String urlGetScore = "/api/scoring";//打分
+	public static  String urlForceAnalysis = "/api/profile";//战力分析
 	public static ExecutorService executorService = Executors.newCachedThreadPool();
 	static DecimalFormat dfXt = new DecimalFormat("0.00");
 	public static final String xiaoTGuest = "coach-t-guest";

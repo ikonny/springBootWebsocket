@@ -186,14 +186,12 @@ public class XiaoTServiceImpl implements XiaoTService {
 		int count=0;
 		while(tQuestions == null){
 			TQuestions para = XiaoTHelp.getTQuestion(fdtId,market);
+			//获取到题目，而且题目可用
 			tQuestions = tQuestionsExtendsMapper.getByUnionKey(para);
 			++count;
 			if(count>=tryNum){
 				break;
 			}
-		}
-		if(tQuestions==null){
-			logger.info("fdtId,market:"+fdtId+"___"+market+"获取不到题目");
 		}
 		byte[] jsonData = tQuestions.getJsonData();
 		try {
