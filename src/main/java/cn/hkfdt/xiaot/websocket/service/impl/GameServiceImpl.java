@@ -1,6 +1,7 @@
 package cn.hkfdt.xiaot.websocket.service.impl;
 
 import cn.hkfdt.xiaot.common.beans.ReqCommonBean;
+import cn.hkfdt.xiaot.common.beans.RspCommonBean;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameMapper;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameUserExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGame;
@@ -10,6 +11,7 @@ import cn.hkfdt.xiaot.mybatis.model.ltschina.TGameUserExample;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTService;
 import cn.hkfdt.xiaot.websocket.Beans.GameRuntimeBean;
 import cn.hkfdt.xiaot.websocket.Beans.GameUserExtBean;
+import cn.hkfdt.xiaot.websocket.Beans.GameUserStateBean;
 import cn.hkfdt.xiaot.websocket.service.GameService;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 import org.apache.commons.collections.map.LinkedMap;
@@ -42,7 +44,68 @@ public class GameServiceImpl implements GameService {
 	public void init(){
 		MatchServiceHelper.gameService = gameService;
 	}
-	
+
+	@Override
+	public RspCommonBean getUserState(ReqCommonBean reqCommonBean) {
+		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
+
+		GameUserStateBean gameUserStateBean = new GameUserStateBean();
+		rspCommonBean.data = gameUserStateBean;
+
+		String userI = reqCommonBean.fdtId;
+		String gameId = reqCommonBean.data.get("gameId").toString();
+		TGame tGame = getTgame(gameId);
+		GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) cacheMapXM.get(gameId);
+
+		if(tGame==null){
+			//比赛不存在
+			rspCommonBean.msg = "比赛不存在";
+			rspCommonBean.rspCode = 201;
+			return rspCommonBean;
+		}
+		//比赛存在，看是否是参加了比赛
+		TGameUser tGameUser = getGameUser(gameId,userI);
+		if(gameRuntimeBean==null){
+			//比赛已经结束
+			if(tGameUser==null){
+				//新人
+				rspCommonBean.msg = "比赛已经结束";
+				rspCommonBean.rspCode = 202;
+				return rspCommonBean;
+			}else{
+				//老人
+				gameUserStateBean.gameState = 4;
+				return rspCommonBean;
+			}
+		}else{
+			//比赛未结束，还在内存中
+			if(!gameRuntimeBean.mapUsers.containsKey(userI)){
+				//新人
+				gameUserStateBean.gameState = 1;
+			}else{
+				GameUserExtBean gameUserExtBean = gameRuntimeBean.mapUsers.get(userI);
+				if(gameRuntimeBean.tGame.getState()==0){
+					gameUserStateBean.gameState = 2;
+				}
+				else if(gameRuntimeBean.tGame.getState()==1){
+					//进行中
+					gameUserStateBean.gameState = 3;
+				}
+				else {
+					//结束
+					gameUserStateBean.gameState = 4;
+				}
+				gameUserStateBean.actions = gameUserExtBean.actions;
+				gameUserStateBean.gameName = tGame.getGameName();
+				gameUserStateBean.headimgurl = gameUserExtBean.headimgurl;
+				gameUserStateBean.userName = gameUserExtBean.userName;
+				gameUserStateBean.userType = gameUserExtBean.userType;
+			}
+		}
+
+		return rspCommonBean;
+	}
+
 	@Override
 	public int ready(ReqCommonBean reqCommonBean) {
 		final String gameId = reqCommonBean.data.get("gameId").toString();
@@ -166,6 +229,25 @@ public class GameServiceImpl implements GameService {
 		TGameExample tGameExample = new TGameExample();
 		tGameExample.createCriteria().andGameIdEqualTo(tGame.getGameId());
 		return tGameMapper.updateByExampleSelective(tGame,tGameExample);
+	}
+	private TGame getTgame(String gameId) {
+		TGameExample tGameExample = new TGameExample();
+		tGameExample.createCriteria().andGameIdEqualTo(gameId);
+		List<TGame>  listGame = tGameMapper.selectByExample(tGameExample);
+		if(listGame==null || listGame.isEmpty()){
+			return null;
+		}else{
+			return listGame.get(0);
+		}
+	}
+	private TGameUser getGameUser(String gameId, String userI) {
+		TGameUserExample tGameUserExample = new TGameUserExample();
+		tGameUserExample.createCriteria().andGameIdEqualTo(gameId)
+				.andUserIdEqualTo(userI);
+		List<TGameUser>  listUser = tGameUserExtendsMapper.selectByExample(tGameUserExample);
+		if(listUser==null || listUser.isEmpty())
+			return null;
+		return listUser.get(0);
 	}
 
 

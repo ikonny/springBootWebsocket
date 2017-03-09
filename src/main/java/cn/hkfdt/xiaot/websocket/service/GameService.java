@@ -1,6 +1,7 @@
 package cn.hkfdt.xiaot.websocket.service;
 
 import cn.hkfdt.xiaot.common.beans.ReqCommonBean;
+import cn.hkfdt.xiaot.common.beans.RspCommonBean;
 import cn.hkfdt.xiaot.websocket.Beans.GameRuntimeBean;
 
 public interface GameService {
@@ -35,4 +36,5 @@ public interface GameService {
 
 	int endTheGame(GameRuntimeBean gameRuntimeBean);
 
+	RspCommonBean getUserState(ReqCommonBean reqCommonBean);
 }

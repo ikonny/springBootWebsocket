@@ -2,10 +2,8 @@ package cn.hkfdt.xiaot.websocket.controllers.match;
 
 import cn.hkfdt.xiaot.common.beans.ReqCommonBean;
 import cn.hkfdt.xiaot.common.beans.RspCommonBean;
-import cn.hkfdt.xiaot.websocket.Beans.GameRuntimeBean;
 import cn.hkfdt.xiaot.websocket.conmng.WebSocketConnectionListener;
 import cn.hkfdt.xiaot.websocket.service.GameService;
-import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 import cn.hkfdt.xiaot.websocket.utils.GameUrlHelp;
 import com.alibaba.fastjson.JSON;
@@ -59,6 +57,25 @@ public class XiaoTMatchController {
 		return reqCommonBean;
 	}
 
+	@MessageMapping("/queue/game/userState")
+	@SendToUser("/queue/game/userState")
+	public String getUserState(SimpMessageHeaderAccessor headerAccessor,String msg) {
+		Map<String, Object>  paraMap = JSON.parseObject(msg);
+		String userId = paraMap.get("userId").toString();
+		String sessionId = headerAccessor.getSessionId(); // Session ID
+		WebSocketConnectionListener.removeUserId(sessionId);
+		WebSocketConnectionListener.setUserIds(userId,sessionId);//重建sessionId和userId对应关系
+
+		ReqCommonBean reqCommonBean = new ReqCommonBean();
+		reqCommonBean.sessionId = sessionId;
+		reqCommonBean.data = paraMap;
+		reqCommonBean.fdtId = userId;
+
+		RspCommonBean rspCommonBean = gameService.getUserState(reqCommonBean);
+		String str = JSON.toJSONString(rspCommonBean);
+		return str;
+	}
+
 	@MessageMapping(GameUrlHelp.queue_userDoReady)
 	@SendToUser(GameUrlHelp.queue_userDoReady)
 	public String ready(SimpMessageHeaderAccessor headerAccessor,String msg) {
@@ -72,7 +89,7 @@ public class XiaoTMatchController {
 		reqCommonBean.sessionId = sessionId;
 		reqCommonBean.data = paraMap;
 		reqCommonBean.fdtId = userId;
-		Map<String,Object>  mapTar = null;
+//		Map<String,Object>  mapTar = null;
 
 		int flag = gameService.ready(reqCommonBean);
 		String msg2 ="";
@@ -85,15 +102,15 @@ public class XiaoTMatchController {
 			rspCode = 201;
 			msg2 = "房间人数已满，不可加入比赛";
 		}
-		if(flag>=0){
-			mapTar = new HashMap<>(1);
-			String gameId = reqCommonBean.data.get("gameId").toString();
-			GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) MatchServiceHelper.cacheMapXM.get(gameId);
-			mapTar.put("gameName",gameRuntimeBean.tGame.getGameName());
-		}
+//		if(flag>=0){
+//			mapTar = new HashMap<>(1);
+//			String gameId = reqCommonBean.data.get("gameId").toString();
+//			GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) MatchServiceHelper.cacheMapXM.get(gameId);
+//			mapTar.put("gameName",gameRuntimeBean.tGame.getGameName());
+//		}
 
 		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(rspCode,msg2);
-		rspCommonBean.data = mapTar;
+//		rspCommonBean.data = mapTar;
 		String str = JSON.toJSONString(rspCommonBean);
 		return str;
 	}
