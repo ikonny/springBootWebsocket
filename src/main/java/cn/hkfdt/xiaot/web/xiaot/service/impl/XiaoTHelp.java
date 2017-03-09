@@ -143,11 +143,12 @@ public class XiaoTHelp {
 	 * 2016-12-16 下午2:41:08
 	 */
 	@SuppressWarnings("unchecked")
-	public static TQuestions getTQuestion(String fdtId, int market) {
+	public static TQuestions getTQuestion(String fdtId, String market) {
 		Map<String, Object> mapPara = new HashMap<String, Object>(3);
 		mapPara.put("fdtId", fdtId);
 		mapPara.put("version", version);
-		mapPara.put("market", XiaoTMarketType.FC.getCode());
+		mapPara.put("market", market);
+
 		String json = JSON.toJSONString(mapPara);//JsonUtil.ObToJson(mapPara);
 		
 		String retStr = NetUtil.sendPostJson(urlPickTrade, json);//HttpUtils.postJson(urlPickTrade, json);
@@ -210,11 +211,11 @@ public class XiaoTHelp {
 	}
 	public static String getMarketCode(TQuestions tQuestions) {
 		int type = tQuestions.getType();
-		if(type==0)
+		if(type==XiaoTMarketType.FC.getType())
 			return XiaoTMarketType.FC.getCode();
-		if(type==1)
+		if(type==XiaoTMarketType.FX.getType())
 			return XiaoTMarketType.FX.getCode();
-		if(type==2)
+		if(type==XiaoTMarketType.SC.getType())
 			return XiaoTMarketType.SC.getCode();
 		return "FC";
 	}
@@ -234,7 +235,7 @@ public class XiaoTHelp {
 	}
 	public static void testRemoteServer() {
 		try {
-			TQuestions tq = getTQuestion(xiaoTGuest, 0);
+			TQuestions tq = getTQuestion(xiaoTGuest, "FC");
 			if(tq!=null){
 				logger.info("xiaot 选题server OK");
 			}

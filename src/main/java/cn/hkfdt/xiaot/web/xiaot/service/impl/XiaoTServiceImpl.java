@@ -177,7 +177,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public TQuestions xiaotTraining(String fdtId, int market, Map<String, Object> mapTar, String type) {
+	public TQuestions xiaotTraining(String fdtId, String market, Map<String, Object> mapTar, String type) {
 		TQuestions tQuestions = null;
 		int count=0;
 		while(tQuestions == null){

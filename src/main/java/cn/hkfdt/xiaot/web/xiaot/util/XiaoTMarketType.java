@@ -2,7 +2,7 @@ package cn.hkfdt.xiaot.web.xiaot.util;
 
 public enum XiaoTMarketType {
 
-	FC(0,"FC"),FX(1,"FX"),SC(2,"SC");
+	FC(0,"FC"),FX(2,"FX"),SC(1,"SC");
 	
 	//=====================
 	private int type;

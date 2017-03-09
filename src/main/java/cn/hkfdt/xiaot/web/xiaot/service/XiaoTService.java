@@ -46,7 +46,7 @@ public interface XiaoTService {
 	 * author:xumin 
 	 * 2016-12-16 上午10:07:26
 	 */
-	TQuestions xiaotTraining(String fdtId, int market, Map<String, Object> mapTar, String type);
+	TQuestions xiaotTraining(String fdtId, String market, Map<String, Object> mapTar, String type);
 	/**
 	 * 请求远程服务，对本次训练结果打分
 	 * @param fdtId

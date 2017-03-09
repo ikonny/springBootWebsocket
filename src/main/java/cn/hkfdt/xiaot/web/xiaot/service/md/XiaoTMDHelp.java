@@ -296,7 +296,7 @@ public class XiaoTMDHelp {
 	 * author:xumin 
 	 * 2016-12-21 下午5:47:21
 	 */
-	private static double EMA(int index, double closePrice, int gene, List<Double> emalist) {
+	public static double EMA(int index, double closePrice, int gene, List<Double> emalist) {
 		double ema = 0;
 		if(index==0){
 			ema = closePrice;
