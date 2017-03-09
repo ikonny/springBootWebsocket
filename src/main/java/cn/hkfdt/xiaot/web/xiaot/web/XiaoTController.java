@@ -1,6 +1,8 @@
 package cn.hkfdt.xiaot.web.xiaot.web;
 
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TQuestionsExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.ForceAnalysis;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
 import cn.hkfdt.xiaot.web.Filters.LoginFilter;
 import cn.hkfdt.xiaot.web.common.UserContext;
 import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
@@ -8,6 +10,9 @@ import cn.hkfdt.xiaot.web.common.service.CommonService;
 import cn.hkfdt.xiaot.web.weixin.WXHelper;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTService;
 import cn.hkfdt.xiaot.web.xiaot.service.impl.XiaoTHelp;
+import cn.hkfdt.xiaot.web.xiaot.service.md.XiaoTMDHelp;
+import cn.hkfdt.xiaot.web.xiaot.util.YSUtils;
+import com.alibaba.fastjson.JSON;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.catalina.util.URLEncoder;
 import org.apache.tomcat.util.codec.binary.StringUtils;
@@ -20,11 +25,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.groups.Default;
-import java.io.IOException;
+import java.io.*;
+import java.net.URI;
+import java.net.URL;
 import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * author:xumin 
@@ -38,6 +43,8 @@ public class XiaoTController {
 	XiaoTService xiaoTService;
 	@Autowired
 	CommonService commonService;
+	@Autowired
+	TQuestionsExtendsMapper tQuestionsExtendsMapper;
 
 	//=========================================
 	/**
@@ -51,7 +58,7 @@ public class XiaoTController {
 	 */
 	@RequestMapping(value="/xiaoth/xiaotTraining")
 	@ResponseBody
-    public Object xiaotTraining(@RequestParam(defaultValue = "0") int market,
+    public Object xiaotTraining(@RequestParam(defaultValue = "FC") String market,
 								@RequestParam(defaultValue = "all") String type, Model model){
 		Map<String, Object> mapTar = new HashMap<String, Object>(8);
 		String fdtId = UserContext.getUserInfo().get().getFdtId();
@@ -255,6 +262,131 @@ public class XiaoTController {
 //		resultMap.put("url", url);
 //		return resultMap;
 //	}
+	@RequestMapping(value="/xiaoth/addNewQuestions")
+	public void addQuestions() throws Exception{
+		this.addFc();
+		this.addSc();
 
+
+	}
+
+	public void addFc() throws Exception{
+		InputStream is = this.getClass().getResourceAsStream("/fc-1000");
+		InputStreamReader read = new InputStreamReader(is);
+		BufferedReader bufferedReader = new BufferedReader(read);
+		String lineTxt = null;
+		while((lineTxt = bufferedReader.readLine()) != null){
+			Map<String, Object> map = JSON.parseObject(lineTxt);
+			String key = map.get("key").toString();
+			String[] keyArr = key.split("#");
+			Map<String, Object> jsonDataMap = new HashMap<>();
+			Map<String, Object> todayMap = (Map<String, Object>)map.get("today");
+			List<Map<String, Object>> todayItemList = (List<Map<String, Object>>)todayMap.get("items");
+			Collections.reverse(todayItemList);
+			List<Map<String, Object>> today200ItemList = new ArrayList<>();
+			for (Map<String, Object> som : todayItemList) {
+				today200ItemList.add(0, som);
+				if(today200ItemList.size() >= 200){
+					break;
+				}
+			}
+			todayMap.put("items", today200ItemList);
+			jsonDataMap.put("today", todayMap);
+			Map<String, Object> historyMap = (Map<String, Object>)map.get("history");
+			List<Map<String, Object>> historyItemList = (List<Map<String, Object>>)historyMap.get("items");
+			int index = 0;
+			List<Double> emaShort = new ArrayList<>();
+			List<Double> emaLone = new ArrayList<>();
+			List<Double> emaDea = new ArrayList<>();
+			for (Map<String, Object> som : historyItemList) {
+
+				setMacd(som, index++,emaShort,emaLone,emaDea);
+			}
+			historyMap.put("macdName", "MACD(12,26,9)");
+			historyMap.put("items", historyItemList);
+			jsonDataMap.put("history", historyMap);
+			String jsonData = JSON.toJSONString(jsonDataMap);
+			byte[] byteTar = YSUtils.compress(jsonData.getBytes(), 2);
+			TQuestions tq = new TQuestions();
+			tq.setExchangeCode(keyArr[0]);
+			tq.setShortSymbol(keyArr[1]);
+			tq.setTradeDay(keyArr[2]);
+			tq.setCreateTime(System.currentTimeMillis());
+			tq.setType(0);
+			tq.setJsonData(byteTar);
+			tq.setInitType(1);
+
+			try {
+				tQuestionsExtendsMapper.insertSelective(tq);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void addSc() throws Exception{
+		InputStream is = this.getClass().getResourceAsStream("/sc-1000");
+		InputStreamReader read = new InputStreamReader(is);
+		BufferedReader bufferedReader = new BufferedReader(read);
+		String lineTxt = null;
+		while((lineTxt = bufferedReader.readLine()) != null){
+			Map<String, Object> map = JSON.parseObject(lineTxt);
+			String key = map.get("key").toString();
+			String[] keyArr = key.split("#");
+			Map<String, Object> jsonDataMap = new HashMap<>();
+			Map<String, Object> todayMap = (Map<String, Object>)map.get("today");
+			List<Map<String, Object>> todayItemList = (List<Map<String, Object>>)todayMap.get("items");
+			Collections.reverse(todayItemList);
+			List<Map<String, Object>> today200ItemList = new ArrayList<>();
+			for (Map<String, Object> som : todayItemList) {
+				today200ItemList.add(0, som);
+				if(today200ItemList.size() >= 200){
+					break;
+				}
+			}
+			todayMap.put("items", today200ItemList);
+			jsonDataMap.put("today", todayMap);
+			Map<String, Object> historyMap = (Map<String, Object>)map.get("history");
+			List<Map<String, Object>> historyItemList = (List<Map<String, Object>>)historyMap.get("items");
+			int index = 0;
+			List<Double> emaShort = new ArrayList<>();
+			List<Double> emaLone = new ArrayList<>();
+			List<Double> emaDea = new ArrayList<>();
+			for (Map<String, Object> som : historyItemList) {
+
+				setMacd(som, index++,emaShort,emaLone,emaDea);
+			}
+			historyMap.put("macdName", "MACD(12,26,9)");
+			historyMap.put("items", historyItemList);
+			jsonDataMap.put("history", historyMap);
+			String jsonData = JSON.toJSONString(jsonDataMap);
+			byte[] byteTar = YSUtils.compress(jsonData.getBytes(), 2);
+			TQuestions tq = new TQuestions();
+			tq.setExchangeCode(keyArr[0]);
+			tq.setShortSymbol(keyArr[1]);
+			tq.setTradeDay(keyArr[2]);
+			tq.setCreateTime(System.currentTimeMillis());
+			tq.setType(1);
+			tq.setJsonData(byteTar);
+			tq.setInitType(1);
+
+			try {
+				tQuestionsExtendsMapper.insertSelective(tq);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public static void setMacd(Map<String, Object> item, int index, List<Double> emaShort,List<Double> emaLone,List<Double> emaDea){
+		//计算macd start add by crimson 2017-02-22
+		double diff = XiaoTMDHelp.EMA(index,Double.parseDouble(item.get("close").toString()),12,emaShort) - XiaoTMDHelp.EMA(index,Double.parseDouble(item.get("close").toString()),26,emaLone);
+		item.put("diff", XiaoTHelp.get2Point(diff));// 变化快的线
+		double dea = XiaoTMDHelp.EMA(index,diff,9,emaDea);
+		item.put("dea", XiaoTHelp.get2Point(dea));// EMA diff 9后的线
+		double macd = 2*(diff-dea);
+		item.put("macd", XiaoTHelp.get2Point(macd));
+		//计算macd end
+	}
 
 }

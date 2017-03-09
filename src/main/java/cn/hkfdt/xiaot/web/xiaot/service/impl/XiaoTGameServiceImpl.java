@@ -21,6 +21,7 @@ import cn.hkfdt.xiaot.web.common.service.AuthService;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTGameService;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTService;
 import cn.hkfdt.xiaot.web.xiaot.service.md.XiaoTMDHelp;
+import cn.hkfdt.xiaot.web.xiaot.util.XiaoTMarketType;
 import cn.hkfdt.xiaot.web.xiaot.util.XiaoTUserType;
 import cn.hkfdt.xiaot.web.xiaot.util.YSUtils;
 import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
@@ -144,8 +145,16 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 			Map<String, Object> mapTar = null;
 			try {
 				int marketType = Integer.parseInt(mapPara.get("marketType").toString());
+				String mkt = "FC";
+				if(marketType == XiaoTMarketType.FC.getType()){
+					mkt = XiaoTMarketType.FC.getCode();
+				}else if(marketType == XiaoTMarketType.FX.getType()){
+					mkt = XiaoTMarketType.FX.getCode();
+				}else if(marketType == XiaoTMarketType.SC.getType()){
+					mkt = XiaoTMarketType.SC.getCode();
+				}
 				mapTar = new HashMap<>(8);
-				TQuestions tQuestions = xiaoTService.xiaotTraining(XiaoTHelp.xiaoTGuest, marketType, mapTar, "all");
+				TQuestions tQuestions = xiaoTService.xiaotTraining(XiaoTHelp.xiaoTGuest, mkt, mapTar, "all");
 				//创建比赛相关数据
 				TGame tGame = new TGame();
 				tGame.setGameId(gameId);
