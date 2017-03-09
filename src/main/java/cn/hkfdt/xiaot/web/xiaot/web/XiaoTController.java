@@ -102,13 +102,10 @@ public class XiaoTController {
     public String xiaot(HttpServletRequest request, @PathVariable String other, Model model,
 						HttpServletResponse response, @RequestParam(defaultValue = "") String userInfo, @RequestParam(required = false) String gameId,
 						@RequestParam(required = false) String num){
-		if(WXHelper.isFromWx(request) && (userInfo == null || "".equalsIgnoreCase(userInfo))){//微信用打开,且没有用户信息
+		if("battle".equals(other) && WXHelper.isFromWx(request) && (userInfo == null || "".equalsIgnoreCase(userInfo))){//微信用打开,且没有用户信息
 			//           logger.info("微信:"+GlobalInfo.wxLoginUrl);
 			try {
-				response.setHeader("Access-Control-Allow-Origin", "*");
-				System.out.println(GlobalInfo.wxLoginUrl);
 				String targetUrl = GlobalInfo.wxLoginUrl.replace("theGameId", gameId).replace("theNum", num);
-				System.out.println(targetUrl);
 				response.sendRedirect(targetUrl);
 			} catch (IOException e) {
 				e.printStackTrace();
