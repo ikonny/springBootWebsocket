@@ -285,6 +285,7 @@ public class XiaoTController {
 			Collections.reverse(todayItemList);
 			List<Map<String, Object>> today200ItemList = new ArrayList<>();
 			for (Map<String, Object> som : todayItemList) {
+				som.put("closePrice", som.get("close"));
 				today200ItemList.add(0, som);
 				if(today200ItemList.size() >= 200){
 					break;
@@ -299,7 +300,7 @@ public class XiaoTController {
 			List<Double> emaLone = new ArrayList<>();
 			List<Double> emaDea = new ArrayList<>();
 			for (Map<String, Object> som : historyItemList) {
-
+				som.put("closePrice", som.get("close"));
 				setMacd(som, index++,emaShort,emaLone,emaDea);
 			}
 			historyMap.put("macdName", "MACD(12,26,9)");
