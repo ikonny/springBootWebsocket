@@ -9,7 +9,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
@@ -121,19 +120,30 @@ public class WebSocketConnectionListener implements
 //		System.err.println("handleSessionConnected");
 	}
 
-	public static  void setUserIds(String fdtId, String sessionId) {
-		mapSession2FdtId.put(sessionId, fdtId);
-		mapFdtId2Session.put(fdtId, sessionId);
+	/**
+	 *
+	 * @param fdtId
+	 * @param sessionId
+	 * @return 0设置成功   -1已经存在fdtid对应的连线，该用户已经存在
+	 */
+	public static int setUserIds(String fdtId, String sessionId) {
+    	synchronized (mapFdtId2Session) {
+			if (mapFdtId2Session.containsKey(fdtId)){
+				logger.info("设置连接:fdtId重复："+fdtId);
+				return  -1;
+			}
+			mapFdtId2Session.put(fdtId, sessionId);//但是这个有可能被覆盖，所以要防止这种情况
+			mapSession2FdtId.put(sessionId, fdtId);//这个是唯一的
+		}
 		logger.info("设置连接:fdtId："+fdtId);
+    	return 0;
 	}
 	public static void removeUserId(String sessionId) {
 		String fdtId = mapSession2FdtId.get(sessionId);
-		if(!StringUtils.isEmpty(fdtId)){
-			mapSession2FdtId.remove(sessionId);
-			mapFdtId2Session.remove(fdtId);
-			ConnectEventHelper.disConnectAndAfterRmove(fdtId,sessionId);
-			logger.info("-------断开:fdtId "+fdtId);
-		}
+		mapSession2FdtId.remove(sessionId);
+		mapFdtId2Session.remove(fdtId);
+		ConnectEventHelper.disConnectAndAfterRmove(fdtId,sessionId);
+		logger.info("-------断开:fdtId "+fdtId);
 	}
 	public static String getFdtId(String fdtKey, String sessionId) {
 		try {
