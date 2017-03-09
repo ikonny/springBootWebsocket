@@ -1,6 +1,9 @@
 package cn.hkfdt.xiaot.web.xiaot.service.impl;
 
-import cn.hkfdt.xiaot.mybatis.mapper.ltschina.*;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.ForceAnalysisExtendsMapper;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.SchoolMapper;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TQuestionsExtendsMapper;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TRecordExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.*;
 import cn.hkfdt.xiaot.util.ImageUtil;
 import cn.hkfdt.xiaot.web.common.redis.RedisClient;
@@ -15,7 +18,8 @@ import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.collections.map.HashedMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -27,7 +31,6 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Logger;
 
 /**
  * author:xumin 
@@ -53,6 +56,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 	
 	AtomicBoolean isInitingTQ = new AtomicBoolean(false);
 	private static final int tryNum = 3;//重试次数
+	static Logger logger = LoggerFactory.getLogger(XiaoTServiceImpl.class);
 	
 	//=====================================
 	 @PostConstruct
@@ -187,6 +191,9 @@ public class XiaoTServiceImpl implements XiaoTService {
 			if(count>=tryNum){
 				break;
 			}
+		}
+		if(tQuestions==null){
+			logger.info("fdtId,market:"+fdtId+"___"+market+"获取不到题目");
 		}
 		byte[] jsonData = tQuestions.getJsonData();
 		try {
