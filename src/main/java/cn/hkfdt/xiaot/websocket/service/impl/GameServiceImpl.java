@@ -123,7 +123,8 @@ public class GameServiceImpl implements GameService {
 	public int gameStart(ReqCommonBean reqCommonBean) {
 		//{"action":"go","gameId":"adsffgcsdf"}
 		String gameId = reqCommonBean.data.get("gameId").toString();
-		int stayTime = Integer.parseInt(reqCommonBean.data.get("stayTime").toString());
+		//画线间隔
+		int drawTimer = Integer.parseInt(reqCommonBean.data.get("drawTimer").toString());
 		GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) cacheMapXM.get(gameId);
 		if(gameRuntimeBean==null){
 			return -2;
@@ -133,14 +134,14 @@ public class GameServiceImpl implements GameService {
 			return -1;
 		}
 		gameRuntimeBean.userNum = gameRuntimeBean.mapUsers.size();//修改比赛开始人数
-		cacheMapXM.put(gameId,gameRuntimeBean,stayTime+50);//开始后调整时间
+		cacheMapXM.put(gameId,gameRuntimeBean,gameRuntimeBean.getGameTime());//开始后调整时间
 		//-------------------------------------------
 		//更新比赛状态
 		updateGameAndInsertUserWithStart(gameRuntimeBean);//执行失败就报错，就不会通知开始
 		//-----------------------------------------------
 		xiaoTMatchTopics.start(gameId);//通知各端比赛开始
 		//比赛计时，通知开始
-		gameRuntimeBean.start(xiaoTMatchTopics);
+		gameRuntimeBean.start(xiaoTMatchTopics,drawTimer);
 		return 0;
 	}
 

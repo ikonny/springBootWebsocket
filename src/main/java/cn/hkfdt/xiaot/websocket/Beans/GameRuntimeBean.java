@@ -2,6 +2,7 @@ package cn.hkfdt.xiaot.websocket.Beans;
 
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGame;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
+import cn.hkfdt.xiaot.web.xiaot.util.XiaoTMarketType;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +59,22 @@ public class GameRuntimeBean {
      */
     private volatile int state=0;
     //================================================================================
-
+    /**
+     * 根据比赛类型，获取比赛时长
+     * @return
+     */
+    public int getGameTime() {
+        if(tGame.getMarketType()== XiaoTMarketType.FC.getType()){
+            return 200+50;
+        }
+        if(tGame.getMarketType()== XiaoTMarketType.SC.getType()){
+            return 240+50;
+        }
+        if(tGame.getMarketType()== XiaoTMarketType.FX.getType()){
+            return 300+50;
+        }
+        return 300;
+    }
     /**
      * 用户准备，或者重连准备
      * @param gameUserExtBean
@@ -136,8 +152,9 @@ public class GameRuntimeBean {
     /**
      * 根据比赛类型，每秒发送比赛x点位置，直到发完，回收线程
      * @param xiaoTMatchTopics
+     * @param drawTimer
      */
-    public synchronized void start(XiaoTMatchTopics xiaoTMatchTopics) {
+    public synchronized void start(XiaoTMatchTopics xiaoTMatchTopics, int drawTimer) {
         int xPoints = 200;//XiaoTMarketType.FC.getType()
 //        if(tGame.getMarketType()== XiaoTMarketType.FC.getType()){
 //
@@ -150,7 +167,7 @@ public class GameRuntimeBean {
             int xNow = 1;
             while(xNow<=xPoints){
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(drawTimer);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -166,4 +183,6 @@ public class GameRuntimeBean {
         td.setName("game_:"+gameId);
         td.start();
     }
+
+
 }
