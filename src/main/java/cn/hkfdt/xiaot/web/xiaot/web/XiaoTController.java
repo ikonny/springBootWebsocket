@@ -190,10 +190,9 @@ public class XiaoTController {
     @RequestMapping(value="/xiaoth/getXiaotRecords")
     @ResponseBody
     public Object getXiaotRecord(
-            @RequestParam(defaultValue = "0") int market, Model model,
+            @RequestParam(defaultValue = "FC") String market, Model model,
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "1") int count){
-    	
     	String fdtId = UserContext.getUserInfo().get().getFdtId();//"aa";//
     	Map<String, Object>  mapPara = new HashMap<String, Object>(6);
     	mapPara.put("fdtId", fdtId);
@@ -279,7 +278,6 @@ public class XiaoTController {
 			Map<String, Object> jsonDataMap = new HashMap<>();
 			Map<String, Object> todayMap = (Map<String, Object>)map.get("today");
 			List<Map<String, Object>> todayItemList = (List<Map<String, Object>>)todayMap.get("items");
-			Collections.reverse(todayItemList);
 			List<Map<String, Object>> today200ItemList = new ArrayList<>();
 			for (Map<String, Object> som : todayItemList) {
 				som.put("closePrice", som.get("close"));
@@ -334,11 +332,11 @@ public class XiaoTController {
 			Map<String, Object> jsonDataMap = new HashMap<>();
 			Map<String, Object> todayMap = (Map<String, Object>)map.get("today");
 			List<Map<String, Object>> todayItemList = (List<Map<String, Object>>)todayMap.get("items");
-			Collections.reverse(todayItemList);
 			List<Map<String, Object>> today200ItemList = new ArrayList<>();
 			for (Map<String, Object> som : todayItemList) {
+				som.put("closePrice", som.get("close"));
 				today200ItemList.add(0, som);
-				if(today200ItemList.size() >= 200){
+				if(today200ItemList.size() >= 242){
 					break;
 				}
 			}
@@ -351,7 +349,7 @@ public class XiaoTController {
 			List<Double> emaLone = new ArrayList<>();
 			List<Double> emaDea = new ArrayList<>();
 			for (Map<String, Object> som : historyItemList) {
-
+				som.put("closePrice", som.get("close"));
 				setMacd(som, index++,emaShort,emaLone,emaDea);
 			}
 			historyMap.put("macdName", "MACD(12,26,9)");

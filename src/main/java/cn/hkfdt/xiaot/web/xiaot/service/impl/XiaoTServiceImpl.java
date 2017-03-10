@@ -279,7 +279,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 			if(!lastAction.getSide().equals("close")){
 				TraningAction closeAction = new TraningAction();
 				closeAction.setSide("close");
-				closeAction.setCurIdx(199);
+
 				closeAction.setTimestamp(System.currentTimeMillis());
 				//获取题目
 				TQuestions para = new TQuestions();
@@ -297,6 +297,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 					List<Map<String, Object>> infoList = (List<Map<String, Object>>)todayMap.get("items");
 					Map<String, Object> lastInfo = infoList.get(infoList.size() - 1);
 					closeAction.setPrice(Integer.parseInt(lastInfo.get("volume").toString()));
+					closeAction.setCurIdx(infoList.size()-1);
 					acList.add(closeAction);
 				} catch (IOException e) {
 					e.printStackTrace();
