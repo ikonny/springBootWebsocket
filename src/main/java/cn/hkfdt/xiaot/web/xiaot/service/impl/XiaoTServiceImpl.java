@@ -296,7 +296,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 					Map<String, Object> todayMap = (Map<String, Object>) jsonDataMap.get("today");
 					List<Map<String, Object>> infoList = (List<Map<String, Object>>)todayMap.get("items");
 					Map<String, Object> lastInfo = infoList.get(infoList.size() - 1);
-					closeAction.setPrice(Integer.parseInt(lastInfo.get("volume").toString()));
+					closeAction.setPrice(Integer.parseInt(lastInfo.get("closePrice").toString()));
 					closeAction.setCurIdx(infoList.size()-1);
 					acList.add(closeAction);
 				} catch (IOException e) {
