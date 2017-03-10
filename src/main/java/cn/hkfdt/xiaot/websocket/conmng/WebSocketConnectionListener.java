@@ -127,8 +127,10 @@ public class WebSocketConnectionListener implements
 	 * @return 0设置成功   -1已经存在fdtid对应的连线，该用户已经存在
 	 */
 	public static int setUserIds(String fdtId, String sessionId) {
+		String sessionIdT = mapFdtId2Session.get(fdtId);//尝试获取原来fdtId对应的sessionId
     	synchronized (mapFdtId2Session) {
-			if (mapFdtId2Session.containsKey(fdtId)){
+			if (sessionIdT!=null && !sessionIdT.equals(sessionId)){
+				//如果原来有连接对应，而且不是同一个连接过来的覆盖.证明是同一个userId，新的客户端
 				logger.info("设置连接:fdtId重复："+fdtId);
 				return  -1;
 			}
