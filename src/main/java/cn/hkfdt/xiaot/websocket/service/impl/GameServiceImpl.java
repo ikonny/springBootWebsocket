@@ -74,32 +74,32 @@ public class GameServiceImpl implements GameService {
 				return rspCommonBean;
 			}else{
 				//老人
-				gameUserStateBean.gameState = 4;
+				gameUserStateBean.curState = 4;
 				return rspCommonBean;
 			}
 		}else{
 			//比赛未结束，还在内存中
 			if(!gameRuntimeBean.mapUsers.containsKey(userI)){
 				//新人
-				gameUserStateBean.gameState = 1;
+				gameUserStateBean.curState = 1;
 			}else{
 				GameUserExtBean gameUserExtBean = gameRuntimeBean.mapUsers.get(userI);
 				if(gameRuntimeBean.tGame.getState()==0){
-					gameUserStateBean.gameState = 2;
+					gameUserStateBean.curState = 2;
 				}
 				else if(gameRuntimeBean.tGame.getState()==1){
 					//进行中
-					gameUserStateBean.gameState = 3;
+					gameUserStateBean.curState = 3;
 				}
 				else {
 					//结束
-					gameUserStateBean.gameState = 4;
+					gameUserStateBean.curState = 4;
 				}
 				gameUserStateBean.actions = gameUserExtBean.actions;
 				gameUserStateBean.gameName = tGame.getGameName();
-				gameUserStateBean.headimgurl = gameUserExtBean.headimgurl;
+//				gameUserStateBean.headimgurl = gameUserExtBean.headimgurl;
 				gameUserStateBean.userName = gameUserExtBean.userName;
-				gameUserStateBean.userType = gameUserExtBean.userType;
+//				gameUserStateBean.userType = gameUserExtBean.userType;
 			}
 		}
 

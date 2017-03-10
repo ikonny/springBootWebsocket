@@ -10,12 +10,12 @@ import java.util.ArrayList;
  */
 public class GameUserStateBean  implements Serializable {
     /**
-     * 1新人，比赛未开始可以准备    准备后  成功，比赛已经开始或者结束，提示错误    {"data":{gameState:1,gameName},"rspCode":200}
-     2.已参赛人，比赛未开始 {"data":{gameState:2,userName,userType,headimgurl,gameName},"rspCode":200}   再去ready请求一次
-     3.已参赛人，比赛进行中   {"data":{gameState:3,actions,userName,userType,headimgurl,gameName},"rspCode":200}      建立连接，实时发送变化数据，订阅比赛结束等信息
-     4.已参赛人，比赛已经结束   {"data":{gameState:4,},"rspCode":200}
+     * 1新人，比赛未开始可以准备    准备后  成功，比赛已经开始或者结束，提示错误    {"data":{curState:1,gameName},"rspCode":200}
+     2.已参赛人，比赛未开始 {"data":{curState:2,userName,userType,headimgurl,gameName},"rspCode":200}   再去ready请求一次
+     3.已参赛人，比赛进行中   {"data":{curState:3,actions,userName,userType,headimgurl,gameName},"rspCode":200}      建立连接，实时发送变化数据，订阅比赛结束等信息
+     4.已参赛人，比赛已经结束   {"data":{curState:4,},"rspCode":200}
      */
-    public int gameState = 1;
+    public int curState = 1;
     public String gameName;
     /**
      */
@@ -34,7 +34,7 @@ public class GameUserStateBean  implements Serializable {
     public GameUserStateBean deepCopy() {
         GameUserStateBean item = new GameUserStateBean();
         item.headimgurl = this.headimgurl;
-        item.gameState = this.gameState;
+        item.curState = this.curState;
         item.gameName = this.gameName;
         item.userName = this.userName;
         item.userType = this.userType;
