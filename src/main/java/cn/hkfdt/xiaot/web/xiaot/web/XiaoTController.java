@@ -274,18 +274,24 @@ public class XiaoTController {
 		while((lineTxt = bufferedReader.readLine()) != null){
 			Map<String, Object> map = JSON.parseObject(lineTxt);
 			String key = map.get("key").toString();
+			String cnName = map.get("name").toString();
 			String[] keyArr = key.split("#");
 			Map<String, Object> jsonDataMap = new HashMap<>();
 			Map<String, Object> todayMap = (Map<String, Object>)map.get("today");
 			List<Map<String, Object>> todayItemList = (List<Map<String, Object>>)todayMap.get("items");
 			List<Map<String, Object>> today200ItemList = new ArrayList<>();
+			Double maxVolatility = null;
 			for (Map<String, Object> som : todayItemList) {
+				if(maxVolatility == null || Double.parseDouble(som.get("volatility").toString()) > maxVolatility){
+					maxVolatility = Double.parseDouble(som.get("volatility").toString());
+				}
 				som.put("closePrice", som.get("close"));
-				today200ItemList.add(0, som);
+				today200ItemList.add(som);
 				if(today200ItemList.size() >= 200){
 					break;
 				}
 			}
+			todayMap.put("volatility", XiaoTHelp.get2Point(maxVolatility));
 			todayMap.put("items", today200ItemList);
 			jsonDataMap.put("today", todayMap);
 			Map<String, Object> historyMap = (Map<String, Object>)map.get("history");
@@ -309,6 +315,7 @@ public class XiaoTController {
 			tq.setTradeDay(keyArr[2]);
 			tq.setCreateTime(System.currentTimeMillis());
 			tq.setType(0);
+			tq.setCnName(cnName);
 			tq.setJsonData(byteTar);
 			tq.setInitType(1);
 
@@ -328,18 +335,24 @@ public class XiaoTController {
 		while((lineTxt = bufferedReader.readLine()) != null){
 			Map<String, Object> map = JSON.parseObject(lineTxt);
 			String key = map.get("key").toString();
+			String cnName = map.get("name").toString();
 			String[] keyArr = key.split("#");
 			Map<String, Object> jsonDataMap = new HashMap<>();
 			Map<String, Object> todayMap = (Map<String, Object>)map.get("today");
 			List<Map<String, Object>> todayItemList = (List<Map<String, Object>>)todayMap.get("items");
 			List<Map<String, Object>> today200ItemList = new ArrayList<>();
+			Double maxVolatility = null;
 			for (Map<String, Object> som : todayItemList) {
+				if(maxVolatility == null || Double.parseDouble(som.get("volatility").toString()) > maxVolatility){
+					maxVolatility = Double.parseDouble(som.get("volatility").toString());
+				}
 				som.put("closePrice", som.get("close"));
-				today200ItemList.add(0, som);
+				today200ItemList.add(som);
 				if(today200ItemList.size() >= 242){
 					break;
 				}
 			}
+			todayMap.put("volatility", XiaoTHelp.get2Point(maxVolatility));
 			todayMap.put("items", today200ItemList);
 			jsonDataMap.put("today", todayMap);
 			Map<String, Object> historyMap = (Map<String, Object>)map.get("history");
@@ -363,6 +376,7 @@ public class XiaoTController {
 			tq.setTradeDay(keyArr[2]);
 			tq.setCreateTime(System.currentTimeMillis());
 			tq.setType(1);
+			tq.setCnName(cnName);
 			tq.setJsonData(byteTar);
 			tq.setInitType(1);
 

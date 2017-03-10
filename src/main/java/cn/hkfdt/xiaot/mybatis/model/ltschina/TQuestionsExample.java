@@ -744,6 +744,76 @@ public class TQuestionsExample {
             return (Criteria) this;
         }
 
+        public Criteria andCnNameIsNull() {
+            addCriterion("cnName is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCnNameIsNotNull() {
+            addCriterion("cnName is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCnNameEqualTo(String value) {
+            addCriterion("cnName =", value, "cnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCnNameNotEqualTo(String value) {
+            addCriterion("cnName <>", value, "cnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCnNameGreaterThan(String value) {
+            addCriterion("cnName >", value, "cnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCnNameGreaterThanOrEqualTo(String value) {
+            addCriterion("cnName >=", value, "cnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCnNameLessThan(String value) {
+            addCriterion("cnName <", value, "cnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCnNameLessThanOrEqualTo(String value) {
+            addCriterion("cnName <=", value, "cnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCnNameLike(String value) {
+            addCriterion("cnName like", value, "cnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCnNameNotLike(String value) {
+            addCriterion("cnName not like", value, "cnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCnNameIn(List<String> values) {
+            addCriterion("cnName in", values, "cnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCnNameNotIn(List<String> values) {
+            addCriterion("cnName not in", values, "cnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCnNameBetween(String value1, String value2) {
+            addCriterion("cnName between", value1, value2, "cnName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCnNameNotBetween(String value1, String value2) {
+            addCriterion("cnName not between", value1, value2, "cnName");
+            return (Criteria) this;
+        }
+
         public Criteria andExchangeCodeLikeInsensitive(String value) {
             addCriterion("upper(exchangeCode) like", value.toUpperCase(), "exchangeCode");
             return (Criteria) this;
@@ -761,6 +831,11 @@ public class TQuestionsExample {
 
         public Criteria andTopicTypeLikeInsensitive(String value) {
             addCriterion("upper(topicType) like", value.toUpperCase(), "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andCnNameLikeInsensitive(String value) {
+            addCriterion("upper(cnName) like", value.toUpperCase(), "cnName");
             return (Criteria) this;
         }
     }

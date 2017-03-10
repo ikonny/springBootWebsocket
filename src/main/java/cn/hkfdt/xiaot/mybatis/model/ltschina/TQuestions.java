@@ -79,6 +79,14 @@ public class TQuestions implements Serializable {
 
     /**
      * <pre>
+     * 表字段注释 : 中文名
+     * 表字段 : xiaot_questions.cnName
+     * </pre>
+     */
+    private String cnName;
+
+    /**
+     * <pre>
      * 表字段注释 : ä¼ ç»™å‰ç«¯çš„è¡Œæƒ…æ•°æ®æ€»å’Œ.ç¬¬ä¸€æ¬¡ä¸ºç©ºï¼Œæœ‰äººè¯·æ±‚åŽåˆ›å»º
      * 表字段 : xiaot_questions.jsonData
      * </pre>
@@ -165,6 +173,14 @@ public class TQuestions implements Serializable {
 
     public void setVolatility(Double volatility) {
         this.volatility = volatility;
+    }
+
+    public String getCnName() {
+        return cnName;
+    }
+
+    public void setCnName(String cnName) {
+        this.cnName = cnName == null ? null : cnName.trim();
     }
 
     public byte[] getJsonData() {

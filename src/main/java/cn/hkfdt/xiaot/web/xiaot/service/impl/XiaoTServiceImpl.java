@@ -254,7 +254,12 @@ public class XiaoTServiceImpl implements XiaoTService {
 			return 0;
 		}
 		String[] strs = tempMap.get("key").toString().split("#");
-
+//获取题目
+		TQuestions para = new TQuestions();
+		para.setExchangeCode(strs[0]);
+		para.setShortSymbol(strs[1]);
+		para.setTradeDay(strs[2]);
+		TQuestions tq = tQuestionsExtendsMapper.getByUnionKey(para);
 
 		tempMap.put("exchangeCode", strs[0]);
 		tempMap.put("symbol", strs[1]);
@@ -281,12 +286,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 				closeAction.setSide("close");
 
 				closeAction.setTimestamp(System.currentTimeMillis());
-				//获取题目
-				TQuestions para = new TQuestions();
-				para.setExchangeCode(strs[0]);
-				para.setShortSymbol(strs[1]);
-				para.setTradeDay(strs[2]);
-				TQuestions tq = tQuestionsExtendsMapper.getByUnionKey(para);
+
 				byte[] jsonData = tq.getJsonData();
 				try {
 					//获取解压后的真实数据json
@@ -332,7 +332,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 						}
 
 						boolean win = (boolean) temp.get("win");
-						setXiaotDoScoreRtnMap(mapTar, score, tempMap, win);
+						setXiaotDoScoreRtnMap(mapTar, score, tempMap, win, tq.getCnName());
 						if (fdtId.equals(XiaoTHelp.xiaoTGuest))
 							return 0;
 
@@ -390,10 +390,13 @@ public class XiaoTServiceImpl implements XiaoTService {
 	}
 	//设置打分后的返回数据
 	private void setXiaotDoScoreRtnMap(Map<String, Object> mapTar,
-			double score, Map<String, Object> tempMap, boolean win) {
+			double score, Map<String, Object> tempMap, boolean win, String cnName) {
 		String symbol = tempMap.get("symbol").toString();
-		Map<String, Object> symbolItem = XiaoTMDHelp.nM2JYS.get(symbol);
-		String chinaName = symbolItem.get("name").toString();
+		String chinaName = cnName;
+		if(chinaName == null || "".equals(chinaName)) {
+			Map<String, Object> symbolItem = XiaoTMDHelp.nM2JYS.get(symbol);
+			chinaName = symbolItem.get("name").toString();
+		}
 		String tradeTime = tempMap.get("tradeTime").toString();
 		
 		String returnRate = tempMap.get("returnRate").toString();
@@ -540,6 +543,12 @@ public class XiaoTServiceImpl implements XiaoTService {
 					tempMap.put("exchangeCode", strs[0]);
 					tempMap.put("symbol", strs[1]);
 					tempMap.put("fdtId", tRecord.getFdtId());
+					//获取题目
+					TQuestions tpara = new TQuestions();
+					tpara.setExchangeCode(strs[0]);
+					tpara.setShortSymbol(strs[1]);
+					tpara.setTradeDay(strs[2]);
+					TQuestions tq = tQuestionsExtendsMapper.getByUnionKey(tpara);
 					Map<String, Object> temp = XiaoTHelp.xiaotDoScore(tRecord.getReqBody());
 					if (temp != null && !temp.isEmpty()) {
 						int code = (int) temp.get("code");
@@ -552,7 +561,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 							}
 
 							boolean win = (boolean) temp.get("win");
-							setXiaotDoScoreRtnMap(mapTar, score, tempMap, win);
+							setXiaotDoScoreRtnMap(mapTar, score, tempMap, win, tq.getCnName());
 							//更新score
 							Map<String, Object> para = new HashMap<>();
 							para.put("score", score);

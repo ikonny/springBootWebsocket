@@ -12,6 +12,7 @@
     <result column="initType" property="initType" jdbcType="INTEGER" />
     <result column="version" property="version" jdbcType="INTEGER" />
     <result column="volatility" property="volatility" jdbcType="DOUBLE" />
+    <result column="cnName" property="cnName" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions" extends="BaseResultMap" >
     <result column="jsonData" property="jsonData" jdbcType="LONGVARBINARY" />
@@ -76,7 +77,7 @@
   </sql>
   <sql id="Base_Column_List" >
     questionId, exchangeCode, shortSymbol, tradeDay, createTime, type, topicType, initType, 
-    version, volatility
+    version, volatility, cnName
   </sql>
   <sql id="Blob_Column_List" >
     jsonData
@@ -133,11 +134,13 @@
     insert into xiaot_questions (questionId, exchangeCode, shortSymbol, 
       tradeDay, createTime, type, 
       topicType, initType, version, 
-      volatility, jsonData)
+      volatility, cnName, jsonData
+      )
     values (#{questionId,jdbcType=INTEGER}, #{exchangeCode,jdbcType=VARCHAR}, #{shortSymbol,jdbcType=VARCHAR}, 
       #{tradeDay,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, 
       #{topicType,jdbcType=VARCHAR}, #{initType,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}, 
-      #{volatility,jdbcType=DOUBLE}, #{jsonData,jdbcType=LONGVARBINARY})
+      #{volatility,jdbcType=DOUBLE}, #{cnName,jdbcType=VARCHAR}, #{jsonData,jdbcType=LONGVARBINARY}
+      )
   </insert>
   <insert id="insertSelective" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions" >
     insert into xiaot_questions
@@ -171,6 +174,9 @@
       </if>
       <if test="volatility != null" >
         volatility,
+      </if>
+      <if test="cnName != null" >
+        cnName,
       </if>
       <if test="jsonData != null" >
         jsonData,
@@ -206,6 +212,9 @@
       </if>
       <if test="volatility != null" >
         #{volatility,jdbcType=DOUBLE},
+      </if>
+      <if test="cnName != null" >
+        #{cnName,jdbcType=VARCHAR},
       </if>
       <if test="jsonData != null" >
         #{jsonData,jdbcType=LONGVARBINARY},
@@ -251,6 +260,9 @@
       <if test="record.volatility != null" >
         volatility = #{record.volatility,jdbcType=DOUBLE},
       </if>
+      <if test="record.cnName != null" >
+        cnName = #{record.cnName,jdbcType=VARCHAR},
+      </if>
       <if test="record.jsonData != null" >
         jsonData = #{record.jsonData,jdbcType=LONGVARBINARY},
       </if>
@@ -271,6 +283,7 @@
       initType = #{record.initType,jdbcType=INTEGER},
       version = #{record.version,jdbcType=INTEGER},
       volatility = #{record.volatility,jdbcType=DOUBLE},
+      cnName = #{record.cnName,jdbcType=VARCHAR},
       jsonData = #{record.jsonData,jdbcType=LONGVARBINARY}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -287,7 +300,8 @@
       topicType = #{record.topicType,jdbcType=VARCHAR},
       initType = #{record.initType,jdbcType=INTEGER},
       version = #{record.version,jdbcType=INTEGER},
-      volatility = #{record.volatility,jdbcType=DOUBLE}
+      volatility = #{record.volatility,jdbcType=DOUBLE},
+      cnName = #{record.cnName,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -322,6 +336,9 @@
       <if test="volatility != null" >
         volatility = #{volatility,jdbcType=DOUBLE},
       </if>
+      <if test="cnName != null" >
+        cnName = #{cnName,jdbcType=VARCHAR},
+      </if>
       <if test="jsonData != null" >
         jsonData = #{jsonData,jdbcType=LONGVARBINARY},
       </if>
@@ -339,6 +356,7 @@
       initType = #{initType,jdbcType=INTEGER},
       version = #{version,jdbcType=INTEGER},
       volatility = #{volatility,jdbcType=DOUBLE},
+      cnName = #{cnName,jdbcType=VARCHAR},
       jsonData = #{jsonData,jdbcType=LONGVARBINARY}
     where questionId = #{questionId,jdbcType=INTEGER}
   </update>
@@ -352,7 +370,8 @@
       topicType = #{topicType,jdbcType=VARCHAR},
       initType = #{initType,jdbcType=INTEGER},
       version = #{version,jdbcType=INTEGER},
-      volatility = #{volatility,jdbcType=DOUBLE}
+      volatility = #{volatility,jdbcType=DOUBLE},
+      cnName = #{cnName,jdbcType=VARCHAR}
     where questionId = #{questionId,jdbcType=INTEGER}
   </update>
   <select resultMap="ResultMapWithBLOBs" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsExample" id="selectByExampleWithBLOBsWithRowbounds" >
