@@ -187,7 +187,7 @@ public class GameRuntimeBean {
 
 
     public boolean notStart() {
-        return startFirst;
+        return !startFirst;
     }
 
     public void startSet() {
