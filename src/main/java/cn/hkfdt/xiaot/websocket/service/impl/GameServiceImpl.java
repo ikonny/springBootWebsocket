@@ -133,6 +133,16 @@ public class GameServiceImpl implements GameService {
 			//一个人也没有
 			return -1;
 		}
+		//---------------------------------------
+//		以下设置比赛开始逻辑
+		synchronized (gameRuntimeBean){
+			//不能多次按比赛开始
+			if(gameRuntimeBean.notStart()){
+				gameRuntimeBean.startSet();
+			}else{
+				return 0;
+			}
+		}
 		gameRuntimeBean.userNum = gameRuntimeBean.mapUsers.size();//修改比赛开始人数
 		cacheMapXM.put(gameId,gameRuntimeBean,gameRuntimeBean.getGameTime());//开始后调整时间
 		//-------------------------------------------
@@ -154,8 +164,10 @@ public class GameServiceImpl implements GameService {
 		gameRuntimeBean.tGame.setState(1);
 		updateGameSelect(gameRuntimeBean.tGame);
 
+		long time = System.currentTimeMillis();
 		gameRuntimeBean.mapUsers.values().forEach(item->{
 			TGameUser tGameUser = MatchServiceHelper.getGameUser(item,gameRuntimeBean,1);
+			tGameUser.setCreateTime(time);
 			tGameUserExtendsMapper.insert(tGameUser);
 		});
 		return 1;

@@ -58,6 +58,7 @@ public class GameRuntimeBean {
      * 0创建未开始 1：开始未结束  2：已经结束
      */
     private volatile int state=0;
+    boolean startFirst = false;
     //================================================================================
     /**
      * 根据比赛类型，获取比赛时长
@@ -185,4 +186,11 @@ public class GameRuntimeBean {
     }
 
 
+    public boolean notStart() {
+        return startFirst;
+    }
+
+    public void startSet() {
+        startFirst = true;
+    }
 }

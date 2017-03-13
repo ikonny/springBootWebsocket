@@ -145,6 +145,10 @@ public class MatchServiceHelper {
 			return ;
 		}
 		GameUserExtBean gameUserExtBean = gameRuntimeBean.mapUsers.get(userId);//获取到当前比赛用户信息
+		if(gameUserExtBean==null){
+			LogUtil.logSensitive("该用户不属于这个比赛！！_"+gameId+"   userId:"+userId);
+			return ;
+		}
 		//更新数据
 		gameUserExtBean.gameId = gameId;
 		gameUserExtBean.curIdx = Integer.parseInt(mapPara.get("curIdx").toString());
