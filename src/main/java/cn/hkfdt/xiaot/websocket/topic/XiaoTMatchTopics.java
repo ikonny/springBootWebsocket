@@ -8,7 +8,6 @@ import cn.hkfdt.xiaot.websocket.Beans.GameUserListBean;
 import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
 import cn.hkfdt.xiaot.websocket.utils.GameUrlHelp;
 import com.alibaba.fastjson.JSON;
-import org.apache.commons.collections.map.LinkedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,18 +137,16 @@ public class XiaoTMatchTopics {
 	 */
 	public String rankList(List<GameUserExtBean> rankList, String gameId) {
 		String destination = GameUrlHelp.topic_gameListInfo+gameId;
-		List<Map<String,Object>> listTar = new ArrayList<>(rankList.size());
+		List<GameUserListBean> listTar = new ArrayList<>(rankList.size());
 		rankList.forEach(item->{
-//			GameUserListBean itemTemp = new GameUserListBean();
-//			itemTemp.userId = item.userId;
-//			itemTemp.headimgurl = item.headimgurl;
-//			itemTemp.userName = item.userName;
-//			itemTemp.userType = item.userType;
-//			itemTemp.returnRate = item.returnRate;
+			GameUserListBean itemTemp = new GameUserListBean();
+			itemTemp.userId = item.userId;
+			itemTemp.headimgurl = item.headimgurl;
+			itemTemp.userName = item.userName;
+			itemTemp.userType = item.userType;
+			itemTemp.returnRate = item.returnRate;
 
-			Map<String,Object> itemNew = new LinkedMap(1);
-			itemNew.put("userId",item.userId);
-			listTar.add(itemNew);
+			listTar.add(itemTemp);
 		});
 		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
 		rspCommonBean.data = listTar;
@@ -168,11 +165,15 @@ public class XiaoTMatchTopics {
 	 * 2017-1-10 下午5:25:46
 	 */
 	public String userRealtimeInfo(List<GameUserExtBean> rankList, String gameId) {
+		//这边只需要15个就行
 		String destination = GameUrlHelp.topic_gameClientInfo+gameId;
 		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
-		rspCommonBean.data = rankList;
+		List<GameUserExtBean> tempList = new ArrayList<>(15);
+		for(int i=0;i<15 && i<rankList.size();i++){
+			tempList.add(rankList.get(i));
+		}
+		rspCommonBean.data = tempList;
 		String str = JSON.toJSONString(rspCommonBean);
-//		logger.info("send userRealtimeInfo length: "+str.length());
 		simpMessagingTemplate.convertAndSend(destination, str);
 		return str;
 	}

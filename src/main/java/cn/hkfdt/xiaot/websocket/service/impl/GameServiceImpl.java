@@ -52,7 +52,7 @@ public class GameServiceImpl implements GameService {
 		GameUserStateBean gameUserStateBean = new GameUserStateBean();
 		rspCommonBean.data = gameUserStateBean;
 
-		String userI = reqCommonBean.fdtId;
+		String userId = reqCommonBean.fdtId;
 		String gameId = reqCommonBean.data.get("gameId").toString();
 		TGame tGame = getTgame(gameId);
 		GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) cacheMapXM.get(gameId);
@@ -64,41 +64,31 @@ public class GameServiceImpl implements GameService {
 			return rspCommonBean;
 		}
 		//比赛存在，看是否是参加了比赛
-		TGameUser tGameUser = getGameUser(gameId,userI);
+		TGameUser tGameUser = getGameUser(gameId,userId);
 		if(gameRuntimeBean==null){
-			//比赛已经结束
-			if(tGameUser==null){
-				//新人
-				rspCommonBean.msg = "比赛已经结束";
-				rspCommonBean.rspCode = 202;
-				return rspCommonBean;
-			}else{
-				//老人
-				gameUserStateBean.curState = 4;
-				return rspCommonBean;
-			}
+			//比赛已经结束,跳静态页面
+			gameUserStateBean.curState = 4;
+			rspCommonBean.rspCode = 200;
+			return rspCommonBean;
 		}else{
 			//比赛未结束，还在内存中
-			if(!gameRuntimeBean.mapUsers.containsKey(userI)){
-				//新人
+			if(gameRuntimeBean.notStart()){
+				//没有开始
 				gameUserStateBean.curState = 1;
 			}else{
-				GameUserExtBean gameUserExtBean = gameRuntimeBean.mapUsers.get(userI);
-				if(gameRuntimeBean.tGame.getState()==0){
+				if(gameRuntimeBean.canReConnect(userId)){
 					gameUserStateBean.curState = 2;
-				}
-				else if(gameRuntimeBean.tGame.getState()==1){
-					//进行中
+				}else{
 					gameUserStateBean.curState = 3;
 				}
-				else {
-					//结束
-					gameUserStateBean.curState = 4;
-				}
+			}
+			//-----------------------------------
+			GameUserExtBean gameUserExtBean = gameRuntimeBean.mapUsers.get(userId);
+			gameUserStateBean.gameName = tGame.getGameName();
+			if(gameUserExtBean!=null){
 				gameUserStateBean.actions = gameUserExtBean.actions;
-				gameUserStateBean.gameName = tGame.getGameName();
-//				gameUserStateBean.headimgurl = gameUserExtBean.headimgurl;
 				gameUserStateBean.userName = gameUserExtBean.userName;
+				gameUserStateBean.headimgurl = gameUserExtBean.headimgurl;
 //				gameUserStateBean.userType = gameUserExtBean.userType;
 			}
 		}
@@ -118,6 +108,33 @@ public class GameServiceImpl implements GameService {
 			xiaoTMatchTopics.readyInfo(gameId);
 		}
 		return flag;
+	}
+	@Override
+	public RspCommonBean userUnReady(ReqCommonBean reqCommonBean) {
+		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
+		String gameId = reqCommonBean.data.get("gameId").toString();
+		String fdtId = reqCommonBean.fdtId;
+		GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) cacheMapXM.get(gameId);
+		if(gameRuntimeBean==null){
+			rspCommonBean.rspCode = 201;
+			rspCommonBean.msg = "比赛不存在";
+			return rspCommonBean;
+		}
+		synchronized (gameRuntimeBean){
+			if(gameRuntimeBean.notStart()){
+				//比赛还没开始，尝试取消准备
+				int flag = gameRuntimeBean.unReadyUser(fdtId);
+				if(flag==1){
+					xiaoTMatchTopics.readyInfo(gameId);
+					return rspCommonBean;
+				}
+			}else{
+				rspCommonBean.rspCode = 202;
+				rspCommonBean.msg = "比赛已经开始";
+				return rspCommonBean;
+			}
+		}
+		return rspCommonBean;
 	}
 	@Override
 	public int gameStart(ReqCommonBean reqCommonBean) {
@@ -151,7 +168,7 @@ public class GameServiceImpl implements GameService {
 		//-----------------------------------------------
 		xiaoTMatchTopics.start(gameId);//通知各端比赛开始
 		//比赛计时，通知开始
-		gameRuntimeBean.start(xiaoTMatchTopics,drawTimer);
+		gameRuntimeBean.start(xiaoTMatchTopics,drawTimer,3200);
 		return 0;
 	}
 

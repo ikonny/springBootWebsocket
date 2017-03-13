@@ -86,7 +86,8 @@ public class GameRuntimeBean {
             //新人
             temp = gameUserExtBean;
         }else{
-            //老人重新准备
+            //老人重新准备,从不用统计结束人数队列拖回来
+            mapUsersEnd.remove(gameUserExtBean.userId);
         }
         temp.state = 0;
         mapUsers.put(temp.userId, temp);
@@ -148,14 +149,43 @@ public class GameRuntimeBean {
         }
     }
 
+    /**
+     * 成功返回1
+     * @param fdtId
+     * @return
+     */
+    public int unReadyUser(String fdtId) {
+        if(mapUsers.containsKey(fdtId)){
+            mapUsers.remove(fdtId);
+            return 1;
+        }else{
+            return -1;
+        }
+    }
+
+    /**
+     * 判断该用户是否可以重连
+     * @param userId
+     * @return
+     */
+    public boolean canReConnect(String userId) {
+        GameUserExtBean gameUserExtBean = mapUsers.get(userId);
+        if(gameUserExtBean!=null){
+            if(gameUserExtBean.state!=1){
+                return true;
+            }
+        }
+        return false;
+    }
     //=============================================================
 
     /**
      * 根据比赛类型，每秒发送比赛x点位置，直到发完，回收线程
      * @param xiaoTMatchTopics
      * @param drawTimer
+     * @param delay  延迟几秒发
      */
-    public synchronized void start(XiaoTMatchTopics xiaoTMatchTopics, int drawTimer) {
+    public synchronized void start(XiaoTMatchTopics xiaoTMatchTopics, int drawTimer, int delay) {
         int xPoints = 200;//XiaoTMarketType.FC.getType()
 //        if(tGame.getMarketType()== XiaoTMarketType.FC.getType()){
 //
@@ -165,17 +195,22 @@ public class GameRuntimeBean {
         }
         state = 1;
         Thread td = new Thread(()->{
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             int xNow = 1;
             while(xNow<=xPoints){
+                //1.发送本次x坐标
+                xiaoTMatchTopics.sendGameTimeLine(gameId,xNow);
+                //2.
+                ++xNow;
                 try {
                     Thread.sleep(drawTimer);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                //1.发送本次x坐标
-                xiaoTMatchTopics.sendGameTimeLine(gameId,xNow);
-                //2.
-                ++xNow;
             }
             //-------------------
             cacheMapXM.put(gameId,this,3);//比赛结束后，3秒后结束
@@ -193,4 +228,6 @@ public class GameRuntimeBean {
     public void startSet() {
         startFirst = true;
     }
+
+
 }
