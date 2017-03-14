@@ -21,7 +21,8 @@ public class InboundChannelIntercepter extends ChannelInterceptorAdapter {
 		if(accessor!=null && StompCommand.SEND==accessor.getCommand()){
 			byte[] bytes = (byte[]) message.getPayload();
 			String msg = new String(bytes);
-			logger.info("in__消息: "+msg);
+			String des = accessor.getHeader("simpDestination").toString();
+			logger.info("in____"+des+" : "+msg);
 		}
 //		if(StompCommand.CONNECT==accessor.getCommand()){
 //			//连接的请求包
