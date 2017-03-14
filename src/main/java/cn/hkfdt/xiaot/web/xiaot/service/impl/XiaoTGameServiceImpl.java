@@ -275,7 +275,7 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 				int count = (orgLength - cutLength) / keyWord.length();
 				resultMap.put("count", count);
 				resultMap.put("header_url", tgu.getHeadimgurl());
-				resultMap.put("actions", tgu.getActions());
+				resultMap.put("actions", tgu.getActions() != null ? tgu.getActions() : new ArrayList<>());
 				userInfoList.add(resultMap);
 			}
 		}
