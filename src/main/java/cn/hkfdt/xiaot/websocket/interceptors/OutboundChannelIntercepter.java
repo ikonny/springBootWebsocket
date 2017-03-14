@@ -9,19 +9,18 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptorAdapter;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 
-public class InboundChannelIntercepter extends ChannelInterceptorAdapter {
+public class OutboundChannelIntercepter extends ChannelInterceptorAdapter {
 
-	static Logger logger = LoggerFactory.getLogger(InboundChannelIntercepter.class);
+	static Logger logger = LoggerFactory.getLogger(OutboundChannelIntercepter.class);
 
 	@Override
 	public Message<?> preSend(Message<?> message, MessageChannel channel) {
 		//即将进入业务层处理的消息
-//		logger.info("preSend");
 		StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 		if(accessor!=null && StompCommand.SEND==accessor.getCommand()){
 			byte[] bytes = (byte[]) message.getPayload();
 			String msg = new String(bytes);
-			logger.info("in__消息: "+msg);
+			System.out.println("out__消息:"+msg);
 		}
 //		if(StompCommand.CONNECT==accessor.getCommand()){
 //			//连接的请求包
@@ -31,11 +30,23 @@ public class InboundChannelIntercepter extends ChannelInterceptorAdapter {
 	}
 
 	public void postSend(Message<?> message, MessageChannel channel, boolean sent) {
-//		logger.info("postSend");
+		logger.info("postSend");
+		StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+		if(accessor!=null && StompCommand.SEND==accessor.getCommand()){
+			byte[] bytes = (byte[]) message.getPayload();
+			String msg = new String(bytes);
+			System.out.println("out__消息:"+msg);
+		}
 	}
 
 	public void afterSendCompletion(Message<?> message, MessageChannel channel, boolean sent, Exception ex) {
-//		logger.info("afterSendCompletion");
+		logger.info("afterSendCompletion");
+		StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+		if(accessor!=null && StompCommand.SEND==accessor.getCommand()){
+			byte[] bytes = (byte[]) message.getPayload();
+			String msg = new String(bytes);
+			System.out.println("out__消息:"+msg);
+		}
 	}
 
 	public boolean preReceive(MessageChannel channel) {
@@ -51,4 +62,5 @@ public class InboundChannelIntercepter extends ChannelInterceptorAdapter {
 	public void afterReceiveCompletion(Message<?> message, MessageChannel channel, Exception ex) {
 		logger.info("afterReceiveCompletion");
 	}
+
 }
