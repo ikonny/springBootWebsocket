@@ -113,6 +113,8 @@ public class MatchServiceHelper {
 			return -1;
 		}
 		gameRuntimeBean.insertGameUser(gameUserExtBean);
+		//准备成功才通知
+		xiaoTMatchTopics.readyInfo(gameId);
 
 		logger.info("比赛gameId:"+gameRuntimeBean.gameId+"_num:"+gameRuntimeBean.userNum
 				+"__加入一人fdtId:"+gameUserExtBean.userId);

@@ -89,6 +89,8 @@ public class GameServiceImpl implements GameService {
 				gameUserStateBean.actions = gameUserExtBean.actions;
 				gameUserStateBean.userName = gameUserExtBean.userName;
 				gameUserStateBean.headimgurl = gameUserExtBean.headimgurl;
+				gameUserStateBean.userNum = gameRuntimeBean.userNum;
+				gameUserStateBean.curUserNum = gameRuntimeBean.mapUsers.size();
 //				gameUserStateBean.userType = gameUserExtBean.userType;
 			}
 		}
@@ -102,10 +104,6 @@ public class GameServiceImpl implements GameService {
 		int flag;
 		synchronized(gameId){
 			flag = MatchServiceHelper.ready(reqCommonBean);
-		}
-		if(flag>=0) {
-			//准备成功才通知
-			xiaoTMatchTopics.readyInfo(gameId);
 		}
 		return flag;
 	}
@@ -125,7 +123,6 @@ public class GameServiceImpl implements GameService {
 				//比赛还没开始，尝试取消准备
 				int flag = gameRuntimeBean.unReadyUser(fdtId);
 				if(flag==1){
-					xiaoTMatchTopics.readyInfo(gameId);
 					return rspCommonBean;
 				}
 			}else{

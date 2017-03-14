@@ -30,6 +30,8 @@ public class GameUserStateBean  implements Serializable {
      * 透传数据
      */
     public Object actions;
+    public int userNum;//比赛人数
+    public int curUserNum;//现在比赛人数
 
     public GameUserStateBean deepCopy() {
         GameUserStateBean item = new GameUserStateBean();

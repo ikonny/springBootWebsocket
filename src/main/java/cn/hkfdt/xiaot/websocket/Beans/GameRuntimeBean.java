@@ -3,6 +3,7 @@ package cn.hkfdt.xiaot.websocket.Beans;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGame;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
 import cn.hkfdt.xiaot.web.xiaot.util.XiaoTMarketType;
+import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +43,7 @@ public class GameRuntimeBean {
      */
     public int serverVersion = 0;
     /**
-     * 客户端每次更新本次信息，改字段+1
+     * 客户端每次更新本次信息，改字段+1,使下次变化发送到裁判端
      */
     public int clientVersion = 0;
     /**
@@ -125,6 +126,7 @@ public class GameRuntimeBean {
             synchronized (mapUsersEnd) {
                 mapUsersEnd.put(userId, gameUserExtBean);
                 gameUserExtBean.state = 1;
+                clientVersion++;
                 if(mapUsersEnd.size()==userNum){
                     return 1;
                 }
@@ -134,29 +136,39 @@ public class GameRuntimeBean {
     }
 
     /**
-     * 用户断线，可以再次进入，注意超时回收类似主动结束
+     * 用户断线
+     * 比赛前断线：直接移除,并通知各端
+     * 比赛中断线：保留,但设置为断线
      * @param fdtId
      * @param sessionId
      */
     public void disConnectAndAfterRmove(String fdtId, String sessionId) {
         GameUserExtBean gameUserExtBean = mapUsers.get(fdtId);
         if(gameUserExtBean!=null){
-            synchronized (mapUsersEnd) {
-                gameUserExtBean.state = 2;
-                mapUsersEnd.put(fdtId, gameUserExtBean);
-                logger.info("比赛运行时断线fdtId："+fdtId);
+            synchronized (this) {
+                if(notStart()){
+                    //比赛前
+                    unReadyUser(fdtId);
+                    logger.info("比赛准备中断线fdtId："+fdtId);
+                }else{
+                    gameUserExtBean.state = 2;
+                    mapUsersEnd.put(fdtId, gameUserExtBean);
+                    clientVersion++;
+                    logger.info("比赛中断线fdtId："+fdtId);
+                }
             }
         }
     }
 
     /**
-     * 成功返回1
+     * 移除准备中的用户，并且出发通知订阅比赛列表的人
      * @param fdtId
      * @return
      */
     public int unReadyUser(String fdtId) {
         if(mapUsers.containsKey(fdtId)){
             mapUsers.remove(fdtId);
+            MatchServiceHelper.xiaoTMatchTopics.readyInfo(gameId);
             return 1;
         }else{
             return -1;
