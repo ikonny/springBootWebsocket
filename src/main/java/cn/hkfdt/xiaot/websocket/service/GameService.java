@@ -37,4 +37,11 @@ public interface GameService {
 	int endTheGame(GameRuntimeBean gameRuntimeBean);
 
 	RspCommonBean getUserState(ReqCommonBean reqCommonBean);
+
+	/**
+	 *  准备取消
+	 * @param reqCommonBean {gameId,userId}
+	 * @return
+	 */
+    RspCommonBean userUnReady(ReqCommonBean reqCommonBean);
 }

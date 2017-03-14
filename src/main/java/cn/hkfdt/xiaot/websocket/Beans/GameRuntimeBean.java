@@ -2,6 +2,8 @@ package cn.hkfdt.xiaot.websocket.Beans;
 
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGame;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
+import cn.hkfdt.xiaot.web.xiaot.util.XiaoTMarketType;
+import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +43,7 @@ public class GameRuntimeBean {
      */
     public int serverVersion = 0;
     /**
-     * 客户端每次更新本次信息，改字段+1
+     * 客户端每次更新本次信息，改字段+1,使下次变化发送到裁判端
      */
     public int clientVersion = 0;
     /**
@@ -57,8 +59,24 @@ public class GameRuntimeBean {
      * 0创建未开始 1：开始未结束  2：已经结束
      */
     private volatile int state=0;
+    boolean startFirst = false;
     //================================================================================
-
+    /**
+     * 根据比赛类型，获取比赛时长
+     * @return
+     */
+    public int getGameTime() {
+        if(tGame.getMarketType()== XiaoTMarketType.FC.getType()){
+            return 200+50;
+        }
+        if(tGame.getMarketType()== XiaoTMarketType.SC.getType()){
+            return 240+50;
+        }
+        if(tGame.getMarketType()== XiaoTMarketType.FX.getType()){
+            return 300+50;
+        }
+        return 300;
+    }
     /**
      * 用户准备，或者重连准备
      * @param gameUserExtBean
@@ -69,7 +87,8 @@ public class GameRuntimeBean {
             //新人
             temp = gameUserExtBean;
         }else{
-            //老人重新准备
+            //老人重新准备,从不用统计结束人数队列拖回来
+            mapUsersEnd.remove(gameUserExtBean.userId);
         }
         temp.state = 0;
         mapUsers.put(temp.userId, temp);
@@ -107,6 +126,7 @@ public class GameRuntimeBean {
             synchronized (mapUsersEnd) {
                 mapUsersEnd.put(userId, gameUserExtBean);
                 gameUserExtBean.state = 1;
+                clientVersion++;
                 if(mapUsersEnd.size()==userNum){
                     return 1;
                 }
@@ -116,28 +136,68 @@ public class GameRuntimeBean {
     }
 
     /**
-     * 用户断线，可以再次进入，注意超时回收类似主动结束
+     * 用户断线
+     * 比赛前断线：直接移除,并通知各端
+     * 比赛中断线：保留,但设置为断线
      * @param fdtId
      * @param sessionId
      */
     public void disConnectAndAfterRmove(String fdtId, String sessionId) {
         GameUserExtBean gameUserExtBean = mapUsers.get(fdtId);
         if(gameUserExtBean!=null){
-            synchronized (mapUsersEnd) {
-                gameUserExtBean.state = 2;
-                mapUsersEnd.put(fdtId, gameUserExtBean);
-                logger.info("比赛运行时断线fdtId："+fdtId);
+            synchronized (this) {
+                if(notStart()){
+                    //比赛前
+                    unReadyUser(fdtId);
+                    logger.info("比赛准备中断线fdtId："+fdtId);
+                }else{
+                    gameUserExtBean.state = 2;
+                    mapUsersEnd.put(fdtId, gameUserExtBean);
+                    clientVersion++;
+                    logger.info("比赛中断线fdtId："+fdtId);
+                }
             }
         }
     }
 
+    /**
+     * 移除准备中的用户，并且出发通知订阅比赛列表的人
+     * @param fdtId
+     * @return
+     */
+    public int unReadyUser(String fdtId) {
+        if(mapUsers.containsKey(fdtId)){
+            mapUsers.remove(fdtId);
+            MatchServiceHelper.xiaoTMatchTopics.readyInfo(gameId);
+            return 1;
+        }else{
+            return -1;
+        }
+    }
+
+    /**
+     * 判断该用户是否可以重连
+     * @param userId
+     * @return
+     */
+    public boolean canReConnect(String userId) {
+        GameUserExtBean gameUserExtBean = mapUsers.get(userId);
+        if(gameUserExtBean!=null){
+            if(gameUserExtBean.state!=1){
+                return true;
+            }
+        }
+        return false;
+    }
     //=============================================================
 
     /**
      * 根据比赛类型，每秒发送比赛x点位置，直到发完，回收线程
      * @param xiaoTMatchTopics
+     * @param drawTimer
+     * @param delay  延迟几秒发
      */
-    public synchronized void start(XiaoTMatchTopics xiaoTMatchTopics) {
+    public synchronized void start(XiaoTMatchTopics xiaoTMatchTopics, int drawTimer, int delay) {
         int xPoints = 200;//XiaoTMarketType.FC.getType()
 //        if(tGame.getMarketType()== XiaoTMarketType.FC.getType()){
 //
@@ -147,17 +207,22 @@ public class GameRuntimeBean {
         }
         state = 1;
         Thread td = new Thread(()->{
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             int xNow = 1;
             while(xNow<=xPoints){
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 //1.发送本次x坐标
                 xiaoTMatchTopics.sendGameTimeLine(gameId,xNow);
                 //2.
                 ++xNow;
+                try {
+                    Thread.sleep(drawTimer);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             //-------------------
             cacheMapXM.put(gameId,this,3);//比赛结束后，3秒后结束
@@ -166,4 +231,15 @@ public class GameRuntimeBean {
         td.setName("game_:"+gameId);
         td.start();
     }
+
+
+    public boolean notStart() {
+        return !startFirst;
+    }
+
+    public void startSet() {
+        startFirst = true;
+    }
+
+
 }

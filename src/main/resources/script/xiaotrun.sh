@@ -1,6 +1,6 @@
 #!/bin/sh
 source /etc/profile
-JRE_HOME=/usr/java/jdk1.8.0_121
+JRE_HOME=~/java/jdk1.8.0_121
 JAR_HOME=~/xiaot/xiaot-boot-0.0.1-SNAPSHOT.jar
 
 P_ID=`jps|grep xiaot|grep -v grep|awk '{print $1}'`

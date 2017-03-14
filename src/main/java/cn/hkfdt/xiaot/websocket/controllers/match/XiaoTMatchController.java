@@ -124,6 +124,15 @@ public class XiaoTMatchController {
 		String str = JSON.toJSONString(rspCommonBean);
 		return str;
 	}
+	@MessageMapping("/queue/game/userUnReady")
+	@SendToUser("/queue/game/userUnReady")
+	public String userUnReady(SimpMessageHeaderAccessor headerAccessor,String msg) {
+		//{gameId,userId}
+		ReqCommonBean reqCommonBean = getParaMap(headerAccessor,msg);
+		RspCommonBean rspCommonBean = gameService.userUnReady(reqCommonBean);
+		String str = JSON.toJSONString(rspCommonBean);
+		return str;
+	}
 	@MessageMapping(GameUrlHelp.queue_gameStart)
 	@SendToUser(GameUrlHelp.queue_gameStart)
 	public String gameStart(SimpMessageHeaderAccessor headerAccessor,String msg) {

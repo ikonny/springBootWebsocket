@@ -10,10 +10,10 @@ import java.util.ArrayList;
  */
 public class GameUserStateBean  implements Serializable {
     /**
-     * 1新人，比赛未开始可以准备    准备后  成功，比赛已经开始或者结束，提示错误    {"data":{curState:1,gameName},"rspCode":200}
-     2.已参赛人，比赛未开始 {"data":{curState:2,userName,userType,headimgurl,gameName},"rspCode":200}   再去ready请求一次
-     3.已参赛人，比赛进行中   {"data":{curState:3,actions,userName,userType,headimgurl,gameName},"rspCode":200}      建立连接，实时发送变化数据，订阅比赛结束等信息
-     4.已参赛人，比赛已经结束   {"data":{curState:4,},"rspCode":200}
+     * 1.下个页面是准备页
+     2.继续比赛（已经参加的人）
+     3.看动态排行（新人+已经确认退出）
+     4.看静态排行
      */
     public int curState = 1;
     public String gameName;
@@ -30,6 +30,8 @@ public class GameUserStateBean  implements Serializable {
      * 透传数据
      */
     public Object actions;
+    public int userNum;//比赛人数
+    public int curUserNum;//现在比赛人数
 
     public GameUserStateBean deepCopy() {
         GameUserStateBean item = new GameUserStateBean();
@@ -39,9 +41,12 @@ public class GameUserStateBean  implements Serializable {
         item.userName = this.userName;
         item.userType = this.userType;
         item.actions = this.actions;
+        item.userNum = this.userNum;
+        item.curUserNum = this.curUserNum;
         if(this.actions==null){
             item.actions = new ArrayList<>(1);
         }
         return item;
     }
+
 }

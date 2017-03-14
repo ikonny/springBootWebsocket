@@ -15,7 +15,6 @@ import cn.hkfdt.xiaot.util.CookieUtil;
 import cn.hkfdt.xiaot.util.ImageUtil;
 import cn.hkfdt.xiaot.web.Filters.LoginFilter;
 import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
-import cn.hkfdt.xiaot.web.common.meta.GameStatus;
 import cn.hkfdt.xiaot.web.common.redis.RedisClient;
 import cn.hkfdt.xiaot.web.common.service.AuthService;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTGameService;
@@ -157,6 +156,7 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 				TQuestions tQuestions = xiaoTService.xiaotTraining(XiaoTHelp.xiaoTGuest, mkt, mapTar, "all");
 				//创建比赛相关数据
 				TGame tGame = new TGame();
+				tGame.setState(0);
 				tGame.setGameId(gameId);
 				if (mapPara.containsKey("gameName")) {
 					tGame.setGameName(mapPara.get("gameName").toString());

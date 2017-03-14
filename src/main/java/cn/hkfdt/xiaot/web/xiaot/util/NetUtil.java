@@ -1,5 +1,8 @@
 package cn.hkfdt.xiaot.web.xiaot.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -16,6 +19,8 @@ import java.util.Date;
  *
  */
 public class NetUtil {
+
+    static Logger logger = LoggerFactory.getLogger(NetUtil.class);
 
     public static void main(String[] args) {
 //        requestThenReturn("http://10.139.100.2/rosefinch/menu-1?code=yhcui");
@@ -199,7 +204,7 @@ public class NetUtil {
                 result += line;
             }
         } catch (Exception e) {
-            System.out.println("发送 POST 请求出现异常！"+e);
+            logger.info("url:"+url+"   para:"+param);
             e.printStackTrace();
         }
         //使用finally块来关闭输出流、输入流

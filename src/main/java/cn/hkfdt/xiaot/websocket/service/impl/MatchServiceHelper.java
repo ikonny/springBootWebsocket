@@ -113,6 +113,8 @@ public class MatchServiceHelper {
 			return -1;
 		}
 		gameRuntimeBean.insertGameUser(gameUserExtBean);
+		//准备成功才通知
+		xiaoTMatchTopics.readyInfo(gameId);
 
 		logger.info("比赛gameId:"+gameRuntimeBean.gameId+"_num:"+gameRuntimeBean.userNum
 				+"__加入一人fdtId:"+gameUserExtBean.userId);
@@ -145,6 +147,10 @@ public class MatchServiceHelper {
 			return ;
 		}
 		GameUserExtBean gameUserExtBean = gameRuntimeBean.mapUsers.get(userId);//获取到当前比赛用户信息
+		if(gameUserExtBean==null){
+			LogUtil.logSensitive("该用户不属于这个比赛！！_"+gameId+"   userId:"+userId);
+			return ;
+		}
 		//更新数据
 		gameUserExtBean.gameId = gameId;
 		gameUserExtBean.curIdx = Integer.parseInt(mapPara.get("curIdx").toString());
