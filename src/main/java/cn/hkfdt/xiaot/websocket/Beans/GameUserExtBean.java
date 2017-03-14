@@ -40,6 +40,7 @@ public class GameUserExtBean extends GameUserBean implements Serializable {
         item.userName = this.userName;
         item.userType = this.userType;
         item.actions = this.actions;
+        item.state = this.state;
         if(this.actions==null){
             item.actions = new ArrayList<>(1);
         }

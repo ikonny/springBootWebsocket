@@ -41,6 +41,8 @@ public class GameUserStateBean  implements Serializable {
         item.userName = this.userName;
         item.userType = this.userType;
         item.actions = this.actions;
+        item.userNum = this.userNum;
+        item.curUserNum = this.curUserNum;
         if(this.actions==null){
             item.actions = new ArrayList<>(1);
         }
