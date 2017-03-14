@@ -151,6 +151,12 @@ public class XiaoTMatchTopics {
 		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
 		rspCommonBean.data = listTar;
 		String str = JSON.toJSONString(rspCommonBean);
+		//-------记录运行时排行榜------------
+		GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) MatchServiceHelper.cacheMapXM.get(gameId);
+		if(gameRuntimeBean ==null){
+			gameRuntimeBean.listRank = listTar;
+		}
+		//---------------------------------
 //		logger.info("send rankList: " + str);
 		simpMessagingTemplate.convertAndSend(destination, str);
 		return str;

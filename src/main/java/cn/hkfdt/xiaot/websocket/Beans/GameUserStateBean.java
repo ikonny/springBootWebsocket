@@ -32,6 +32,10 @@ public class GameUserStateBean  implements Serializable {
     public Object actions;
     public int userNum;//比赛人数
     public int curUserNum;//现在比赛人数
+    /**
+     * curState = 3.时传当时排行榜
+     */
+    public Object tag;//附加数据
 
     public GameUserStateBean deepCopy() {
         GameUserStateBean item = new GameUserStateBean();
@@ -43,6 +47,7 @@ public class GameUserStateBean  implements Serializable {
         item.actions = this.actions;
         item.userNum = this.userNum;
         item.curUserNum = this.curUserNum;
+        item.tag = this.tag;
         if(this.actions==null){
             item.actions = new ArrayList<>(1);
         }

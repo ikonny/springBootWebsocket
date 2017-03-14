@@ -8,6 +8,7 @@ import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 
 import static cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper.cacheMapXM;
@@ -25,9 +26,9 @@ public class GameRuntimeBean {
     public volatile  int userNum;
     public String gameId;
     /**
-     * 排过序的list,里面引用的对象一样
+     * 当前排名，在排名后会被记录
      */
-//    public List<GameUserExtBean> listUser;
+    public List<GameUserListBean> listRank;
     /**
      * 用户map表，将会在创建比赛的时候初始化大小
      */
