@@ -153,7 +153,7 @@ public class XiaoTMatchTopics {
 		String str = JSON.toJSONString(rspCommonBean);
 		//-------记录运行时排行榜------------
 		GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) MatchServiceHelper.cacheMapXM.get(gameId);
-		if(gameRuntimeBean ==null){
+		if(gameRuntimeBean !=null){
 			gameRuntimeBean.listRank = listTar;
 		}
 		//---------------------------------

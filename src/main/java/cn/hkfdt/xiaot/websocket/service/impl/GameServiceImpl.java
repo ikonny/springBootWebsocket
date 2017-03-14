@@ -87,12 +87,12 @@ public class GameServiceImpl implements GameService {
 			//-----------------------------------
 			GameUserExtBean gameUserExtBean = gameRuntimeBean.mapUsers.get(userId);
 			gameUserStateBean.gameName = tGame.getGameName();
+			gameUserStateBean.userNum = gameRuntimeBean.userNum;
+			gameUserStateBean.curUserNum = gameRuntimeBean.mapUsers.size();
 			if(gameUserExtBean!=null){
 				gameUserStateBean.actions = gameUserExtBean.actions;
 				gameUserStateBean.userName = gameUserExtBean.userName;
 				gameUserStateBean.headimgurl = gameUserExtBean.headimgurl;
-				gameUserStateBean.userNum = gameRuntimeBean.userNum;
-				gameUserStateBean.curUserNum = gameRuntimeBean.mapUsers.size();
 //				gameUserStateBean.userType = gameUserExtBean.userType;
 			}
 		}
