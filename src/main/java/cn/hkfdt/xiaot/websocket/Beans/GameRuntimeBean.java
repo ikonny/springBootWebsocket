@@ -149,8 +149,8 @@ public class GameRuntimeBean {
             synchronized (this) {
                 if(notStart()){
                     //比赛前
-                    unReadyUser(fdtId);
                     logger.info("比赛准备中断线fdtId："+fdtId);
+                    unReadyUser(fdtId);
                 }else{
                     gameUserExtBean.state = 2;
                     mapUsersEnd.put(fdtId, gameUserExtBean);
@@ -239,6 +239,7 @@ public class GameRuntimeBean {
     }
 
     public void startSet() {
+        logger.info("比赛开始："+tGame.getGameName());
         startFirst = true;
     }
 

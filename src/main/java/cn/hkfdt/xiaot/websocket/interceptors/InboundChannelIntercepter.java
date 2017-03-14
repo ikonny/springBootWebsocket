@@ -22,7 +22,7 @@ public class InboundChannelIntercepter extends ChannelInterceptorAdapter {
 			byte[] bytes = (byte[]) message.getPayload();
 			String msg = new String(bytes);
 			String des = accessor.getHeader("simpDestination").toString();
-			logger.info("in____"+des+" : "+msg);
+			logger.info("=====>>>>>>>>"+des+" : "+msg);
 		}
 //		if(StompCommand.CONNECT==accessor.getCommand()){
 //			//连接的请求包

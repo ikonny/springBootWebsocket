@@ -1,7 +1,10 @@
 package cn.hkfdt.xiaot.websocket;
 
 import cn.hkfdt.xiaot.websocket.interceptors.InboundChannelIntercepter;
+import cn.hkfdt.xiaot.websocket.interceptors.OutboundChannelIntercepter;
 import cn.hkfdt.xiaot.websocket.interceptors.XiaoTShareInterceptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -19,7 +22,8 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 @Configuration
 @EnableWebSocketMessageBroker  //STOMP client
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
-	
+
+    static Logger logger = LoggerFactory.getLogger(WebSocketConfig.class);
 	//这个先启用
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -28,7 +32,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
         te.setPoolSize(1);
         te.setThreadNamePrefix("wss-heartbeat-thread-");
         te.initialize();
-        int heartBeatTime = 1000*15;
+        int heartBeatTime = 1000*10;
 //        config.enableSimpleBroker("/").setHeartbeatValue(new long[]{heartBeatTime, heartBeatTime})
 //                .setTaskScheduler(te);
         //=============================================================
@@ -56,13 +60,33 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     	channelRegistration.setInterceptors(interceptors);
         super.configureClientInboundChannel(channelRegistration);
     	System.out.println("configureClientInboundChannel");
+
     }
     @Override
     public void configureClientOutboundChannel(ChannelRegistration registration) {
-//        OutboundChannelIntercepter interceptors = new OutboundChannelIntercepter();
-//        registration.setInterceptors(interceptors);
-//        super.configureClientOutboundChannel(registration);
-//        System.out.println("configureClientOutboundChannel");
+        OutboundChannelIntercepter interceptors = new OutboundChannelIntercepter();
+        registration.setInterceptors(interceptors);
+        super.configureClientOutboundChannel(registration);
+        System.out.println("configureClientOutboundChannel");
     }
+//    @Override
+//    public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
+//        HandlerMethodReturnValueHandler handlerMethodReturnValueHandler = new HandlerMethodReturnValueHandler() {
+//            @Override
+//            public boolean supportsReturnType(MethodParameter returnType) {
+//                logger.info(returnType.toString());
+//                return true;
+//            }
+//
+//            @Override
+//            public void handleReturnValue(Object returnValue, MethodParameter returnType, Message<?> message) throws Exception {
+//                logger.info(returnValue.toString());
+//            }
+//        };
+//        returnValueHandlers.add(handlerMethodReturnValueHandler);
+//
+//        super.addReturnValueHandlers(returnValueHandlers);
+//
+//    }
 
 }

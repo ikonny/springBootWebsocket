@@ -97,7 +97,6 @@ public class WebSocketConnectionListener implements
 		SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
 		String sessionId = (String) headers.getHeader(SIMP_SESSION_ID);
 		removeUserId(sessionId);
-//		System.err.println("handleSessionDisconnect");
 	}
 	//[stompCommand=CONNECT, null, null, null, nativeHeaders={fdt-id=[123], accept-version=[1.1,1.0], 
 	//heart-beat=[10000,10000]}, simpMessageType=CONNECT,
@@ -117,7 +116,6 @@ public class WebSocketConnectionListener implements
 			logger.info("sessionId: "+sessionId+"__获取不到fdtKey");
 		}
 		setUserIds(fdtId,sessionId);
-//		System.err.println("handleSessionConnected");
 	}
 
 	/**

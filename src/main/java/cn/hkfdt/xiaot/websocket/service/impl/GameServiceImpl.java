@@ -15,6 +15,8 @@ import cn.hkfdt.xiaot.websocket.Beans.GameUserStateBean;
 import cn.hkfdt.xiaot.websocket.service.GameService;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 import org.apache.commons.collections.map.LinkedMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,8 @@ import static cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper.cacheMapX
 
 @Service
 public class GameServiceImpl implements GameService {
+
+	static Logger logger = LoggerFactory.getLogger(GameServiceImpl.class);
 
 	@Autowired
 	XiaoTMatchTopics xiaoTMatchTopics;
@@ -219,6 +223,7 @@ public class GameServiceImpl implements GameService {
 		tGame.setUpdateTime(time);
 		tGame.setState(2);
 
+		logger.info("比赛结束："+tGame.getGameName());
 		//
 		List<GameUserExtBean> list = new ArrayList<>(gameRuntimeBean.userNum);
 		gameRuntimeBean.mapUsers.values().forEach(item->{
