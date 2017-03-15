@@ -10,13 +10,14 @@ spring.datasource.ltsChina.driver-class-name=com.mysql.jdbc.Driver
 
 #default is tomcat jdbc connection pool
 spring.datasource.ltsChina.dbcp.initial-size=2
-spring.datasource.ltsChina.tomcat.min-idle=2
-spring.datasource.ltsChina.tomcat.max-idle=10
-spring.datasource.ltsChina.tomcat.max-wait=10000
-spring.datasource.ltsChina.tomcat.validation-query=SELECT 1
+spring.datasource.ltsChina.minIdle=5
+spring.datasource.ltsChina.maxIdle=50
+spring.datasource.ltsChina.maxWait=10000
 
-spring.datasource.ltsChina.tomcat.test-while-idle=true
-spring.datasource.ltsChina.tomcat.time-between-eviction-runs-millis=27800
+spring.datasource.ltsChina.validationQuery=SELECT 1
+spring.datasource.ltsChina.testWhileIdle=true
+spring.datasource.ltsChina.timeBetweenEvictionRunsMillis=15000
+spring.datasource.ltsChina.minEvictableIdleTimeMillis=18000
 
 #=======================================================================
 
@@ -27,13 +28,14 @@ spring.datasource.fxChina.driver-class-name=com.mysql.jdbc.Driver
 
 #default is tomcat jdbc connection pool
 spring.datasource.fxChina.dbcp.initial-size=1
-spring.datasource.fxChina.tomcat.min-idle=1
-spring.datasource.fxChina.tomcat.max-idle=6
-spring.datasource.fxChina.tomcat.max-wait=10000
-spring.datasource.fxChina.tomcat.validation-query=SELECT 1
+spring.datasource.fxChina.minIdle=2
+spring.datasource.fxChina.maxIdle=15
+spring.datasource.fxChina.maxWait=10000
 
-spring.datasource.fxChina.tomcat.test-while-idle=true
-spring.datasource.fxChina.tomcat.time-between-eviction-runs-millis=27800
+spring.datasource.fxChina.validationQuery=SELECT 1
+spring.datasource.fxChina.testWhileIdle=true
+spring.datasource.fxChina.timeBetweenEvictionRunsMillis=15000
+spring.datasource.fxChina.minEvictableIdleTimeMillis=18000
 
 
 #mybatis\u914D\u7F6E
@@ -66,3 +68,5 @@ spring.resources.chain.cache=false
 spring.devtools.restart.enabled =false
 
 xiaot.game.overtime.minute=30
+#true:打印所有用户的输入输出日志
+websoket.log.trans=true
