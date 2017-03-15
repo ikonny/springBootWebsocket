@@ -100,8 +100,30 @@ public class XiaoTController {
 	 */
 	@RequestMapping(value="/xiaoth/xiaot/{other}")
     public String xiaot(HttpServletRequest request, @PathVariable String other, Model model,
-						HttpServletResponse response, @RequestParam(defaultValue = "") String userInfo, @RequestParam(required = false) String gameId,
-						@RequestParam(required = false) String num){
+						HttpServletResponse response){
+
+		//{"lib":"1.1.10", "liveVideo":"1.1.10"}
+//		String str = request.getRequestURI();
+		Map<String,Object>  mapTar = commonService.getSystemSettingValueAsMap("xiaoT_version");
+        model.addAttribute("lib_version", mapTar.get("lib"));
+        model.addAttribute("xiaoT_version", mapTar.get("xiaoT"));
+
+		String baseUrl = GlobalInfo.imDomain;
+        model.addAttribute("baseUrl", baseUrl);
+		//model.addAttribute("userInfo", URLDecoder.decode(userInfo));
+		return "xiaot/index";
+    }
+
+	/**
+	 * 小T训练营首页2级路径版本
+	 * @param model
+	 * @return
+	 * author:xumin
+	 * 2016-12-15 下午5:02:06
+	 */
+	@RequestMapping(value="/xiaoth/xiaot/{other}/{param}")
+	public String xiaot2path(HttpServletRequest request, HttpServletResponse response, @PathVariable String other, @PathVariable String param, Model model, @RequestParam(defaultValue = "") String userInfo, @RequestParam(required = false) String gameId,
+							 @RequestParam(required = false) String num){
 		if("battle".equals(other) && WXHelper.isFromWx(request) && (userInfo == null || "".equalsIgnoreCase(userInfo))){//微信用打开,且没有用户信息
 			//           logger.info("微信:"+GlobalInfo.wxLoginUrl);
 			try {
@@ -115,30 +137,12 @@ public class XiaoTController {
 		//{"lib":"1.1.10", "liveVideo":"1.1.10"}
 //		String str = request.getRequestURI();
 		Map<String,Object>  mapTar = commonService.getSystemSettingValueAsMap("xiaoT_version");
-        model.addAttribute("lib_version", mapTar.get("lib"));
-        model.addAttribute("xiaoT_version", mapTar.get("xiaoT"));
-
-		String baseUrl = GlobalInfo.imDomain;
-        model.addAttribute("baseUrl", baseUrl);
-		model.addAttribute("userInfo", URLDecoder.decode(userInfo));
-		return "xiaot/index";
-    }
-
-	/**
-	 * 小T训练营首页2级路径版本
-	 * @param model
-	 * @return
-	 * author:xumin
-	 * 2016-12-15 下午5:02:06
-	 */
-	@RequestMapping(value="/xiaoth/xiaot/{other}/{param}")
-	public String xiaot2path(HttpServletRequest request, @PathVariable String other, @PathVariable String param, Model model){
-		//{"lib":"1.1.10", "liveVideo":"1.1.10"}
-		Map<String,Object>  mapTar = commonService.getSystemSettingValueAsMap("xiaoT_version");
 		model.addAttribute("lib_version", mapTar.get("lib"));
 		model.addAttribute("xiaoT_version", mapTar.get("xiaoT"));
+
 		String baseUrl = GlobalInfo.imDomain;
 		model.addAttribute("baseUrl", baseUrl);
+		model.addAttribute("userInfo", URLDecoder.decode(userInfo));
 		return "xiaot/index";
 	}
 	/**

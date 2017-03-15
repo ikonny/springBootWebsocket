@@ -115,7 +115,7 @@ unionid	只有在用户将公众号绑定到微信开放平台帐号后，才会
         RspCommonBean rcb = RspCommonBean.getCommonRspBean(202,"微信授权未知错误");
         HttpClientUtil http=new HttpClientUtil (response);
         http.setParameter("userInfo", URLEncoder.encode(new Gson().toJson(mapTar)));
-        http.sendByPost("http://" + GlobalInfo.serverDomain + "/xiaoth/xiaot/battle?gameId="+ gameId + "&num=" + num);
+        http.sendByPost("http://" + GlobalInfo.serverDomain + "/xiaoth/xiaot/battle/guide?gameId="+ gameId + "&num=" + num);
 
     }
 }
