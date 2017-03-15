@@ -162,6 +162,20 @@ public class GameRuntimeBean {
     }
 
     /**
+     * 断线重连，恢复状态
+     * @param fdtId
+     */
+    public void reJoinUser(String fdtId) {
+        GameUserExtBean gameUserExtBean = mapUsers.get(fdtId);
+        if(gameUserExtBean!=null){
+            gameUserExtBean.state = 0;
+            mapUsersEnd.remove(fdtId);
+            clientVersion++;
+            logger.info("断线用户恢复fdtId："+fdtId);
+        }
+    }
+
+    /**
      * 移除准备中的用户，并且出发通知订阅比赛列表的人
      * @param fdtId
      * @return
@@ -242,6 +256,7 @@ public class GameRuntimeBean {
         logger.info("比赛开始："+tGame.getGameName());
         startFirst = true;
     }
+
 
 
 }

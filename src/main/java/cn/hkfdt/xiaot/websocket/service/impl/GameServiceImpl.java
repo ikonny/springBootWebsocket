@@ -82,6 +82,7 @@ public class GameServiceImpl implements GameService {
 			}else{
 				if(gameRuntimeBean.canReConnect(userId)){
 					gameUserStateBean.curState = 2;
+					gameRuntimeBean.reJoinUser(userId);
 				}else{
 					//跳动态排行榜
 					gameUserStateBean.curState = 3;
