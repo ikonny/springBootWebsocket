@@ -121,25 +121,28 @@ public class WebSocketConnectionListener implements
 	}
 
 	/**
-	 *
+	 * 保证一个fdtId对应一个sessionId
+	 * 如果尝试同fdtId建立新连接，则报错-1
 	 * @param fdtId
 	 * @param sessionId
 	 * @return 0设置成功   -1已经存在fdtid对应的连线，该用户已经存在
 	 */
 	public static int setUserIds(String fdtId, String sessionId) {
-		String sessionIdT = mapFdtId2Session.get(fdtId);//尝试获取原来fdtId对应的sessionId
+		//检查fdtId对应的连接是否存在
+		String sessionIdOlder = mapFdtId2Session.get(fdtId);
     	synchronized (mapFdtId2Session) {
-			if (sessionIdT!=null && !sessionIdT.equals(sessionId)){
+			if (sessionIdOlder!=null && !sessionIdOlder.equals(sessionId)){
 				//如果原来有连接对应，而且不是同一个连接过来的覆盖.证明是同一个userId，新的客户端
 				logger.info("设置连接:fdtId重复："+fdtId);
 				return  -1;
-			}else{
-
 			}
-			mapFdtId2Session.put(fdtId, sessionId);//但是这个有可能被覆盖，所以要防止这种情况
-			mapSession2FdtId.put(sessionId, fdtId);//这个是唯一的
+			if(sessionIdOlder==null) {
+				//这个是新加入的正常状态
+				mapFdtId2Session.put(fdtId, sessionId);//但是这个有可能被覆盖，所以要防止这种情况
+				mapSession2FdtId.put(sessionId, fdtId);//这个是唯一的
+				logger.info("设置连接:fdtId："+fdtId);
+			}
 		}
-		logger.info("设置连接:fdtId："+fdtId);
     	return 0;
 	}
 
