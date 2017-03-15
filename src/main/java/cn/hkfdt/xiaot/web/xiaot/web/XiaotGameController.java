@@ -70,23 +70,7 @@ public class XiaotGameController {
             mapTar = JSON.parseObject(userInfo);
         }
         userId = mapTar.get("userId").toString();
-
-        int status = xiaoTGameService.getGameStatus(gameId);
-        if (status == GameStatus.OVER.getStatus()) {
-            List<Map<String, Object>> rankList = (List)xiaoTGameService.getGameResult(gameId).data;
-            for (Map<String, Object> som : rankList) {
-                String tId = som.get("userId").toString();
-                if(userId.equals(tId)){
-                    String rk = som.get("rankIdx").toString();
-                    mapTar.put("rankIdx", Integer.parseInt(rk));
-                }
-            }
-            rcb.rspCode = 301;
-            rcb.msg = "比赛已结束";
-        }else if(status == GameStatus.UNDERWAY.getStatus()){
-            rcb.rspCode = 302;
-            rcb.msg = "比赛已开始";
-        }
+        
         rcb.data = mapTar;
         return rcb;
     }
