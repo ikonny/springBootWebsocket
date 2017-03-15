@@ -146,7 +146,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 				float accumulatedIncome = item.getAccumulatedIncome();
 				mapItem.put("userId", fdtId);
 				mapItem.put("score", fdtScore);
-				mapItem.put("percent", accumulatedIncome);
+				mapItem.put("returnRate", accumulatedIncome);
 				mapItem.put("tradeCount", item.getTradeCount());
 
 				Map<String,Object> mapInfo = fdtId2AuthExInfo.get(fdtId);
@@ -165,8 +165,8 @@ public class XiaoTServiceImpl implements XiaoTService {
 				servingUrl = ImageUtil.transAndResizeImg(servingUrl,100,100);
 				boolean isvip = (boolean) mapInfo.get("vip");
 				mapItem.put("school", school);
-				mapItem.put("name", username);
-				mapItem.put("header_url", servingUrl);
+				mapItem.put("userName", username);
+				mapItem.put("headimgurl", servingUrl);
 				mapItem.put("isvip", isvip);
 				
 				listTar.add(mapItem);

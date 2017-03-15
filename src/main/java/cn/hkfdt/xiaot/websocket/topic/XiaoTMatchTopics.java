@@ -145,7 +145,16 @@ public class XiaoTMatchTopics {
 			itemTemp.userName = item.userName;
 			itemTemp.userType = item.userType;
 			itemTemp.returnRate = item.returnRate;
-
+			try {
+				String keyWord = "side";
+				String action = item.actions.toString();
+				int orgLength = action.length();
+				int cutLength = action.replace(keyWord, "").length();
+				int count = (orgLength - cutLength) / keyWord.length();
+				itemTemp.count = count;
+			}catch (Exception e){
+				e.printStackTrace();
+			}
 			listTar.add(itemTemp);
 		});
 		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);

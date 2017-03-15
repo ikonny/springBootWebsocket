@@ -5,7 +5,7 @@ import cn.hkfdt.xiaot.common.beans.GameUserBean;
 import java.io.Serializable;
 
 /**
- * 比赛用户交互对象
+ * 排行榜对象
  * Created by whyse
  * on 2017/2/24 12:14
  */
@@ -14,6 +14,10 @@ public class GameUserListBean extends GameUserBean implements Serializable {
      * 收益率
      */
     public double returnRate;
+    /**
+     * 比赛次数
+     */
+    public int count;
 
     public GameUserListBean deepCopy() {
         GameUserListBean item = new GameUserListBean();
@@ -23,6 +27,7 @@ public class GameUserListBean extends GameUserBean implements Serializable {
         item.userName = this.userName;
         item.headimgurl = this.headimgurl;
         item.userId = this.userId;
+        item.count = this.count;
         return item;
     }
 }
