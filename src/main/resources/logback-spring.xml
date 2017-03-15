@@ -28,6 +28,17 @@
         </rollingPolicy>
     </appender>
 
+    <appender name="inAndOut" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log_home}/inAndOut.log</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log_home}/inAndOut-%d{yyyyMMdd}.log</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
     <!--这个包下的log都打印-->
     <logger name="org.springframework" level="info"/>
     <!--<logger name="cn.hkfdt.xiaot" level="info"/>-->
@@ -35,6 +46,10 @@
     <!--不向上打印 additivity="false" 认为敏感日志单独一份，但root日志有汇总-->
     <logger name="xiaot_sensitive" level="info">
         <appender-ref ref="xiaot_sensitive"/>
+    </logger>
+
+    <logger name="inAndOut" level="info">
+        <appender-ref ref="inAndOut"/>
     </logger>
 
     <root level="info">

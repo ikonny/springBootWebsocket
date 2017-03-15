@@ -12,7 +12,7 @@ import org.springframework.messaging.support.MessageHeaderAccessor;
 
 public class InboundChannelIntercepter extends ChannelInterceptorAdapter {
 
-	static Logger logger = LoggerFactory.getLogger(InboundChannelIntercepter.class);
+	static Logger logger = LoggerFactory.getLogger("inAndOut");
 
 	@Override
 	public Message<?> preSend(Message<?> message, MessageChannel channel) {
