@@ -2,6 +2,7 @@ package cn.hkfdt.xiaot.websocket.conmng;
 
 import cn.hkfdt.xiaot.websocket.utils.RSAUtil;
 import com.alibaba.fastjson.JSON;
+import com.mysql.jdbc.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEvent;
@@ -96,7 +97,8 @@ public class WebSocketConnectionListener implements
 	private void handleSessionDisconnect(SessionDisconnectEvent event) {
 		SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
 		String sessionId = (String) headers.getHeader(SIMP_SESSION_ID);
-		removeUserId(sessionId);
+		String fdtId = removeUserId(sessionId);
+		ConnectEventHelper.disConnectAndAfterRmove(fdtId,sessionId);
 	}
 	//[stompCommand=CONNECT, null, null, null, nativeHeaders={fdt-id=[123], accept-version=[1.1,1.0], 
 	//heart-beat=[10000,10000]}, simpMessageType=CONNECT,
@@ -131,6 +133,8 @@ public class WebSocketConnectionListener implements
 				//如果原来有连接对应，而且不是同一个连接过来的覆盖.证明是同一个userId，新的客户端
 				logger.info("设置连接:fdtId重复："+fdtId);
 				return  -1;
+			}else{
+
 			}
 			mapFdtId2Session.put(fdtId, sessionId);//但是这个有可能被覆盖，所以要防止这种情况
 			mapSession2FdtId.put(sessionId, fdtId);//这个是唯一的
@@ -138,12 +142,20 @@ public class WebSocketConnectionListener implements
 		logger.info("设置连接:fdtId："+fdtId);
     	return 0;
 	}
-	public static void removeUserId(String sessionId) {
+
+	/**
+	 * 只是单纯的map中移除数据，不做断线连带
+	 * 返回fdtId
+	 * @param sessionId
+	 */
+	public static String removeUserId(String sessionId) {
 		String fdtId = mapSession2FdtId.get(sessionId);
 		mapSession2FdtId.remove(sessionId);
-		mapFdtId2Session.remove(fdtId);
-		ConnectEventHelper.disConnectAndAfterRmove(fdtId,sessionId);
-		logger.info("-------断开:fdtId "+fdtId);
+		if(!StringUtils.isNullOrEmpty(fdtId)) {
+			mapFdtId2Session.remove(fdtId);
+			logger.info("-------map移除:fdtId " + fdtId);
+		}
+		return fdtId;
 	}
 	public static String getFdtId(String fdtKey, String sessionId) {
 		try {

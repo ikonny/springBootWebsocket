@@ -1,5 +1,6 @@
 package cn.hkfdt.xiaot.websocket.interceptors;
 
+import cn.hkfdt.xiaot.websocket.conmng.WebSocketConnectionListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
@@ -19,10 +20,12 @@ public class InboundChannelIntercepter extends ChannelInterceptorAdapter {
 //		logger.info("preSend");
 		StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 		if(accessor!=null && StompCommand.SEND==accessor.getCommand()){
+			String sessionId = accessor.getSessionId();
+			String fdtId = WebSocketConnectionListener.mapSession2FdtId.get(sessionId);
 			byte[] bytes = (byte[]) message.getPayload();
 			String msg = new String(bytes);
 			String des = accessor.getHeader("simpDestination").toString();
-			logger.info("=====>>>>>>>>"+des+" : "+msg);
+			logger.info("=====>>>>>>>>"+fdtId+"  :  "+des+" : "+msg);
 		}
 //		if(StompCommand.CONNECT==accessor.getCommand()){
 //			//连接的请求包

@@ -1,6 +1,7 @@
 package cn.hkfdt.xiaot.websocket.conmng;
 
 import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
+import com.mysql.jdbc.StringUtils;
 
 /**
  * 系统监听到连接断开或者设置情况下会通知相关方法
@@ -15,7 +16,10 @@ public class ConnectEventHelper {
      */
     public static void disConnectAndAfterRmove(String fdtId, String sessionId) {
         try{
-            MatchServiceHelper.disConnectAndAfterRmove(fdtId,sessionId);
+            if(!StringUtils.isNullOrEmpty(fdtId)) {
+                //不为空就断线回收
+                MatchServiceHelper.disConnectAndAfterRmove(fdtId, sessionId);
+            }
         }catch (Exception e){
             e.printStackTrace();
         }

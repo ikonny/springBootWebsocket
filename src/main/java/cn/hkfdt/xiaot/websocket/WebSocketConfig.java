@@ -1,10 +1,12 @@
 package cn.hkfdt.xiaot.websocket;
 
+import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfoHelperServer;
 import cn.hkfdt.xiaot.websocket.interceptors.InboundChannelIntercepter;
 import cn.hkfdt.xiaot.websocket.interceptors.OutboundChannelIntercepter;
 import cn.hkfdt.xiaot.websocket.interceptors.XiaoTShareInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -24,6 +26,8 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
     static Logger logger = LoggerFactory.getLogger(WebSocketConfig.class);
+    @Autowired
+    GlobalInfoHelperServer globalInfoHelperServer;
 	//这个先启用
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -56,18 +60,22 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     @Override
     public void configureClientInboundChannel(ChannelRegistration channelRegistration) {
         //拦截websoket的消息，消息类型和消息体
-    	InboundChannelIntercepter interceptors = new InboundChannelIntercepter();
-    	channelRegistration.setInterceptors(interceptors);
-        super.configureClientInboundChannel(channelRegistration);
-    	System.out.println("configureClientInboundChannel");
+        if(globalInfoHelperServer.isTransLogon) {
+            InboundChannelIntercepter interceptors = new InboundChannelIntercepter();
+            channelRegistration.setInterceptors(interceptors);
+            super.configureClientInboundChannel(channelRegistration);
+            System.out.println("configureClientInboundChannel");
+        }
 
     }
     @Override
     public void configureClientOutboundChannel(ChannelRegistration registration) {
-        OutboundChannelIntercepter interceptors = new OutboundChannelIntercepter();
-        registration.setInterceptors(interceptors);
-        super.configureClientOutboundChannel(registration);
-        System.out.println("configureClientOutboundChannel");
+        if(globalInfoHelperServer.isTransLogon) {
+            OutboundChannelIntercepter interceptors = new OutboundChannelIntercepter();
+            registration.setInterceptors(interceptors);
+            super.configureClientOutboundChannel(registration);
+            System.out.println("configureClientOutboundChannel");
+        }
     }
 //    @Override
 //    public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {

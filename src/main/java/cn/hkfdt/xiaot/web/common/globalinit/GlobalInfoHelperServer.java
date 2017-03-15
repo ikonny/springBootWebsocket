@@ -44,7 +44,8 @@ public class GlobalInfoHelperServer {
     String gameClientUrl;//扫码跳转的url
     @Value("${xiaot.game.overtime.minute}")
     int gameOvertimeM;
-
+    @Value("${websoket.log.trans}")
+    public boolean isTransLogon = false;
 
 
     @PostConstruct
