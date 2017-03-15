@@ -152,10 +152,15 @@ public class GameRuntimeBean {
                     logger.info("比赛准备中断线fdtId："+fdtId);
                     unReadyUser(fdtId);
                 }else{
-                    gameUserExtBean.state = 2;
-                    mapUsersEnd.put(fdtId, gameUserExtBean);
-                    clientVersion++;
-                    logger.info("比赛中断线fdtId："+fdtId);
+                    if(gameUserExtBean.state!=1) {
+                        //确认退出的状态，不需要任何重新覆盖
+                        gameUserExtBean.state = 2;
+                        mapUsersEnd.put(fdtId, gameUserExtBean);
+                        clientVersion++;
+                        logger.info("比赛中断线fdtId：" + fdtId);
+                    }else{
+                        logger.info("比赛中确认退出，断线fdtId：" + fdtId);
+                    }
                 }
             }
         }
