@@ -59,7 +59,7 @@ public class GameRuntimeBean {
      * 服务端计时比赛状态字段
      * 0创建未开始 1：开始未结束  2：已经结束
      */
-    private volatile int state=0;
+    public volatile int state=0;
     boolean startFirst = false;
     //================================================================================
     /**
@@ -129,6 +129,7 @@ public class GameRuntimeBean {
                 gameUserExtBean.state = 1;
                 clientVersion++;
                 if(mapUsersEnd.size()==userNum){
+                    state = 2;//比赛结束
                     return 1;
                 }
             }
@@ -225,6 +226,7 @@ public class GameRuntimeBean {
         if(state>0){
             return;
         }
+        clientVersion++;
         state = 1;
         Thread td = new Thread(()->{
             try {

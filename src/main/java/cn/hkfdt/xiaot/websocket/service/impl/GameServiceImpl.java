@@ -1,5 +1,6 @@
 package cn.hkfdt.xiaot.websocket.service.impl;
 
+import cn.hkfdt.xiaot.common.XiaoTCommon;
 import cn.hkfdt.xiaot.common.beans.ReqCommonBean;
 import cn.hkfdt.xiaot.common.beans.RspCommonBean;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameMapper;
@@ -69,7 +70,7 @@ public class GameServiceImpl implements GameService {
 		}
 		//比赛存在，看是否是参加了比赛
 		TGameUser tGameUser = getGameUser(gameId,userId);
-		if(gameRuntimeBean==null){
+		if(gameRuntimeBean==null || gameRuntimeBean.state==2){
 			//比赛已经结束,跳静态页面
 			gameUserStateBean.curState = 4;
 			rspCommonBean.rspCode = 200;
@@ -219,10 +220,12 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public int endTheGame(GameRuntimeBean gameRuntimeBean) {
+
 		TGame tGame = gameRuntimeBean.tGame;
 		long time = System.currentTimeMillis();
 		tGame.setUpdateTime(time);
 		tGame.setState(2);
+		gameRuntimeBean.state = 2;
 
 		logger.info("比赛结束："+tGame.getGameName());
 		//
@@ -244,7 +247,16 @@ public class GameServiceImpl implements GameService {
 		updateGameSelect(tGame);
 		//比赛结束时，再次排序通知各订阅者
 		MatchServiceHelper.sendTopicClientInfoAll(list,gameRuntimeBean.gameId);
-		xiaoTMatchTopics.gameEndTopic(gameRuntimeBean.gameId);
+
+		XiaoTCommon.executorService.submit(()->{
+			//整场比赛，2秒后停止
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			xiaoTMatchTopics.gameEndTopic(gameRuntimeBean.gameId);
+		});
 		return 0;
 	}
 
