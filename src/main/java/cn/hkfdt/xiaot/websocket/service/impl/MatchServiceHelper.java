@@ -206,6 +206,7 @@ public class MatchServiceHelper {
 		tGameUser.setMarketType(gameRuntimeBean.tGame.getMarketType());
 		tGameUser.setActions( JSON.toJSONString(gameUserExtBean.actions));
 //		tGameUser.setGameId(gameUserExtBean.gameId);
+		tGameUser.setCurIdx(gameUserExtBean.curIdx);
 		return tGameUser;
 	}
 

@@ -1174,6 +1174,66 @@ public class TGameUserExample {
             return (Criteria) this;
         }
 
+        public Criteria andCurIdxIsNull() {
+            addCriterion("curIdx is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurIdxIsNotNull() {
+            addCriterion("curIdx is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurIdxEqualTo(Integer value) {
+            addCriterion("curIdx =", value, "curIdx");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurIdxNotEqualTo(Integer value) {
+            addCriterion("curIdx <>", value, "curIdx");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurIdxGreaterThan(Integer value) {
+            addCriterion("curIdx >", value, "curIdx");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurIdxGreaterThanOrEqualTo(Integer value) {
+            addCriterion("curIdx >=", value, "curIdx");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurIdxLessThan(Integer value) {
+            addCriterion("curIdx <", value, "curIdx");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurIdxLessThanOrEqualTo(Integer value) {
+            addCriterion("curIdx <=", value, "curIdx");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurIdxIn(List<Integer> values) {
+            addCriterion("curIdx in", values, "curIdx");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurIdxNotIn(List<Integer> values) {
+            addCriterion("curIdx not in", values, "curIdx");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurIdxBetween(Integer value1, Integer value2) {
+            addCriterion("curIdx between", value1, value2, "curIdx");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurIdxNotBetween(Integer value1, Integer value2) {
+            addCriterion("curIdx not between", value1, value2, "curIdx");
+            return (Criteria) this;
+        }
+
         public Criteria andGameIdLikeInsensitive(String value) {
             addCriterion("upper(gameId) like", value.toUpperCase(), "gameId");
             return (Criteria) this;

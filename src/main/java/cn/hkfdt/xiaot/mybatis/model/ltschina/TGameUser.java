@@ -122,6 +122,14 @@ public class TGameUser implements Serializable {
      */
     private String headimgurl;
 
+    /**
+     * <pre>
+     * 表字段注释 : 当前收益率的横坐标
+     * 表字段 : xiaot_game_user.curIdx
+     * </pre>
+     */
+    private Integer curIdx;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -258,5 +266,13 @@ public class TGameUser implements Serializable {
 
     public void setHeadimgurl(String headimgurl) {
         this.headimgurl = headimgurl == null ? null : headimgurl.trim();
+    }
+
+    public Integer getCurIdx() {
+        return curIdx;
+    }
+
+    public void setCurIdx(Integer curIdx) {
+        this.curIdx = curIdx;
     }
 }
