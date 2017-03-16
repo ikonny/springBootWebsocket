@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper.cacheMapXM;
 
@@ -61,6 +62,10 @@ public class GameRuntimeBean {
      */
     public volatile int state=0;
     boolean startFirst = false;
+    /**
+     * 是否操作完数据库，操作完了就是1，证明比赛结束并且不需要记录里面的数据了
+     */
+    AtomicInteger dbUpdateState= new AtomicInteger(0);
     //================================================================================
     /**
      * 根据比赛类型，获取比赛时长
@@ -270,6 +275,15 @@ public class GameRuntimeBean {
         startFirst = true;
     }
 
+    /**
+     * 比赛结束时如果已经更新完数据库了，就不需要再更新数据库了
+     * @return
+     */
+    public boolean canUpdateDate() {
+        return dbUpdateState.get()==0;
+    }
 
-
+    public void hasUpdateDb() {
+        dbUpdateState.incrementAndGet();
+    }
 }

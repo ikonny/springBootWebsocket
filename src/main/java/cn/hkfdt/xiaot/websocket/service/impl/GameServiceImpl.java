@@ -223,6 +223,13 @@ public class GameServiceImpl implements GameService {
 	@Override
 	public int endTheGame(GameRuntimeBean gameRuntimeBean) {
 
+		synchronized (gameRuntimeBean) {
+			if (!gameRuntimeBean.canUpdateDate()) {
+				logger.info("!!!尝试更新已经更新过的比赛数据");
+				return 0;
+			}
+			gameRuntimeBean.hasUpdateDb();
+		}
 		TGame tGame = gameRuntimeBean.tGame;
 		long time = System.currentTimeMillis();
 		tGame.setUpdateTime(time);

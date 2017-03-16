@@ -65,7 +65,9 @@ public class MatchServiceHelper {
 
 		//==========指定超时回收事件处理=========================
 		cacheMapXM.addListener((Object item,String key)->{
-			gameService.endTheGame((GameRuntimeBean) item);
+			GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) item;
+			logger.info(gameRuntimeBean.tGame.getGameName()+"__超时结束回收");
+			gameService.endTheGame(gameRuntimeBean);
 		});
 	}
 

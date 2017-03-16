@@ -6,6 +6,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 实现一个支持定时回收超时的内存数据的map
  * Created by whyse
  * on 2017/2/23 20:02
  */
@@ -26,6 +27,10 @@ public class CacheMapXM {
         mapMatchInfo = new ConcurrentHashMap<>(500);
         init();
     }
+
+    /**
+     * 这个任务线程肯定会执行完毕
+     */
     private void init() {
         //回收任务
         Runnable runnable = new Runnable() {
