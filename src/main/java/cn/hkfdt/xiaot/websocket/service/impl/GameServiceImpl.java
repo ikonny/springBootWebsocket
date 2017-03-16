@@ -200,8 +200,10 @@ public class GameServiceImpl implements GameService {
 		//{  gameId: '', userId: '}
 		String gameId = reqCommonBean.data.get("gameId").toString();
 		String userId = reqCommonBean.data.get("userId").toString();
+		//1:比赛进行中确认退出   3：比赛结束退出
+		int userState = Integer.parseInt(reqCommonBean.data.get("state").toString());
 		Map<String,Object>  mapRt = new LinkedMap(2);
-		int flag = MatchServiceHelper.gameUserEnd(gameId,userId);
+		int flag = MatchServiceHelper.gameUserEnd(gameId,userId,userState);
 		if(flag==0){
 			GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) cacheMapXM.get(gameId);
 			GameUserExtBean item = gameRuntimeBean.mapUsers.get(userId);

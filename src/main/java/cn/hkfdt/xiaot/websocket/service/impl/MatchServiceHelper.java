@@ -170,15 +170,17 @@ public class MatchServiceHelper {
 	/**
 	 * 0:带回gameUserExtBean -1：比赛早就结束 1：本次操作后比赛结束
 	 * 返回用户信息，移除用户对象，如果最后一个用户结束，则游戏结束
+	 *
+	 * @param userState 1:比赛进行中确认退出   3：比赛结束退出
 	 * @param gameId
 	 * @param userId
 	 * @return gameUserExtBean,gameRuntimeBean
 	 */
-	public static int gameUserEnd(String gameId, String userId) {
+	public static int gameUserEnd(String gameId, String userId,int userState) {
 		GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) cacheMapXM.get(gameId);
 		if(gameRuntimeBean==null)
 			return -1;
-		int flag = gameRuntimeBean.gameUserEnd(userId);
+		int flag = gameRuntimeBean.gameUserEnd(userId,userState);
 		return flag;
 	}
 

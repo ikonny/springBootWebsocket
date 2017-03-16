@@ -118,18 +118,20 @@ public class GameRuntimeBean {
     /**
      * 用户主动结束比赛操作
      * 不能再次进入
+     *
+     * @param userState
      * @param userId
      * @return 1所有用户都告诉比赛结束  0成功
      */
-    public int gameUserEnd(String userId) {
+    public int gameUserEnd(String userId,int userState) {
         GameUserExtBean gameUserExtBean = mapUsers.get(userId);
         if(gameUserExtBean!=null){
             synchronized (mapUsersEnd) {
                 mapUsersEnd.put(userId, gameUserExtBean);
-                gameUserExtBean.state = 1;
+                gameUserExtBean.state = userState;
                 clientVersion++;
                 if(mapUsersEnd.size()==userNum){
-                    state = 2;//比赛结束
+                    this.state = 2;//比赛结束
                     return 1;
                 }
             }
@@ -153,14 +155,18 @@ public class GameRuntimeBean {
                     logger.info("比赛准备中断线fdtId："+fdtId);
                     unReadyUser(fdtId);
                 }else{
-                    if(gameUserExtBean.state!=1) {
-                        //确认退出的状态，不需要任何重新覆盖
+                    if(gameUserExtBean.state==0) {
+                        //用户正常状态断线
                         gameUserExtBean.state = 2;
                         mapUsersEnd.put(fdtId, gameUserExtBean);
                         clientVersion++;
                         logger.info("比赛中断线fdtId：" + fdtId);
-                    }else{
+                    }
+                    if(gameUserExtBean.state==1){
                         logger.info("比赛中确认退出，断线fdtId：" + fdtId);
+                    }
+                    if(gameUserExtBean.state==3){
+                        logger.info("比赛正常退出，断线fdtId：" + fdtId);
                     }
                 }
             }
@@ -204,7 +210,7 @@ public class GameRuntimeBean {
     public boolean canReConnect(String userId) {
         GameUserExtBean gameUserExtBean = mapUsers.get(userId);
         if(gameUserExtBean!=null){
-            if(gameUserExtBean.state!=1){
+            if(gameUserExtBean.state ==2 || gameUserExtBean.state == 0){
                 return true;
             }
         }
