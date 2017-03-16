@@ -95,6 +95,7 @@ unionid	只有在用户将公众号绑定到微信开放平台帐号后，才会
             if(!mapTemp.containsKey("errcode")){
                 url = WXHelper.getUserInfoUrl(mapTemp);
                 jsonStr = HttpUtils.httpGet(url);
+                jsonStr = new String(jsonStr.getBytes("ISO-8859-1"), "UTF-8");
                 mapTemp = JSON.parseObject(jsonStr);//获取到用户的信息
 
                 String nickname = mapTemp.get("nickname").toString();
