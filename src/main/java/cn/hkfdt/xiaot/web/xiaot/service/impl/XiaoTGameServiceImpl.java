@@ -265,6 +265,7 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 			for (TGameUser tgu : tguList) {
 				Map<String, Object> resultMap = new HashMap<>();
 				resultMap.put("rankIdx", tgu.getRanking());
+				resultMap.put("curIdx", tgu.getCurIdx());
 				resultMap.put("userName", tgu.getNickName());
 				resultMap.put("userId", tgu.getUserId());
 				resultMap.put("returnRate", tgu.getReturnRate());
