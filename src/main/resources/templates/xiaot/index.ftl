@@ -11,7 +11,6 @@
 <body>
 
 	<section id="J-klinetc" class="m-activity j-klinetc"></section>
-	<script src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/2.5.1/vconsole.min.js" charset="utf-8"></script>
 	<script src="${baseUrl}/assets/fdt/lib/${lib_version}/js/common.min.js"></script>
 	<script src="${baseUrl}/assets/fdt/lib/${lib_version}/js/react@15.4.0/react.min.js"></script>
 	<script src="${baseUrl}/assets/fdt/lib/${lib_version}/js/react@15.4.0/react-dom.min.js"></script>
