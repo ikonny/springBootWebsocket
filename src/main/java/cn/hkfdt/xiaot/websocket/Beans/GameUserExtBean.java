@@ -26,7 +26,7 @@ public class GameUserExtBean extends GameUserBean implements Serializable {
      */
     public Object actions;
     /**
-     * 0: 正常  1：已经确认退出（不得重连）  2:断线
+     * 0: 正常  1：已经确认退出（不得重连）  2:断线  3:比赛正常退出
      */
     public volatile int state=0;
 
