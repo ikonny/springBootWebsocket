@@ -123,7 +123,7 @@ public class XiaoTController {
 	 */
 	@RequestMapping(value="/xiaoth/xiaot/{other}/{param}")
 	public String xiaot2path(HttpServletRequest request, HttpServletResponse response, @PathVariable String other, @PathVariable String param, Model model, @RequestParam(defaultValue = "") String userInfo, @RequestParam(required = false) String gameId,
-							 @RequestParam(required = false) String num){
+							 @RequestParam(required = false) String num) throws Exception{
 		if("battle".equals(other) && WXHelper.isFromWx(request) && (userInfo == null || "".equalsIgnoreCase(userInfo))){//微信用打开,且没有用户信息
 			//           logger.info("微信:"+GlobalInfo.wxLoginUrl);
 			try {
@@ -142,7 +142,7 @@ public class XiaoTController {
 
 		String baseUrl = GlobalInfo.imDomain;
 		model.addAttribute("baseUrl", baseUrl);
-		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("userInfo", URLDecoder.decode(userInfo, "utf-8"));
 		return "xiaot/index";
 	}
 	/**
