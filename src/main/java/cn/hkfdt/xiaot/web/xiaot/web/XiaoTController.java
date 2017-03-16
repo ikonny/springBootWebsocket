@@ -142,7 +142,7 @@ public class XiaoTController {
 
 		String baseUrl = GlobalInfo.imDomain;
 		model.addAttribute("baseUrl", baseUrl);
-		model.addAttribute("userInfo", URLDecoder.decode(userInfo));
+		model.addAttribute("userInfo", userInfo);
 		return "xiaot/index";
 	}
 	/**

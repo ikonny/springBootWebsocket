@@ -95,7 +95,6 @@ unionid	只有在用户将公众号绑定到微信开放平台帐号后，才会
             if(!mapTemp.containsKey("errcode")){
                 url = WXHelper.getUserInfoUrl(mapTemp);
                 jsonStr = HttpUtils.httpGet(url);
-                jsonStr = new String(jsonStr.getBytes("ISO-8859-1"), "UTF-8");
                 mapTemp = JSON.parseObject(jsonStr);//获取到用户的信息
 
                 String nickname = mapTemp.get("nickname").toString();
@@ -115,7 +114,7 @@ unionid	只有在用户将公众号绑定到微信开放平台帐号后，才会
         }
         RspCommonBean rcb = RspCommonBean.getCommonRspBean(202,"微信授权未知错误");
         HttpClientUtil http=new HttpClientUtil (response);
-        http.setParameter("userInfo", URLEncoder.encode(new Gson().toJson(mapTar)));
+        http.setParameter("userInfo", new Gson().toJson(mapTar));
         http.sendByPost("http://" + GlobalInfo.serverDomain + "/xiaoth/xiaot/battle/guide?gameId="+ gameId + "&num=" + num);
 
     }
