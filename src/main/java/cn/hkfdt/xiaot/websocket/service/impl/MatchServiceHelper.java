@@ -4,6 +4,7 @@ import cn.hkfdt.xiaot.common.CacheMapXM;
 import cn.hkfdt.xiaot.common.beans.GameCacheBean;
 import cn.hkfdt.xiaot.common.beans.ReqCommonBean;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGameUser;
+import cn.hkfdt.xiaot.util.EmojiUtil;
 import cn.hkfdt.xiaot.web.common.LogUtil;
 import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
 import cn.hkfdt.xiaot.websocket.Beans.GameRuntimeBean;
@@ -199,7 +200,8 @@ public class MatchServiceHelper {
 		tGameUser.setGameId(gameUserExtBean.gameId);
 		tGameUser.setUserId(gameUserExtBean.userId);
 		tGameUser.setUserType(gameUserExtBean.userType);
-		tGameUser.setNickName(gameUserExtBean.userName);
+		String userName = EmojiUtil.filterEmoji(gameUserExtBean.userName);
+		tGameUser.setNickName(userName);
 		tGameUser.setHeadimgurl(gameUserExtBean.headimgurl);
 		tGameUser.setUpdateTime(time);
 		tGameUser.setState(state);

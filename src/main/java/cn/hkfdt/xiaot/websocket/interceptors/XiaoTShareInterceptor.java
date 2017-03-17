@@ -36,10 +36,10 @@ public class XiaoTShareInterceptor extends HttpSessionHandshakeInterceptor {
 			ServerHttpResponse arg1, WebSocketHandler arg2,
 			Map<String, Object> arg3) throws Exception {
 
-		HttpHeaders httpHeaders = arg0.getHeaders();
-		logger.info(httpHeaders.toString());
+//		HttpHeaders httpHeaders = arg0.getHeaders();
+//		logger.info(httpHeaders.toString());
 		String clientIp = getIp(arg0);
-		logger.info("clientAddress:"+arg0.getRemoteAddress().toString());
+		logger.info("clientAddress_:_"+clientIp);
 
 //		if(!httpHeaders.get("xumin").get(0).toString().equals("admin")){
 //			return false;
@@ -57,10 +57,30 @@ public class XiaoTShareInterceptor extends HttpSessionHandshakeInterceptor {
 //		}
 		return true;
 	}
-
+	/*
+	{upgrade=[websocket], connection=[upgrade], host=[devxiaot.forexmaster.cn],
+	x-real-ip=[202.96.126.186], x-forwarded-for=[202.96.126.186], x-forwarded-proto=[http],
+	origin=[http://devxiaot.forexmaster.cn], sec-websocket-protocol=[v10.stomp, v11.stomp],
+	pragma=[no-cache], cache-control=[no-cache],
+	sec-websocket-key=[XajWUa90k+NDz2L1uoUTGw==],
+	sec-websocket-version=[13], sec-websocket-extensions=[x-webkit-deflate-frame],
+	user-agent=[Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X)
+	AppleWebKit/602.4.6 (KHTML, like Gecko) Mobile/14D27 fdt_scheme/ForexMasterCN
+	fdt/iOS_CN fdt_version/5.0.0]}
+	 */
 	private String getIp(ServerHttpRequest arg0) {
-		String ip = arg0.getRemoteAddress().toString();
-		return ip;
+		HttpHeaders httpHeaders = arg0.getHeaders();
+		String ip = null;
+		if(httpHeaders.containsKey("x-forwarded-for")){
+			return ip = httpHeaders.get("x-forwarded-for").get(0);
+		}
+		if(httpHeaders.containsKey("Proxy-Client-IP")){
+			return ip = httpHeaders.get("Proxy-Client-IP").get(0);
+		}
+		if(httpHeaders.containsKey("WL-Proxy-Client-IP")){
+			return ip = httpHeaders.get("WL-Proxy-Client-IP").get(0);
+		}
+		return arg0.getRemoteAddress().toString();
 	}
 
 }

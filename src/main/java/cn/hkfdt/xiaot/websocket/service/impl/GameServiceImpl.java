@@ -191,7 +191,7 @@ public class GameServiceImpl implements GameService {
 
 		long time = System.currentTimeMillis();
 		gameRuntimeBean.mapUsers.values().forEach(item->{
-			TGameUser tGameUser = MatchServiceHelper.getGameUser(item,gameRuntimeBean,1);
+			TGameUser tGameUser = MatchServiceHelper.getGameUser(item, gameRuntimeBean, 1);
 			tGameUser.setCreateTime(time);
 			tGameUserExtendsMapper.insert(tGameUser);
 		});
