@@ -98,17 +98,15 @@ public class WebSocketConnectionListener implements
 		SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
 		String sessionId = (String) headers.getHeader(SIMP_SESSION_ID);
 		String fdtId = removeUserId(sessionId);
+//		CustomSubProtocolWebSocketHandler.handleSessionDisconnect(sessionId);
 		ConnectEventHelper.disConnectAndAfterRmove(fdtId,sessionId);
 	}
 	//[stompCommand=CONNECT, null, null, null, nativeHeaders={fdt-id=[123], accept-version=[1.1,1.0], 
 	//heart-beat=[10000,10000]}, simpMessageType=CONNECT,
 	//null, null, null, null, null, null, simpHeartbeat=[J@5c7d82d, simpSessionId=nhdw6oj_, null, null]
 	private void handleSessionConnected(SessionConnectEvent event) {
-//		SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
-//		String sessionId = (String) headers.getHeader(SIMP_SESSION_ID);
 		StompHeaderAccessor headers = StompHeaderAccessor.wrap(event.getMessage()); //获取消息头
 		String sessionId =headers.getSessionId();
-//		String name = headers.getUser().getName(); //获取账号名,获取不到？？！
 		String fdtId = sessionId;
 		List<String> fdtKeyList = headers.getNativeHeader(FDT_KEY);
 		if(fdtKeyList!=null){
@@ -135,7 +133,16 @@ public class WebSocketConnectionListener implements
 //			if (sessionIdOlder!=null && !sessionIdOlder.equals(sessionId)){
 //				//如果原来有连接对应，而且不是同一个连接过来的覆盖.证明是同一个userId，新的客户端
 //				logger.info("设置连接:fdtId重复："+fdtId);
+//				//----------------------------
+//				if(CustomSubProtocolWebSocketHandler.disconnect(sessionIdOlder)==1) {
+//					mapFdtId2Session.put(fdtId, sessionId);//但是这个有可能被覆盖，所以要防止这种情况
+//					mapSession2FdtId.put(sessionId, fdtId);//这个是唯一的
+//					logger.info("设置连接:fdtId：" + fdtId);
+//					return 0;
+//				}
+//				//----------------------------
 //				return  -1;
+//				//----------------------------
 //			}
 //			if(sessionIdOlder==null) {
 //				//这个是新加入的正常状态

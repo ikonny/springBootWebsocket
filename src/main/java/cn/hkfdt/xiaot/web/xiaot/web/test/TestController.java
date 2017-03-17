@@ -94,6 +94,7 @@ public class TestController {
 		mapTar.put("serverHadRec",msg);
 		String str = JSON.toJSONString(mapTar);
 		logger.info(str);
+//		int state = WebSocketConnectionListener.setUserIds(sessionId,sessionId+"__");
 //		simpMessagingTemplate.convertAndSendToUser(sessionId,"/queue/test/send",str);//等价
 		return str;
 	}

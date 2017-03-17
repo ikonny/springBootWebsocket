@@ -260,8 +260,16 @@ public class GameRuntimeBean {
             //-------------------
             if(state!=2) {
                 //正常结束移除数据后，又被这个线程给加入到map里
-                cacheMapXM.put(gameId, this, 3);//比赛结束后，3秒后结束
-                MatchServiceHelper.gameService.endTheGame(this);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if(cacheMapXM.get(gameId)!=null) {
+                    cacheMapXM.remove(gameId);
+                    logger.info(tGame.getGameName()+"__走完比赛3秒后回收");
+                    MatchServiceHelper.gameService.endTheGame(this);
+                }
             }
         });
         td.setName("game_:"+gameId);
