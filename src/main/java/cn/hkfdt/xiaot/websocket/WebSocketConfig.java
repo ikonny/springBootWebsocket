@@ -4,6 +4,7 @@ import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfoHelperServer;
 import cn.hkfdt.xiaot.websocket.conmng.CustomSubProtocolWebSocketHandler;
 import cn.hkfdt.xiaot.websocket.interceptors.InboundChannelIntercepter;
 import cn.hkfdt.xiaot.websocket.interceptors.OutboundChannelIntercepter;
+import cn.hkfdt.xiaot.websocket.interceptors.XiaoTShareInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,9 +58,8 @@ public class WebSocketConfig extends WebSocketMessageBrokerConfigurationSupport 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
     	//这是一条连线
-//    	XiaoTShareInterceptor xiaoTShareInterceptor = new XiaoTShareInterceptor();//这个是连接建立时候的
-//        .addInterceptors(xiaoTShareInterceptor)
-        registry.addEndpoint("/xiaots").setAllowedOrigins("*");
+    	XiaoTShareInterceptor xiaoTShareInterceptor = new XiaoTShareInterceptor();//这个是连接建立时候的
+        registry.addEndpoint("/xiaots").addInterceptors(xiaoTShareInterceptor).setAllowedOrigins("*");
 //        .withSockJS().setStreamBytesLimit(1000 * 1024);//客户端是SockJS就使用这个
     }
 
