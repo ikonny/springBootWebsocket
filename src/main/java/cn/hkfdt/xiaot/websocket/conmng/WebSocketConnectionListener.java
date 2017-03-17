@@ -126,7 +126,7 @@ public class WebSocketConnectionListener implements
 	 * @return 0设置成功   -1已经存在fdtid对应的连线，该用户已经存在
 	 */
 	public static int setUserIds(String fdtId, String sessionId) {
-		removeUserId(sessionId);//设置之前，先移除相关对应
+		removeUserId(fdtId,sessionId);//设置之前，先移除相关对应
 		//检查fdtId对应的连接是否存在
 //		String sessionIdOlder = mapFdtId2Session.get(fdtId);
 //    	synchronized (mapFdtId2Session) {
@@ -159,6 +159,22 @@ public class WebSocketConnectionListener implements
     	return 0;
 	}
 
+	private static void removeUserId(String fdtId, String sessionId) {
+		if(!StringUtils.isNullOrEmpty(fdtId)){
+			String sessionIdOlder = mapFdtId2Session.get(fdtId);
+			mapFdtId2Session.remove(fdtId);
+			if(!StringUtils.isNullOrEmpty(sessionIdOlder)) {
+				mapSession2FdtId.remove(sessionIdOlder);
+			}
+		}
+		if(!StringUtils.isNullOrEmpty(sessionId)){
+			String fdtIdOlder = mapSession2FdtId.get(sessionId);
+			mapSession2FdtId.remove(sessionId);
+			if(!StringUtils.isNullOrEmpty(fdtIdOlder)) {
+				mapFdtId2Session.remove(fdtIdOlder);
+			}
+		}
+	}
 	/**
 	 * 只是单纯的map中移除数据，不做断线连带
 	 * 返回fdtId
