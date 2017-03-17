@@ -261,7 +261,7 @@ public class GameRuntimeBean {
             if(state!=2) {
                 //正常结束移除数据后，又被这个线程给加入到map里
                 cacheMapXM.put(gameId, this, 3);//比赛结束后，3秒后结束
-                state = 2;
+                MatchServiceHelper.gameService.endTheGame(this);
             }
         });
         td.setName("game_:"+gameId);

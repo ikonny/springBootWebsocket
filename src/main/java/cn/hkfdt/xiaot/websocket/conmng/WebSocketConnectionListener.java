@@ -128,21 +128,27 @@ public class WebSocketConnectionListener implements
 	 * @return 0设置成功   -1已经存在fdtid对应的连线，该用户已经存在
 	 */
 	public static int setUserIds(String fdtId, String sessionId) {
+		removeUserId(sessionId);//设置之前，先移除相关对应
 		//检查fdtId对应的连接是否存在
-		String sessionIdOlder = mapFdtId2Session.get(fdtId);
-    	synchronized (mapFdtId2Session) {
-			if (sessionIdOlder!=null && !sessionIdOlder.equals(sessionId)){
-				//如果原来有连接对应，而且不是同一个连接过来的覆盖.证明是同一个userId，新的客户端
-				logger.info("设置连接:fdtId重复："+fdtId);
-				return  -1;
-			}
-			if(sessionIdOlder==null) {
-				//这个是新加入的正常状态
-				mapFdtId2Session.put(fdtId, sessionId);//但是这个有可能被覆盖，所以要防止这种情况
-				mapSession2FdtId.put(sessionId, fdtId);//这个是唯一的
-				logger.info("设置连接:fdtId："+fdtId);
-			}
-		}
+//		String sessionIdOlder = mapFdtId2Session.get(fdtId);
+//    	synchronized (mapFdtId2Session) {
+//			if (sessionIdOlder!=null && !sessionIdOlder.equals(sessionId)){
+//				//如果原来有连接对应，而且不是同一个连接过来的覆盖.证明是同一个userId，新的客户端
+//				logger.info("设置连接:fdtId重复："+fdtId);
+//				return  -1;
+//			}
+//			if(sessionIdOlder==null) {
+//				//这个是新加入的正常状态
+//				mapFdtId2Session.put(fdtId, sessionId);//但是这个有可能被覆盖，所以要防止这种情况
+//				mapSession2FdtId.put(sessionId, fdtId);//这个是唯一的
+//				logger.info("设置连接:fdtId："+fdtId);
+//			}
+//		}
+		//================================
+		//这个是覆盖方法
+		mapFdtId2Session.put(fdtId, sessionId);//但是这个有可能被覆盖，所以要防止这种情况
+		mapSession2FdtId.put(sessionId, fdtId);//这个是唯一的
+		logger.info("设置连接:fdtId："+fdtId);
     	return 0;
 	}
 

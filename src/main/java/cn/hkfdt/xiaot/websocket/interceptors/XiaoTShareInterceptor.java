@@ -2,6 +2,7 @@ package cn.hkfdt.xiaot.websocket.interceptors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.socket.WebSocketHandler;
@@ -35,7 +36,11 @@ public class XiaoTShareInterceptor extends HttpSessionHandshakeInterceptor {
 			ServerHttpResponse arg1, WebSocketHandler arg2,
 			Map<String, Object> arg3) throws Exception {
 
-//		System.out.println("beforeHandshake："+arg0.getURI());
+		HttpHeaders httpHeaders = arg0.getHeaders();
+		logger.info(httpHeaders.toString());
+		if(!httpHeaders.get("xumin").get(0).toString().equals("admin")){
+			return false;
+		}
 //		if (arg0 instanceof ServletServerHttpRequest) {
 //			ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) arg0;
 //			System.err.println(servletRequest.toString());

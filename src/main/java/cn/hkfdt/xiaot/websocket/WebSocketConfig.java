@@ -1,19 +1,24 @@
 package cn.hkfdt.xiaot.websocket;
 
 import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfoHelperServer;
+import cn.hkfdt.xiaot.websocket.conmng.CustomSubProtocolWebSocketHandler;
 import cn.hkfdt.xiaot.websocket.interceptors.InboundChannelIntercepter;
 import cn.hkfdt.xiaot.websocket.interceptors.OutboundChannelIntercepter;
-import cn.hkfdt.xiaot.websocket.interceptors.XiaoTShareInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.converter.MessageConverter;
+import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
+import org.springframework.messaging.handler.invocation.HandlerMethodReturnValueHandler;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.config.annotation.*;
+
+import java.util.List;
 
 /*
  * 1.@EnableWebSocketMessageBroker注解表示开启使用STOMP协议来传输基于代理的消息，Broker就是代理的意思。 
@@ -23,7 +28,7 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
  */
 @Configuration
 @EnableWebSocketMessageBroker  //STOMP client
-public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
+public class WebSocketConfig extends WebSocketMessageBrokerConfigurationSupport implements WebSocketMessageBrokerConfigurer {
 
     static Logger logger = LoggerFactory.getLogger(WebSocketConfig.class);
     @Autowired
@@ -51,12 +56,18 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // use the /guestbook endpoint (prefixed with /app as configured above) for incoming requests
     	//这是一条连线
-    	XiaoTShareInterceptor xiaoTShareInterceptor = new XiaoTShareInterceptor();//这个是连接建立时候的
-        registry.addEndpoint("/xiaots").addInterceptors(xiaoTShareInterceptor).setAllowedOrigins("*");
+//    	XiaoTShareInterceptor xiaoTShareInterceptor = new XiaoTShareInterceptor();//这个是连接建立时候的
+//        .addInterceptors(xiaoTShareInterceptor)
+        registry.addEndpoint("/xiaots").setAllowedOrigins("*");
 //        .withSockJS().setStreamBytesLimit(1000 * 1024);//客户端是SockJS就使用这个
     }
+
+    @Override
+    public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
+        super.configureWebSocketTransport(registry);
+    }
+
     @Override
     public void configureClientInboundChannel(ChannelRegistration channelRegistration) {
         //拦截websoket的消息，消息类型和消息体
@@ -77,24 +88,31 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
             System.out.println("configureClientOutboundChannel");
         }
     }
-//    @Override
-//    public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
-//        HandlerMethodReturnValueHandler handlerMethodReturnValueHandler = new HandlerMethodReturnValueHandler() {
-//            @Override
-//            public boolean supportsReturnType(MethodParameter returnType) {
-//                logger.info(returnType.toString());
-//                return true;
-//            }
-//
-//            @Override
-//            public void handleReturnValue(Object returnValue, MethodParameter returnType, Message<?> message) throws Exception {
-//                logger.info(returnValue.toString());
-//            }
-//        };
-//        returnValueHandlers.add(handlerMethodReturnValueHandler);
-//
-//        super.addReturnValueHandlers(returnValueHandlers);
-//
-//    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        super.addArgumentResolvers(argumentResolvers);
+    }
+
+    @Override
+    public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
+        super.addReturnValueHandlers(returnValueHandlers);
+    }
+
+    @Override
+    public boolean configureMessageConverters(List<MessageConverter> messageConverters) {
+        return super.configureMessageConverters(messageConverters);
+    }
+
+    //============================================================
+
+    /**
+     * 拦截用户的sessionHander，做索引
+     * @return
+     */
+    @Bean
+    public WebSocketHandler subProtocolWebSocketHandler() {
+        return new CustomSubProtocolWebSocketHandler(clientInboundChannel(), clientOutboundChannel());
+    }
 
 }

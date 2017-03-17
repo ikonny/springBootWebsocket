@@ -63,7 +63,6 @@ public class XiaoTMatchController {
 		Map<String, Object>  paraMap = JSON.parseObject(msg);
 		String userId = paraMap.get("userId").toString();
 		String sessionId = headerAccessor.getSessionId(); // Session ID
-		WebSocketConnectionListener.removeUserId(sessionId);
 		int state = WebSocketConnectionListener.setUserIds(userId,sessionId);//重建sessionId和userId对应关系
 		if(state==-1){
 			RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(1000,"该用户已经在比赛中");
@@ -88,7 +87,6 @@ public class XiaoTMatchController {
 		String userId = paraMap.get("userId").toString();
 		String sessionId = headerAccessor.getSessionId(); // Session ID
 		//准备时候提供的userId比之前连线时拿不到而用暂时userId替代的，需要这边覆盖
-		WebSocketConnectionListener.removeUserId(sessionId);
 		int state = WebSocketConnectionListener.setUserIds(userId,sessionId);//重建sessionId和userId对应关系
 		if(state==-1){
 			RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(1000,"该用户已经在比赛中");

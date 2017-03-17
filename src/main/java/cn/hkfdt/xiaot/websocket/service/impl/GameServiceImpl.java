@@ -173,6 +173,9 @@ public class GameServiceImpl implements GameService {
 		//-----------------------------------------------
 		xiaoTMatchTopics.start(gameId);//通知各端比赛开始
 		//比赛计时，通知开始
+		if(drawTimer<=500){
+			drawTimer = 500;
+		}
 		gameRuntimeBean.start(xiaoTMatchTopics,drawTimer,3200);
 		return 0;
 	}
