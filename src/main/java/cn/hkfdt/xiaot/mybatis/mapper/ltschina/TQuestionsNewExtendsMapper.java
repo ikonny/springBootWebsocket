@@ -14,7 +14,7 @@ public interface TQuestionsNewExtendsMapper extends TQuestionsNewMapper {
 	 * author:xumin 
 	 * 2016-12-16 上午11:35:45
 	 */
-	@Select("select * from xiaot_questions WHERE exchangeCode=#{para.exchangeCode}" +
+	@Select("select * from xiaot_questionsNew WHERE exchangeCode=#{para.exchangeCode}" +
 			" and shortSymbol = #{para.shortSymbol} and tradeDay = #{para.tradeDay} " +
 			" and version = #{para.version} and initType =1")
 	TQuestionsNew getByUnionKey(@Param("para") TQuestionsNew para);
@@ -24,6 +24,6 @@ public interface TQuestionsNewExtendsMapper extends TQuestionsNewMapper {
 	 * author:xumin 
 	 * 2016-12-19 下午6:29:41
 	 */
-	@Select("select * from xiaot_questions WHERE initType = 0 and type = #{type} ")
+	@Select("select * from xiaot_questionsNew WHERE initType = 0 and type = #{type} ")
 	List<TQuestionsNew> initTQuestions(@Param("type") int type);
 }
