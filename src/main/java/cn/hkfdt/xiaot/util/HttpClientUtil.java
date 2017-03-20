@@ -28,7 +28,7 @@ public class HttpClientUtil {
         PrintWriter out = this.response.getWriter();
         out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
         out.println("<HTML>");
-        out.println(" <HEAD><TITLE>sender</TITLE></HEAD>");
+        out.println(" <HEAD><TITLE></TITLE></HEAD>");
         out.println(" <BODY>");
         out.println("<form name=\"submitForm\" action=\""+url+"\" method=\"post\">");
         Iterator<String> it=this.parameter.keySet().iterator();
