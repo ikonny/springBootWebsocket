@@ -261,6 +261,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 		para.setExchangeCode(strs[0]);
 		para.setShortSymbol(strs[1]);
 		para.setTradeDay(strs[2]);
+		para.setVersion(GlobalInfo.qversion);
 		TQuestionsNew tq = tQuestionsNewExtendsMapper.getByUnionKey(para);
 
 		tempMap.put("exchangeCode", strs[0]);
