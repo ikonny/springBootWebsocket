@@ -28,6 +28,7 @@ public class GlobalInfo {
     public static String serverDomain;
     public static String gameClientUrl="http://devxiaot.forexmaster.cn/xiaoth/xiaot/battle/guide";
     public static int gameOvertimeM;
+    public static int qversion;
 
     public static void printInfo() {
         Map<String,Object> mapTar = new LinkedHashMap<>(20);

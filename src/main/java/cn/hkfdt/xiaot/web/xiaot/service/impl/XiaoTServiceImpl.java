@@ -2,10 +2,11 @@ package cn.hkfdt.xiaot.web.xiaot.service.impl;
 
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.ForceAnalysisExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.SchoolMapper;
-import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TQuestionsExtendsMapper;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TQuestionsNewExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TRecordExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.*;
 import cn.hkfdt.xiaot.util.ImageUtil;
+import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
 import cn.hkfdt.xiaot.web.common.redis.RedisClient;
 import cn.hkfdt.xiaot.web.common.service.AuthService;
 import cn.hkfdt.xiaot.web.xiaot.service.XiaoTService;
@@ -44,7 +45,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 	@Autowired
 	ForceAnalysisExtendsMapper forceAnalysisExtendsMapper;
 	@Autowired
-	TQuestionsExtendsMapper tQuestionsExtendsMapper;
+	TQuestionsNewExtendsMapper tQuestionsNewExtendsMapper;
 	@Autowired
 	TRecordExtendsMapper tRecordExtendsMapper;
 	@Autowired
@@ -181,13 +182,14 @@ public class XiaoTServiceImpl implements XiaoTService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public TQuestions xiaotTraining(String fdtId, String market, Map<String, Object> mapTar, String type) {
-		TQuestions tQuestions = null;
+	public TQuestionsNew xiaotTraining(String fdtId, String market, Map<String, Object> mapTar, String type) {
+		TQuestionsNew tQuestions = null;
 		int count=0;
 		while(tQuestions == null){
-			TQuestions para = XiaoTHelp.getTQuestion(fdtId,market);
+			TQuestionsNew para = XiaoTHelp.getTQuestion(fdtId,market);
+			para.setVersion(GlobalInfo.qversion);
 			//获取到题目，而且题目可用
-			tQuestions = tQuestionsExtendsMapper.getByUnionKey(para);
+			tQuestions = tQuestionsNewExtendsMapper.getByUnionKey(para);
 			++count;
 			if(count>=tryNum){
 				break;
@@ -255,11 +257,11 @@ public class XiaoTServiceImpl implements XiaoTService {
 		}
 		String[] strs = tempMap.get("key").toString().split("#");
 //获取题目
-		TQuestions para = new TQuestions();
+		TQuestionsNew para = new TQuestionsNew();
 		para.setExchangeCode(strs[0]);
 		para.setShortSymbol(strs[1]);
 		para.setTradeDay(strs[2]);
-		TQuestions tq = tQuestionsExtendsMapper.getByUnionKey(para);
+		TQuestionsNew tq = tQuestionsNewExtendsMapper.getByUnionKey(para);
 
 		tempMap.put("exchangeCode", strs[0]);
 		tempMap.put("symbol", strs[1]);
@@ -474,8 +476,8 @@ public class XiaoTServiceImpl implements XiaoTService {
 			@Override
 			public void run() {
 				try{
-					List<TQuestions> listQ = tQuestionsExtendsMapper.initTQuestions(market);
-					for(TQuestions item : listQ){
+					List<TQuestionsNew> listQ = tQuestionsNewExtendsMapper.initTQuestions(market);
+					for(TQuestionsNew item : listQ){
 						List<Map<String, Object>> listMapday = XiaoTMDDBHelper.getHistoryDayData(item,market);
 						if(listMapday!=null && listMapday.size()==79){
 							List<Map<String, Object>> listMapMin = XiaoTMDDBHelper.getHistoryMinData(item, market);
@@ -503,7 +505,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 							//插入数据失败的标志
 							item.setInitType(-1);//日行情少于79天
 						}
-						tQuestionsExtendsMapper.updateByPrimaryKeySelective(item);
+						tQuestionsNewExtendsMapper.updateByPrimaryKeySelective(item);
 					}
 				}finally{
 					XiaoTJdbcDriver.closeCon();
@@ -544,11 +546,11 @@ public class XiaoTServiceImpl implements XiaoTService {
 					tempMap.put("symbol", strs[1]);
 					tempMap.put("fdtId", tRecord.getFdtId());
 					//获取题目
-					TQuestions tpara = new TQuestions();
+					TQuestionsNew tpara = new TQuestionsNew();
 					tpara.setExchangeCode(strs[0]);
 					tpara.setShortSymbol(strs[1]);
 					tpara.setTradeDay(strs[2]);
-					TQuestions tq = tQuestionsExtendsMapper.getByUnionKey(tpara);
+					TQuestionsNew tq = tQuestionsNewExtendsMapper.getByUnionKey(tpara);
 					Map<String, Object> temp = XiaoTHelp.xiaotDoScore(tRecord.getReqBody());
 					if (temp != null && !temp.isEmpty()) {
 						int code = (int) temp.get("code");

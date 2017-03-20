@@ -1,6 +1,6 @@
 package cn.hkfdt.xiaot.web.xiaot.service.md;
 
-import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNew;
 import com.alibaba.fastjson.JSON;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -64,7 +64,7 @@ public class XiaoTMDDBHelper {
 	 * author:xumin 
 	 * 2016-12-20 下午4:42:44
 	 */
-	public static List<Map<String, Object>> getHistoryMinData(TQuestions item, int market) {
+	public static List<Map<String, Object>> getHistoryMinData(TQuestionsNew item, int market) {
 		String exchangeCode = item.getExchangeCode();//DCE等
 		String shortSymbol = item.getShortSymbol();//A等 大豆缩写
 		String tradeDay = item.getTradeDay();//题目交易当日，北京时间
@@ -89,7 +89,7 @@ public class XiaoTMDDBHelper {
 	 * author:xumin 
 	 * 2016-12-20 下午8:12:19
 	 */
-	public static List<Map<String, Object>> getHistoryDayData(TQuestions item,
+	public static List<Map<String, Object>> getHistoryDayData(TQuestionsNew item,
 			int market) {
 		String exchangeCode = item.getExchangeCode();//DCE等
 		String shortSymbol = item.getShortSymbol();//A等 大豆缩写

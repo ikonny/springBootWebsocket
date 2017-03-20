@@ -6,11 +6,11 @@ import cn.hkfdt.xiaot.common.beans.RspCommonBean;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameMapper;
 import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TGameUserExtendsMapper;
-import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TQuestionsExtendsMapper;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TQuestionsNewExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.Auth;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGame;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGameUser;
-import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNew;
 import cn.hkfdt.xiaot.util.CookieUtil;
 import cn.hkfdt.xiaot.util.ImageUtil;
 import cn.hkfdt.xiaot.web.Filters.LoginFilter;
@@ -55,7 +55,7 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 	@Autowired
 	TGameExtendsMapper tGameExtendsMapper;
 	@Autowired
-	TQuestionsExtendsMapper tQuestionsExtendsMapper;
+	TQuestionsNewExtendsMapper tQuestionsNewExtendsMapper;
 	@Autowired
 	TGameUserExtendsMapper tGameUserExtendsMapper;
 
@@ -153,7 +153,7 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 					mkt = XiaoTMarketType.SC.getCode();
 				}
 				mapTar = new HashMap<>(8);
-				TQuestions tQuestions = xiaoTService.xiaotTraining(XiaoTHelp.xiaoTGuest, mkt, mapTar, "all");
+				TQuestionsNew tQuestions = xiaoTService.xiaotTraining(XiaoTHelp.xiaoTGuest, mkt, mapTar, "all");
 				//创建比赛相关数据
 				TGame tGame = new TGame();
 				tGame.setState(0);
@@ -210,7 +210,7 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 		RspCommonBean rcb = new RspCommonBean();
 		TGame tg = tGameExtendsMapper.selectGameByGameId(gameId);
 		int questionId = tg.getQuestionId();
-		TQuestions tq = tQuestionsExtendsMapper.selectByPrimaryKey(questionId);
+		TQuestionsNew tq = tQuestionsNewExtendsMapper.selectByPrimaryKey(questionId);
 		byte[] jsonData = tq.getJsonData();
 		Map<String, Object> mapTar = new HashMap<>();
 		try {

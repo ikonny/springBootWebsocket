@@ -1,7 +1,7 @@
 package cn.hkfdt.xiaot.web.xiaot.service.md;
 
 
-import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNew;
 import cn.hkfdt.xiaot.util.DateUtil;
 import cn.hkfdt.xiaot.web.xiaot.service.impl.XiaoTHelp;
 import com.alibaba.fastjson.JSON;
@@ -199,7 +199,7 @@ public class XiaoTMDHelp {
 	 * @param mapTar 
 	 */
 	public static int getJsonData(List<Map<String, Object>> listMapDay,
-								  TQuestions item, int market, List<Map<String, Object>> listMapMin, Map<String, Object> mapTar) {
+								  TQuestionsNew item, int market, List<Map<String, Object>> listMapMin, Map<String, Object> mapTar) {
 		int flag = 0;
 		try {
 			setHisDayData(mapTar,listMapDay);

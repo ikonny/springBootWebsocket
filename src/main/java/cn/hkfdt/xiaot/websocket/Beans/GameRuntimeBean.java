@@ -1,7 +1,7 @@
 package cn.hkfdt.xiaot.websocket.Beans;
 
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGame;
-import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNew;
 import cn.hkfdt.xiaot.web.xiaot.util.XiaoTMarketType;
 import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
@@ -51,7 +51,7 @@ public class GameRuntimeBean {
     /**
      * 一个没有jsonData的题目结构
      */
-    public TQuestions tQuestions;
+    public TQuestionsNew tQuestions;
     /**
      * 比赛数据，含有比赛id，人数，比赛名称等
      */

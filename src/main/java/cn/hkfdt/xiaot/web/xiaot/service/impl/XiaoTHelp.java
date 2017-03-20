@@ -1,6 +1,6 @@
 package cn.hkfdt.xiaot.web.xiaot.service.impl;
 
-import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNew;
 import cn.hkfdt.xiaot.util.TimeUtil;
 import cn.hkfdt.xiaot.web.common.LogUtil;
 import cn.hkfdt.xiaot.web.xiaot.service.md.XiaoTMDDBHelper;
@@ -143,7 +143,7 @@ public class XiaoTHelp {
 	 * 2016-12-16 下午2:41:08
 	 */
 	@SuppressWarnings("unchecked")
-	public static TQuestions getTQuestion(String fdtId, String market) {
+	public static TQuestionsNew getTQuestion(String fdtId, String market) {
 		Map<String, Object> mapPara = new HashMap<String, Object>(3);
 		mapPara.put("fdtId", fdtId);
 		mapPara.put("version", version);
@@ -153,12 +153,12 @@ public class XiaoTHelp {
 		
 		String retStr = NetUtil.sendPostJson(urlPickTrade, json);//HttpUtils.postJson(urlPickTrade, json);
 		mapPara = JSON.parseObject(retStr);//(Map<String, Object>) JsonUtil.JsonToOb(retStr, mapPara.getClass());
-		TQuestions para = null;
+		TQuestionsNew para = null;
 		if(mapPara!=null ){
 			int code = (int) mapPara.get("code");
 			if(code==200){
 				String[] strs = mapPara.get("unionKey").toString().split("#");
-				para = new TQuestions();
+				para = new TQuestionsNew();
 				para.setExchangeCode(strs[0]);
 				para.setShortSymbol(strs[1]);
 				para.setTradeDay(strs[2]);
@@ -204,12 +204,12 @@ public class XiaoTHelp {
 		mapPara = JSON.parseObject(retStr);//(Map<String, Object>) JsonUtil.JsonToOb(retStr, mapPara.getClass());
 		return mapPara;
 	}
-	public static String getTKey(TQuestions tQuestions) {
+	public static String getTKey(TQuestionsNew tQuestions) {
 		//"DCE#BB#2016-08-12
 		String str = tQuestions.getExchangeCode()+"#"+tQuestions.getShortSymbol()+"#"+tQuestions.getTradeDay();
 		return str;
 	}
-	public static String getMarketCode(TQuestions tQuestions) {
+	public static String getMarketCode(TQuestionsNew tQuestions) {
 		int type = tQuestions.getType();
 		if(type==XiaoTMarketType.FC.getType())
 			return XiaoTMarketType.FC.getCode();
@@ -235,7 +235,7 @@ public class XiaoTHelp {
 	}
 	public static void testRemoteServer() {
 		try {
-			TQuestions tq = getTQuestion(xiaoTGuest, "FC");
+			TQuestionsNew tq = getTQuestion(xiaoTGuest, "FC");
 			if(tq!=null){
 				logger.info("xiaot 选题server OK");
 			}

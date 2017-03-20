@@ -1,11 +1,11 @@
 package cn.hkfdt.xiaot.web.common.service.impl;
 
 import cn.hkfdt.xiaot.mybatis.mapper.fxchina.SystemSettingsMapper;
-import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TQuestionsExtendsMapper;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TQuestionsNewExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.model.fxchina.SystemSettings;
 import cn.hkfdt.xiaot.mybatis.model.fxchina.SystemSettingsExample;
-import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
-import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsExample;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNew;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNewExample;
 import cn.hkfdt.xiaot.web.common.LogUtil;
 import cn.hkfdt.xiaot.web.common.service.CommonService;
 import com.alibaba.fastjson.JSON;
@@ -28,15 +28,15 @@ public class CommonServiceImpl implements CommonService {
     @Autowired
     SystemSettingsMapper systemSettingsMapper;
     @Autowired
-    TQuestionsExtendsMapper tQuestionsExtendsMapper;
+    TQuestionsNewExtendsMapper tQuestionsNewExtendsMapper;
 
     @Override
     public void testConnect() {
         try {
-            TQuestionsExample example = new TQuestionsExample();
+            TQuestionsNewExample example = new TQuestionsNewExample();
 //        example.setOrderByClause( " *** desc");
             RowBounds tq = new RowBounds(0, 1);
-            List<TQuestions> list = tQuestionsExtendsMapper.selectByExampleWithRowbounds(example, tq);
+            List<TQuestionsNew> list = tQuestionsNewExtendsMapper.selectByExampleWithRowbounds(example, tq);
             if(!list.isEmpty()){
                 logger.info("lts_china DB OK");
             }else{

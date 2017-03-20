@@ -92,7 +92,7 @@ public class HttpUtils {
 			response = okHttpClient.newCall(request).execute();
 			if (response.isSuccessful()) {
 				// 打印服务端返回结果
-				return response.body().string();
+				return new String(response.body().bytes(), "utf-8");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -1,8 +1,8 @@
 package cn.hkfdt.xiaot.web.xiaot.web;
 
-import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TQuestionsExtendsMapper;
+import cn.hkfdt.xiaot.mybatis.mapper.ltschina.TQuestionsNewExtendsMapper;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.ForceAnalysis;
-import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNew;
 import cn.hkfdt.xiaot.web.Filters.LoginFilter;
 import cn.hkfdt.xiaot.web.common.UserContext;
 import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
@@ -14,8 +14,6 @@ import cn.hkfdt.xiaot.web.xiaot.service.md.XiaoTMDHelp;
 import cn.hkfdt.xiaot.web.xiaot.util.YSUtils;
 import com.alibaba.fastjson.JSON;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
-import org.apache.catalina.util.URLEncoder;
-import org.apache.tomcat.util.codec.binary.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +42,7 @@ public class XiaoTController {
 	@Autowired
 	CommonService commonService;
 	@Autowired
-	TQuestionsExtendsMapper tQuestionsExtendsMapper;
+	TQuestionsNewExtendsMapper tQuestionsNewExtendsMapper;
 
 	//=========================================
 	/**
@@ -313,7 +311,7 @@ public class XiaoTController {
 			jsonDataMap.put("history", historyMap);
 			String jsonData = JSON.toJSONString(jsonDataMap);
 			byte[] byteTar = YSUtils.compress(jsonData.getBytes(), 2);
-			TQuestions tq = new TQuestions();
+			TQuestionsNew tq = new TQuestionsNew();
 			tq.setExchangeCode(keyArr[0]);
 			tq.setShortSymbol(keyArr[1]);
 			tq.setTradeDay(keyArr[2]);
@@ -324,7 +322,7 @@ public class XiaoTController {
 			tq.setInitType(1);
 
 			try {
-				tQuestionsExtendsMapper.insertSelective(tq);
+				tQuestionsNewExtendsMapper.insertSelective(tq);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -374,7 +372,7 @@ public class XiaoTController {
 			jsonDataMap.put("history", historyMap);
 			String jsonData = JSON.toJSONString(jsonDataMap);
 			byte[] byteTar = YSUtils.compress(jsonData.getBytes(), 2);
-			TQuestions tq = new TQuestions();
+			TQuestionsNew tq = new TQuestionsNew();
 			tq.setExchangeCode(keyArr[0]);
 			tq.setShortSymbol(keyArr[1]);
 			tq.setTradeDay(keyArr[2]);
@@ -385,7 +383,7 @@ public class XiaoTController {
 			tq.setInitType(1);
 
 			try {
-				tQuestionsExtendsMapper.insertSelective(tq);
+				tQuestionsNewExtendsMapper.insertSelective(tq);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

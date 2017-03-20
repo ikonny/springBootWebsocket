@@ -2,7 +2,7 @@ package cn.hkfdt.xiaot.web.xiaot.service;
 
 
 import cn.hkfdt.xiaot.mybatis.model.ltschina.ForceAnalysis;
-import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNew;
 
 import java.util.List;
 import java.util.Map;
@@ -46,7 +46,7 @@ public interface XiaoTService {
 	 * author:xumin 
 	 * 2016-12-16 上午10:07:26
 	 */
-	TQuestions xiaotTraining(String fdtId, String market, Map<String, Object> mapTar, String type);
+	TQuestionsNew xiaotTraining(String fdtId, String market, Map<String, Object> mapTar, String type);
 	/**
 	 * 请求远程服务，对本次训练结果打分
 	 * @param fdtId

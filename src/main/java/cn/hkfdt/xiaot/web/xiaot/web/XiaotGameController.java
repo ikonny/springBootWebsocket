@@ -70,7 +70,7 @@ public class XiaotGameController {
             mapTar = JSON.parseObject(userInfo);
         }
         userId = mapTar.get("userId").toString();
-        
+
         rcb.data = mapTar;
         return rcb;
     }

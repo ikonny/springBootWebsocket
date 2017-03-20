@@ -46,6 +46,8 @@ public class GlobalInfoHelperServer {
     int gameOvertimeM;
     @Value("${websoket.log.trans}")
     public boolean isTransLogon = false;
+    @Value("${xiaot.question.version}")
+    int qvsrsion;
 
 
     @PostConstruct
@@ -61,6 +63,7 @@ public class GlobalInfoHelperServer {
         GlobalInfo.redisAuth = redisAuth;
         GlobalInfo.imDomain = imDomain;
         GlobalInfo.serverDomain = serverDomain;
+        GlobalInfo.qversion = qvsrsion;
         //============================================
         GlobalInfo.wxToken = wxToken;
         GlobalInfo.wxAppid = wxAppid;

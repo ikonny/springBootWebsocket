@@ -2,7 +2,6 @@ package cn.hkfdt.xiaot.web.weixin;
 
 import cn.hkfdt.xiaot.common.beans.RspCommonBean;
 import cn.hkfdt.xiaot.util.HttpClientUtil;
-import cn.hkfdt.xiaot.util.MapUtil;
 import cn.hkfdt.xiaot.util.SHAUtil;
 import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
 import cn.hkfdt.xiaot.web.xiaot.util.XiaoTUserType;

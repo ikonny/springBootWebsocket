@@ -1,7 +1,7 @@
 package cn.hkfdt.xiaot.common.beans;
 
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGame;
-import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNew;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -20,7 +20,7 @@ public class GameCacheBean implements Serializable {
     /**
      * 一个没有jsonData的题目结构
      */
-    public TQuestions tQuestions;
+    public TQuestionsNew tQuestions;
     /**
      * 比赛数据，含有比赛id，人数，比赛名称等
      */

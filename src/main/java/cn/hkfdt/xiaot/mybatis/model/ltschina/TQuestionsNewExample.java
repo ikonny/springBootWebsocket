@@ -3,14 +3,14 @@ package cn.hkfdt.xiaot.mybatis.model.ltschina;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TQuestionsExample {
+public class TQuestionsNewExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public TQuestionsExample() {
+    public TQuestionsNewExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 

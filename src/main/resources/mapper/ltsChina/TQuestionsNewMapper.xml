@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.hkfdt.xiaot.mybatis.mapper.ltschina.TQuestionsMapper" >
-  <resultMap id="BaseResultMap" type="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions" >
+<mapper namespace="cn.hkfdt.xiaot.mybatis.mapper.ltschina.TQuestionsNewMapper" >
+  <resultMap id="BaseResultMap" type="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNew" >
     <id column="questionId" property="questionId" jdbcType="INTEGER" />
     <result column="exchangeCode" property="exchangeCode" jdbcType="VARCHAR" />
     <result column="shortSymbol" property="shortSymbol" jdbcType="VARCHAR" />
@@ -14,7 +14,7 @@
     <result column="volatility" property="volatility" jdbcType="DOUBLE" />
     <result column="cnName" property="cnName" jdbcType="VARCHAR" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions" extends="BaseResultMap" >
+  <resultMap id="ResultMapWithBLOBs" type="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNew" extends="BaseResultMap" >
     <result column="jsonData" property="jsonData" jdbcType="LONGVARBINARY" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -82,7 +82,7 @@
   <sql id="Blob_Column_List" >
     jsonData
   </sql>
-  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsExample" >
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNewExample" >
     select
     <if test="distinct" >
       distinct
@@ -90,7 +90,7 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from xiaot_questions
+    from xiaot_questionsNew
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -98,13 +98,13 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNewExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from xiaot_questions
+    from xiaot_questionsNew
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -117,21 +117,21 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from xiaot_questions
+    from xiaot_questionsNew
     where questionId = #{questionId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from xiaot_questions
+    delete from xiaot_questionsNew
     where questionId = #{questionId,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsExample" >
-    delete from xiaot_questions
+  <delete id="deleteByExample" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNewExample" >
+    delete from xiaot_questionsNew
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions" >
-    insert into xiaot_questions (questionId, exchangeCode, shortSymbol, 
+  <insert id="insert" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNew" >
+    insert into xiaot_questionsNew (questionId, exchangeCode, shortSymbol, 
       tradeDay, createTime, type, 
       topicType, initType, version, 
       volatility, cnName, jsonData
@@ -142,8 +142,8 @@
       #{volatility,jdbcType=DOUBLE}, #{cnName,jdbcType=VARCHAR}, #{jsonData,jdbcType=LONGVARBINARY}
       )
   </insert>
-  <insert id="insertSelective" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions" >
-    insert into xiaot_questions
+  <insert id="insertSelective" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNew" >
+    insert into xiaot_questionsNew
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="questionId != null" >
         questionId,
@@ -221,14 +221,14 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsExample" resultType="java.lang.Integer" >
-    select count(*) from xiaot_questions
+  <select id="countByExample" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNewExample" resultType="java.lang.Integer" >
+    select count(*) from xiaot_questionsNew
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update xiaot_questions
+    update xiaot_questionsNew
     <set >
       <if test="record.questionId != null" >
         questionId = #{record.questionId,jdbcType=INTEGER},
@@ -272,7 +272,7 @@
     </if>
   </update>
   <update id="updateByExampleWithBLOBs" parameterType="map" >
-    update xiaot_questions
+    update xiaot_questionsNew
     set questionId = #{record.questionId,jdbcType=INTEGER},
       exchangeCode = #{record.exchangeCode,jdbcType=VARCHAR},
       shortSymbol = #{record.shortSymbol,jdbcType=VARCHAR},
@@ -290,7 +290,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update xiaot_questions
+    update xiaot_questionsNew
     set questionId = #{record.questionId,jdbcType=INTEGER},
       exchangeCode = #{record.exchangeCode,jdbcType=VARCHAR},
       shortSymbol = #{record.shortSymbol,jdbcType=VARCHAR},
@@ -306,8 +306,8 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions" >
-    update xiaot_questions
+  <update id="updateByPrimaryKeySelective" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNew" >
+    update xiaot_questionsNew
     <set >
       <if test="exchangeCode != null" >
         exchangeCode = #{exchangeCode,jdbcType=VARCHAR},
@@ -345,8 +345,8 @@
     </set>
     where questionId = #{questionId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions" >
-    update xiaot_questions
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNew" >
+    update xiaot_questionsNew
     set exchangeCode = #{exchangeCode,jdbcType=VARCHAR},
       shortSymbol = #{shortSymbol,jdbcType=VARCHAR},
       tradeDay = #{tradeDay,jdbcType=VARCHAR},
@@ -360,8 +360,8 @@
       jsonData = #{jsonData,jdbcType=LONGVARBINARY}
     where questionId = #{questionId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestions" >
-    update xiaot_questions
+  <update id="updateByPrimaryKey" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNew" >
+    update xiaot_questionsNew
     set exchangeCode = #{exchangeCode,jdbcType=VARCHAR},
       shortSymbol = #{shortSymbol,jdbcType=VARCHAR},
       tradeDay = #{tradeDay,jdbcType=VARCHAR},
@@ -374,7 +374,7 @@
       cnName = #{cnName,jdbcType=VARCHAR}
     where questionId = #{questionId,jdbcType=INTEGER}
   </update>
-  <select resultMap="ResultMapWithBLOBs" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsExample" id="selectByExampleWithBLOBsWithRowbounds" >
+  <select resultMap="ResultMapWithBLOBs" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNewExample" id="selectByExampleWithBLOBsWithRowbounds" >
     select
     <if test="distinct" >
       distinct
@@ -382,7 +382,7 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from xiaot_questions
+    from xiaot_questionsNew
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -390,13 +390,13 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select resultMap="BaseResultMap" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsExample" id="selectByExampleWithRowbounds" >
+  <select resultMap="BaseResultMap" parameterType="cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNewExample" id="selectByExampleWithRowbounds" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from xiaot_questions
+    from xiaot_questionsNew
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
