@@ -551,6 +551,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 					tpara.setExchangeCode(strs[0]);
 					tpara.setShortSymbol(strs[1]);
 					tpara.setTradeDay(strs[2]);
+                    tpara.setVersion(GlobalInfo.qversion);
 					TQuestionsNew tq = tQuestionsNewExtendsMapper.getByUnionKey(tpara);
 					Map<String, Object> temp = XiaoTHelp.xiaotDoScore(tRecord.getReqBody());
 					if (temp != null && !temp.isEmpty()) {
