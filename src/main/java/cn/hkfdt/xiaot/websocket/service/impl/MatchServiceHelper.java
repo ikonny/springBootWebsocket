@@ -102,6 +102,7 @@ public class MatchServiceHelper {
 	 * 
 	 * @param reqCommonBean sessionId,matchId
 	 * @return -2 比赛不存在，超时， -1比赛人数已满 ，0：准备成功 ,1:准备成功+可以通知开始
+	 * -3 比赛已开始
 	 * author:xumin 
 	 * 2017-1-11 上午11:29:29
 	 */
@@ -111,6 +112,9 @@ public class MatchServiceHelper {
 		GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) cacheMapXM.get(gameId);
 		if(gameRuntimeBean==null)
 			return -2;
+		if(!gameRuntimeBean.notStart()){
+			return -3;
+		}
 		GameUserExtBean gameUserExtBean = getReadyUser(reqCommonBean);
 		if(!gameRuntimeBean.canJoinGame(gameUserExtBean.userId)){
 			return -1;

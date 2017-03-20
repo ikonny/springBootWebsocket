@@ -111,13 +111,10 @@ public class XiaoTMatchController {
 			rspCode = 201;
 			msg2 = "房间人数已满，不可加入比赛";
 		}
-//		if(flag>=0){
-//			mapTar = new HashMap<>(1);
-//			String gameId = reqCommonBean.data.get("gameId").toString();
-//			GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) MatchServiceHelper.cacheMapXM.get(gameId);
-//			mapTar.put("gameName",gameRuntimeBean.tGame.getGameName());
-//		}
-
+		if(flag==-3){
+			rspCode = 201;
+			msg2 = "比赛已开始";
+		}
 		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(rspCode,msg2);
 //		rspCommonBean.data = mapTar;
 		String str = JSON.toJSONString(rspCommonBean);
