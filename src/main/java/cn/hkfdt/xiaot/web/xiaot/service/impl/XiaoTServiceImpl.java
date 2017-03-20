@@ -196,6 +196,7 @@ public class XiaoTServiceImpl implements XiaoTService {
 			}
 		}
 		byte[] jsonData = tQuestions.getJsonData();
+		double v = tQuestions.getVolatility();
 		try {
 			//获取解压后的真实数据json
 			jsonData = YSUtils.uncompress(jsonData);
@@ -216,6 +217,10 @@ public class XiaoTServiceImpl implements XiaoTService {
 			}
 			hMap.put("items", needHistoryList);
 			jsonDataMap.put("history", hMap);
+			if(v > 0){//老数据，从表中获取振幅
+				Map<String, Object> tMap = (Map<String,Object>)jsonDataMap.get("today");
+				tMap.put("volatility", XiaoTHelp.get2Point(v));
+			}
 			if("history".equalsIgnoreCase(type)){
 				jsonDataMap.put("today", null);
 			}else if("today".equalsIgnoreCase(type)){
