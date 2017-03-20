@@ -22,12 +22,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.groups.Default;
-import java.io.*;
-import java.net.URI;
-import java.net.URL;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * author:xumin 
@@ -43,6 +46,7 @@ public class XiaoTController {
 	CommonService commonService;
 	@Autowired
 	TQuestionsNewExtendsMapper tQuestionsNewExtendsMapper;
+	static String xiaoT_version = "xiaoT_version_1";
 
 	//=========================================
 	/**
@@ -102,7 +106,7 @@ public class XiaoTController {
 
 		//{"lib":"1.1.10", "liveVideo":"1.1.10"}
 //		String str = request.getRequestURI();
-		Map<String,Object>  mapTar = commonService.getSystemSettingValueAsMap("xiaoT_version");
+		Map<String,Object>  mapTar = commonService.getSystemSettingValueAsMap(xiaoT_version);
         model.addAttribute("lib_version", mapTar.get("lib"));
         model.addAttribute("xiaoT_version", mapTar.get("xiaoT"));
 
@@ -134,7 +138,7 @@ public class XiaoTController {
 		}
 		//{"lib":"1.1.10", "liveVideo":"1.1.10"}
 //		String str = request.getRequestURI();
-		Map<String,Object>  mapTar = commonService.getSystemSettingValueAsMap("xiaoT_version");
+		Map<String,Object>  mapTar = commonService.getSystemSettingValueAsMap(xiaoT_version);
 		model.addAttribute("lib_version", mapTar.get("lib"));
 		model.addAttribute("xiaoT_version", mapTar.get("xiaoT"));
 
