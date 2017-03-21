@@ -143,14 +143,14 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 		Future tar = XiaoTCommon.executorService.submit(()->{
 			Map<String, Object> mapTar = null;
 			try {
-				int marketType = Integer.parseInt(mapPara.get("marketType").toString());
-				String mkt = "FC";
-				if(marketType == XiaoTMarketType.FC.getType()){
-					mkt = XiaoTMarketType.FC.getCode();
-				}else if(marketType == XiaoTMarketType.FX.getType()){
-					mkt = XiaoTMarketType.FX.getCode();
-				}else if(marketType == XiaoTMarketType.SC.getType()){
-					mkt = XiaoTMarketType.SC.getCode();
+				String mkt = mapPara.get("marketType").toString();
+				int marketType = 0;
+				if(mkt.equalsIgnoreCase(XiaoTMarketType.FC.getCode())){
+					marketType = XiaoTMarketType.FC.getType();
+				}else if(mkt.equalsIgnoreCase(XiaoTMarketType.SC.getCode())){
+					marketType = XiaoTMarketType.SC.getType();
+				}else if(mkt.equalsIgnoreCase(XiaoTMarketType.FX.getCode())){
+					marketType = XiaoTMarketType.FX.getType();
 				}
 				mapTar = new HashMap<>(8);
 				TQuestionsNew tQuestions = xiaoTService.xiaotTraining(XiaoTHelp.xiaoTGuest, mkt, mapTar, "all");
