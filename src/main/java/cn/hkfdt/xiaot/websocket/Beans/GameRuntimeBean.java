@@ -230,13 +230,14 @@ public class GameRuntimeBean {
      * @param delay  延迟几秒发
      */
     public synchronized void start(XiaoTMatchTopics xiaoTMatchTopics, int drawTimer, int delay) {
-        int xPoints = 200;//XiaoTMarketType.FC.getType()
-//        if(tGame.getMarketType()== XiaoTMarketType.FC.getType()){
-//
-//        }
         if(state>0){
             return;
         }
+        int xPointtemp = 200;//XiaoTMarketType.FC.getType()
+        if(tGame.getMarketType()== XiaoTMarketType.SC.getType()){
+            xPointtemp = 242;
+        }
+        int xPoints = xPointtemp;
         clientVersion++;
         state = 1;
         Thread td = new Thread(()->{
