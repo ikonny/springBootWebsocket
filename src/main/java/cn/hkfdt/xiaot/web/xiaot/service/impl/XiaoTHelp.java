@@ -67,8 +67,8 @@ public class XiaoTHelp {
 //		System.err.println(str);
 		
 //		System.err.println(get2Point(2.0001));
-//		TQuestions date = getTQuestion("test", 0);
-//		System.err.println(date);
+		TQuestionsNew date = getTQuestion("test", "SC");
+		System.err.println(date);
 		
 //
 
@@ -77,16 +77,16 @@ public class XiaoTHelp {
 //		System.err.println(mapDF);
 		
 //		
-		Runnable run = new Runnable() {
-			
-			@Override
-			public void run() {
-				Map<String, Object> mapZL = getXiaoTZL("mb000001001", "");//战力
-				System.err.println(mapZL);
-			}
-		};
-		XiaoTHelp.executorService.execute(run);
-		XiaoTHelp.executorService.shutdown();
+//		Runnable run = new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				Map<String, Object> mapZL = getXiaoTZL("mb000001001", "");//战力
+//				System.err.println(mapZL);
+//			}
+//		};
+//		XiaoTHelp.executorService.execute(run);
+//		XiaoTHelp.executorService.shutdown();
 		
 	}
 	private static Map<String, Object> testxiaotDoScore(String name) {
