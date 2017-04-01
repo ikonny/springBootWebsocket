@@ -9,8 +9,12 @@ import cn.hkfdt.xiaot.web.xiaot.service.impl.XiaoTHelp;
  */
 public class BigDateConnectTest {
     public static void main(String[] args) {
-        XiaoTHelp.urlPickTrade = "http://121.43.73.191:8082"+XiaoTHelp.urlPickTrade;
-        TQuestionsNew para = XiaoTHelp.getTQuestion("coach-t-guest","FC");
+        //http://10.139.168.195:8082
+        String pathOnline = "http://192.168.4.139:8082";//192.168.4.139
+        String pathOnTest = "http://121.43.73.191:8082";
+        XiaoTHelp.urlPickTrade = pathOnline+XiaoTHelp.urlPickTrade;
+        //mb000034263   coach-t-guest
+        TQuestionsNew para = XiaoTHelp.getTQuestion("mb000034263","SC");
         System.err.println(para);
     }
 }

@@ -150,8 +150,9 @@ public class XiaoTHelp {
 		mapPara.put("market", market);
 
 		String json = JSON.toJSONString(mapPara);//JsonUtil.ObToJson(mapPara);
-		
+		logger.info("reqJson:"+json);
 		String retStr = NetUtil.sendPostJson(urlPickTrade, json);//HttpUtils.postJson(urlPickTrade, json);
+		logger.info("responseBody:"+retStr);
 		mapPara = JSON.parseObject(retStr);//(Map<String, Object>) JsonUtil.JsonToOb(retStr, mapPara.getClass());
 		TQuestionsNew para = null;
 		if(mapPara!=null ){

@@ -13,7 +13,11 @@
             <charset>UTF-8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log_home}/xiaot-%d{yyyyMMdd}.log</fileNamePattern>
+            <fileNamePattern>${log_home}/xiaot-%d{yyyyMMdd}-%i.log</fileNamePattern>
+            <MaxHistory>365</MaxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>2048MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
     </appender>
 
@@ -35,7 +39,11 @@
             <charset>UTF-8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log_home}/inAndOut-%d{yyyyMMdd}.log</fileNamePattern>
+            <fileNamePattern>${log_home}/inAndOut-%d{yyyyMMdd}-%i.log</fileNamePattern>
+            <MaxHistory>365</MaxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>2048MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
     </appender>
 
@@ -52,7 +60,7 @@
         <appender-ref ref="inAndOut"/>
     </logger>
 
-    <root level="info">
+    <root level="debug">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="ROLLING"/>
     </root>

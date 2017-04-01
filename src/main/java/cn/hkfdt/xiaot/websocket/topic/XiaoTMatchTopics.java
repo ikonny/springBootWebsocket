@@ -147,11 +147,13 @@ public class XiaoTMatchTopics {
 			itemTemp.returnRate = item.returnRate;
 			try {
 				String keyWord = "side";
-				String action = item.actions.toString();
-				int orgLength = action.length();
-				int cutLength = action.replace(keyWord, "").length();
-				int count = (orgLength - cutLength) / keyWord.length();
-				itemTemp.count = count;
+				if(item.actions!=null) {
+					String action = item.actions.toString();
+					int orgLength = action.length();
+					int cutLength = action.replace(keyWord, "").length();
+					int count = (orgLength - cutLength) / keyWord.length();
+					itemTemp.count = count;
+				}
 			}catch (Exception e){
 				e.printStackTrace();
 			}

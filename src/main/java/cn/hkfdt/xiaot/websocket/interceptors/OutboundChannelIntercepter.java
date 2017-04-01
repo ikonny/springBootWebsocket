@@ -19,6 +19,7 @@ public class OutboundChannelIntercepter extends ChannelInterceptorAdapter {
 			String msgType = genericMessage.getHeaders().get("simpMessageType").toString();
 			if(msgType.equals("MESSAGE")) {
 				byte[] bytes = (byte[]) message.getPayload();
+//				logger.info("-----------size:"+bytes.length);
 				String msg = new String(bytes);
 				String des = genericMessage.getHeaders().get("simpDestination").toString();
 				logger.info("<<<<<<<<====="+des+" : "+msg);
