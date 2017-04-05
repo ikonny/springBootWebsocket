@@ -176,7 +176,7 @@ public class GameServiceImpl implements GameService {
 		if(drawTimer<=500){
 			drawTimer = 500;
 		}
-		gameRuntimeBean.start(xiaoTMatchTopics,drawTimer,3200);
+		gameRuntimeBean.start(xiaoTMatchTopics,drawTimer);
 		return 0;
 	}
 

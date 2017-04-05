@@ -30,6 +30,10 @@ public class GameRuntimeBean {
      */
     public static final int listInfoSizeShow = 50;
     /**
+     * 比赛开始后倒计时读秒
+     */
+    public static final int gameStartDelay = 5*1000;
+    /**
      * 比赛人数
      */
     public volatile  int userNum;
@@ -235,9 +239,8 @@ public class GameRuntimeBean {
      * 根据比赛类型，每秒发送比赛x点位置，直到发完，回收线程
      * @param xiaoTMatchTopics
      * @param drawTimer
-     * @param delay  延迟几秒发
      */
-    public synchronized void start(XiaoTMatchTopics xiaoTMatchTopics, int drawTimer, int delay) {
+    public synchronized void start(XiaoTMatchTopics xiaoTMatchTopics, int drawTimer) {
         if(state>0){
             return;
         }
@@ -250,7 +253,7 @@ public class GameRuntimeBean {
         state = 1;
         Thread td = new Thread(()->{
             try {
-                Thread.sleep(delay);
+                Thread.sleep(gameStartDelay);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
