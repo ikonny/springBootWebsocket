@@ -22,9 +22,9 @@ import static cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper.cacheMapX
 public class GameRuntimeBean {
     static Logger logger = LoggerFactory.getLogger(GameRuntimeBean.class);
     /**
-     * 准备列表只展示前面30个人
+     * 准备列表只展示前面10个人
      */
-    public static final int readyInfoSizeShow = 30;
+    public static final int readyInfoSizeShow = 10;
     /**
      * 动态排行榜，客户端订阅的有限制50人
      */
@@ -255,7 +255,7 @@ public class GameRuntimeBean {
                 e.printStackTrace();
             }
             int xNow = 1;
-            while(xNow<=xPoints){
+            while(xNow<=xPoints && state!=2){
                 //1.发送本次x坐标
                 xiaoTMatchTopics.sendGameTimeLine(gameId,xNow);
                 //2.

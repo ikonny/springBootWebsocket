@@ -2,9 +2,11 @@ package cn.hkfdt.xiaot.websocket.topic;
 
 import cn.hkfdt.xiaot.common.beans.GameUserBean;
 import cn.hkfdt.xiaot.common.beans.RspCommonBean;
+import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNew;
 import cn.hkfdt.xiaot.websocket.Beans.GameRuntimeBean;
 import cn.hkfdt.xiaot.websocket.Beans.GameUserExtBean;
 import cn.hkfdt.xiaot.websocket.Beans.GameUserListBean;
+import cn.hkfdt.xiaot.websocket.common.ClientAgentMng;
 import cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper;
 import cn.hkfdt.xiaot.websocket.utils.GameUrlHelp;
 import com.alibaba.fastjson.JSON;
@@ -81,6 +83,7 @@ public class XiaoTMatchTopics {
 	@PostConstruct
 	public void init(){
 		MatchServiceHelper.xiaoTMatchTopics = this;
+		ClientAgentMng.simpMessagingTemplate = simpMessagingTemplate;
 	}
 
 	/**
@@ -243,10 +246,15 @@ public class XiaoTMatchTopics {
 		return str;
 	}
 
-	public void gameEndTopic(String gameId) {
-		String destination = GameUrlHelp.topic_gameEnd+gameId;
+	public void gameEndTopic(GameRuntimeBean gameRuntimeBean) {
+		String destination = GameUrlHelp.topic_gameEnd+gameRuntimeBean.gameId;
 		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
-		rspCommonBean.data = gameId;
+		Map<String,Object> map = new HashMap<>(3);
+		TQuestionsNew tQuestionsNew = gameRuntimeBean.tQuestions;
+		map.put("tradeDay",tQuestionsNew.getTradeDay().replace("-","."));
+		map.put("cnName",tQuestionsNew.getCnName());
+		map.put("symbol",tQuestionsNew.getShortSymbol()+"."+tQuestionsNew.getExchangeCode());
+		rspCommonBean.data = map;
 		String str = JSON.toJSONString(rspCommonBean);
 		simpMessagingTemplate.convertAndSend(destination, str);
 	}

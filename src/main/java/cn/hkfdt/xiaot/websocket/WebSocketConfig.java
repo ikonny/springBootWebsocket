@@ -8,7 +8,6 @@ import cn.hkfdt.xiaot.websocket.interceptors.XiaoTShareInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
@@ -113,7 +112,7 @@ public class WebSocketConfig extends WebSocketMessageBrokerConfigurationSupport 
      * 拦截用户的sessionHander，做索引
      * @return
      */
-    @Bean
+//    @Bean
     public WebSocketHandler subProtocolWebSocketHandler() {
         return new CustomSubProtocolWebSocketHandler(clientInboundChannel(), clientOutboundChannel());
     }

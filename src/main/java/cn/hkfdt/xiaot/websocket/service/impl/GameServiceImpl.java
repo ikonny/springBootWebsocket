@@ -267,7 +267,7 @@ public class GameServiceImpl implements GameService {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			xiaoTMatchTopics.gameEndTopic(gameRuntimeBean.gameId);
+			xiaoTMatchTopics.gameEndTopic(gameRuntimeBean);
 		});
 		return 0;
 	}
