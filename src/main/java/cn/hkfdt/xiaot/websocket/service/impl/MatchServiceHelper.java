@@ -170,8 +170,8 @@ public class MatchServiceHelper {
 		Collections.sort(list, (item1, item2) -> {
 			return item1.returnRate > item2.returnRate ? -1 : 1;
 		});
-		xiaoTMatchTopics.rankList(list,gameId);
-		xiaoTMatchTopics.userRealtimeInfo(list,gameId);
+		xiaoTMatchTopics.listInfo(list,gameId);
+		xiaoTMatchTopics.clientInfo(list,gameId);
 	}
 
 	/**

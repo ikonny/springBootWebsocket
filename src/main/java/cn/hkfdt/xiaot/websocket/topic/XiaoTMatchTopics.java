@@ -15,10 +15,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 都是topic相关的订阅
@@ -100,18 +97,28 @@ public class XiaoTMatchTopics {
 			simpMessagingTemplate.convertAndSend(destination, str);
 			return ;
 		}
+		Map<String,Object> mapReady = new HashMap<>(3);
 		List<GameUserBean> listUser = new ArrayList<>();
-		gameRuntimeBean.mapUsers.values().forEach(itme->{
+		Iterator<GameUserExtBean> iterable =  gameRuntimeBean.mapUsers.values().iterator();
+		int index = 0;
+		while(iterable.hasNext() && index<GameRuntimeBean.readyInfoSizeShow){
+			++index;
+			GameUserExtBean item = iterable.next();
+			iterable.hasNext();
 			GameUserBean itemNew = new GameUserBean();
-			itemNew.userId = itme.userId;
-			itemNew.headimgurl = itme.headimgurl;
-			itemNew.userName = itme.userName;
-			itemNew.userType = itme.userType;
+			itemNew.userId = item.userId;
+			itemNew.headimgurl = item.headimgurl;
+			itemNew.userName = item.userName;
+			itemNew.userType = item.userType;
 
 			listUser.add(itemNew);
-		});
+		}
+
+		mapReady.put("totalSize",gameRuntimeBean.mapUsers.size());
+		mapReady.put("list",listUser);
+
 		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
-		rspCommonBean.data = listUser;
+		rspCommonBean.data = mapReady;
 		String str = JSON.toJSONString(rspCommonBean);
 
 		simpMessagingTemplate.convertAndSend(destination, str);
@@ -135,9 +142,11 @@ public class XiaoTMatchTopics {
 	 * author:xumin 
 	 * 2017-1-10 下午5:24:07
 	 */
-	public String rankList(List<GameUserExtBean> rankList, String gameId) {
+	public String listInfo(List<GameUserExtBean> rankList, String gameId) {
 		String destination = GameUrlHelp.topic_gameListInfo+gameId;
 		List<GameUserListBean> listTar = new ArrayList<>(rankList.size());
+		List<String> listUserIdOrder = new ArrayList<>(rankList.size());//用于单纯的排序
+		//有序的
 		rankList.forEach(item->{
 			GameUserListBean itemTemp = new GameUserListBean();
 			itemTemp.userId = item.userId;
@@ -158,30 +167,69 @@ public class XiaoTMatchTopics {
 				e.printStackTrace();
 			}
 			listTar.add(itemTemp);
+			listUserIdOrder.add(itemTemp.userId);
 		});
-		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
-		rspCommonBean.data = listTar;
-		String str = JSON.toJSONString(rspCommonBean);
 		//-------记录运行时排行榜------------
 		GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) MatchServiceHelper.cacheMapXM.get(gameId);
 		if(gameRuntimeBean !=null){
 			gameRuntimeBean.listRank = listTar;
 		}
-		//---------------------------------
+		//---------------------------------------------------------------------
+		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
+		rspCommonBean.data = listTar;
+		String str = JSON.toJSONString(rspCommonBean);
 //		logger.info("send rankList: " + str);
 		simpMessagingTemplate.convertAndSend(destination, str);
+		listInfoSimple(listUserIdOrder,gameId);
+		listInfoLimit(listTar,gameId);
 		return str;
 	}
+
+	/**
+	 * 比赛开始后，手机客户端参观比赛排行，使用的是限制50人的动态排行信息
+	 * @param listTar 全量，已经排好序的列表进行截取
+	 * @param gameId
+	 */
+	private void listInfoLimit(List<GameUserListBean> listTar, String gameId) {
+		Map<String,Object> mapLimitListInfo = new HashMap<>(2);
+		List<GameUserListBean> listLimitTar = new ArrayList<>(GameRuntimeBean.listInfoSizeShow);
+		for(int i=0;i<GameRuntimeBean.listInfoSizeShow && i<listTar.size();i++){
+			listLimitTar.add(listTar.get(i));
+		}
+		mapLimitListInfo.put("totalSize",listLimitTar.size());
+		mapLimitListInfo.put("list",listLimitTar);
+
+		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
+		rspCommonBean.data = mapLimitListInfo;
+		String str = JSON.toJSONString(rspCommonBean);
+
+		simpMessagingTemplate.convertAndSend("/topic/game/listInfoLimit/"+gameId, str);
+	}
+
+	/**
+	 * 显示全部信息不过里面只有userId,用于客户端自己显示排名
+	 * @param listUserIdOrder
+	 * @param gameId
+	 */
+	private void listInfoSimple(List<String> listUserIdOrder, String gameId) {
+		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
+		rspCommonBean.data = listUserIdOrder;
+		String str = JSON.toJSONString(rspCommonBean);
+
+		simpMessagingTemplate.convertAndSend("/topic/game/listInfoSimple/"+gameId, str);
+	}
+
 	/**
 	 * 某比赛选手成绩更新后触发
 	 * 透传给裁判页面打开的相关人
+	 * 取前面15个人就行
 	 * @param rankList
 	 * @param gameId
 	 * @return
 	 * author:xumin 
 	 * 2017-1-10 下午5:25:46
 	 */
-	public String userRealtimeInfo(List<GameUserExtBean> rankList, String gameId) {
+	public String clientInfo(List<GameUserExtBean> rankList, String gameId) {
 		//这边只需要15个就行
 		String destination = GameUrlHelp.topic_gameClientInfo+gameId;
 		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);

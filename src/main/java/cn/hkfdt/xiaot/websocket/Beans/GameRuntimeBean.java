@@ -22,6 +22,14 @@ import static cn.hkfdt.xiaot.websocket.service.impl.MatchServiceHelper.cacheMapX
 public class GameRuntimeBean {
     static Logger logger = LoggerFactory.getLogger(GameRuntimeBean.class);
     /**
+     * 准备列表只展示前面30个人
+     */
+    public static final int readyInfoSizeShow = 30;
+    /**
+     * 动态排行榜，客户端订阅的有限制50人
+     */
+    public static final int listInfoSizeShow = 50;
+    /**
      * 比赛人数
      */
     public volatile  int userNum;

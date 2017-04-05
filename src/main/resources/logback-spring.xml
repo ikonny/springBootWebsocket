@@ -60,7 +60,7 @@
         <appender-ref ref="inAndOut"/>
     </logger>
 
-    <root level="debug">
+    <root level="info">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="ROLLING"/>
     </root>
