@@ -24,7 +24,7 @@ public class GameUrlHelp {
     /**
      * 通知裁判端所有客户端信息/gameId
      */
-    final public static String topic_gameClientInfo = "/topic/game/ClientInfo/";
+    final public static String topic_gameClientInfo = "/topic/game/clientInfo/";
     /**
      * 通知订阅排行榜的客户端/gameId
      */

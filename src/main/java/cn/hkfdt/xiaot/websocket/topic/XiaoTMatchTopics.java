@@ -233,11 +233,10 @@ public class XiaoTMatchTopics {
 	 * 2017-1-10 下午5:25:46
 	 */
 	public String clientInfo(List<GameUserExtBean> rankList, String gameId) {
-		//这边只需要15个就行
 		String destination = GameUrlHelp.topic_gameClientInfo+gameId;
 		RspCommonBean rspCommonBean = RspCommonBean.getCommonRspBean(200,null);
-		List<GameUserExtBean> tempList = new ArrayList<>(15);
-		for(int i=0;i<15 && i<rankList.size();i++){
+		List<GameUserExtBean> tempList = new ArrayList<>(GameRuntimeBean.clientInfoSize);
+		for(int i=0;i<GameRuntimeBean.clientInfoSize && i<rankList.size();i++){
 			tempList.add(rankList.get(i));
 		}
 		rspCommonBean.data = tempList;

@@ -34,6 +34,10 @@ public class GameRuntimeBean {
      */
     public static final int gameStartDelay = 5*1000;
     /**
+     * 大屏幕投射人数
+     */
+    public static final int clientInfoSize = 9;
+    /**
      * 比赛人数
      */
     public volatile  int userNum;
