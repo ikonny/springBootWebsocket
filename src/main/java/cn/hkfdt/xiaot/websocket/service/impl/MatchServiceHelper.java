@@ -44,24 +44,29 @@ public class MatchServiceHelper {
 		Runnable runnable = new Runnable() {
 
 			public void run() {
-				cacheMapXM.mapMatchInfo.forEachKey(2,key->{
-					GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) cacheMapXM.get(key);
-					if(gameRuntimeBean.clientVersion!=gameRuntimeBean.serverVersion) {
-						//拷贝一份数据
-						List<GameUserExtBean> list = new ArrayList<>(gameRuntimeBean.userNum);
-						gameRuntimeBean.mapUsers.values().forEach(item->{
-							GameUserExtBean itemNew = item.deepCopy();
-							list.add(itemNew);
-						});
-						//----------------------------------------------
-						sendTopicClientInfoAll(list,gameRuntimeBean.gameId);
-						gameRuntimeBean.serverVersion = gameRuntimeBean.clientVersion;
-					}
-				});
+				try {
+					cacheMapXM.mapMatchInfo.forEachKey(2,key->{
+						GameRuntimeBean gameRuntimeBean = (GameRuntimeBean) cacheMapXM.get(key);
+						if (gameRuntimeBean.clientVersion != gameRuntimeBean.serverVersion) {
+							//拷贝一份数据
+							List<GameUserExtBean> list = new ArrayList<>(gameRuntimeBean.userNum);
+							gameRuntimeBean.mapUsers.values().forEach(item -> {
+								GameUserExtBean itemNew = item.deepCopy();
+								list.add(itemNew);
+							});
+							//----------------------------------------------
+							sendTopicClientInfoAll(list, gameRuntimeBean.gameId);
+							gameRuntimeBean.serverVersion = gameRuntimeBean.clientVersion;
+						}
+					});
+				}catch (Exception e){
+					e.printStackTrace();
+					LogUtil.logSensitive(e.getMessage());
+				}
 			}
 		};
 		ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-		// 第二个参数为首次执行的延时时间，第三个参数为定时执行的间隔时间
+		// 第二个参数为首次执行的延时时间，第三个参数为定时执行的间隔时间. 注意，万一出错，不捕捉异常是会停止的
 		service.scheduleAtFixedRate(runnable, 10, 1000, TimeUnit.MILLISECONDS);
 
 		//==========指定超时回收事件处理=========================

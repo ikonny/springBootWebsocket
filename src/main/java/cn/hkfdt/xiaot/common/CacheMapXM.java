@@ -36,21 +36,21 @@ public class CacheMapXM {
         Runnable runnable = new Runnable() {
 
             public void run() {
-                long time = System.currentTimeMillis();
-                mapMatchInfo.forEachEntry(2,item->{
-                    XmItem xmItem = item.getValue();
-                    if(xmItem.endTime<=time){
-                        mapMatchInfo.remove(xmItem.key);
-                        try {
+                try {
+                    long time = System.currentTimeMillis();
+                    mapMatchInfo.forEachEntry(2,item->{
+                        XmItem xmItem = item.getValue();
+                        if(xmItem.endTime<=time){
+                            mapMatchInfo.remove(xmItem.key);
                             if (cahceXMListen != null) {
                                 cahceXMListen.timeOverEvent(xmItem.item,xmItem.key);
                             }
-                        }catch (Exception e){
-                            e.printStackTrace();
                         }
-                    }
-//                    System.err.println("回收一次，结束时间:"+xmItem.endTime+"   现在时间:"+time);
-                });
+    //                    System.err.println("回收一次，结束时间:"+xmItem.endTime+"   现在时间:"+time);
+                    });
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         };
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
