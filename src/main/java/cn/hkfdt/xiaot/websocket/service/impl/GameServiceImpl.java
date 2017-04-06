@@ -169,7 +169,10 @@ public class GameServiceImpl implements GameService {
 		cacheMapXM.put(gameId,gameRuntimeBean,gameRuntimeBean.getGameTime());//开始后调整时间
 		//-------------------------------------------
 		//更新比赛状态
-		updateGameAndInsertUserWithStart(gameRuntimeBean);//执行失败就报错，就不会通知开始
+		XiaoTCommon.executorService.submit(()->{
+			//这里面比较耗时间，特别是人多后200+，为了不影响及时响应开始，异步入库
+			updateGameAndInsertUserWithStart(gameRuntimeBean);//执行失败就报错，就不会通知开始
+		});
 		//-----------------------------------------------
 		xiaoTMatchTopics.start(gameId);//通知各端比赛开始
 		//比赛计时，通知开始
