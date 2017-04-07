@@ -249,7 +249,7 @@ public class GameServiceImpl implements GameService {
 			list.add(item.deepCopy());
 		});
 		Collections.sort(list, (item1, item2) -> {
-			return item1.returnRate > item2.returnRate ? -1 : 1;
+			return -Double.compare(item1.returnRate,item2.returnRate);//item1.returnRate > item2.returnRate ? -1 : 1;
 		});
 		for(int i=0;i<list.size();i++){
 			GameUserExtBean item = list.get(i);

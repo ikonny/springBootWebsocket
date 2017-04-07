@@ -173,7 +173,7 @@ public class MatchServiceHelper {
 	}
 	public static void sendTopicClientInfoAll(List<GameUserExtBean> list, String gameId) {
 		Collections.sort(list, (item1, item2) -> {
-			return item1.returnRate > item2.returnRate ? -1 : 1;
+			return -Double.compare(item1.returnRate,item2.returnRate);//item1.returnRate > item2.returnRate ? -1 : 1;
 		});
 		xiaoTMatchTopics.listInfo(list,gameId);
 		xiaoTMatchTopics.clientInfo(list,gameId);
