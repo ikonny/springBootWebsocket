@@ -40,6 +40,7 @@ public class ContexStartedListen  implements ApplicationListener<ContextRefreshe
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
         logger.info("===============系统依赖检测开始========================");
 //        GlobalInfo.printInfo();
         RedisClient.test();//测试redis是否ok
