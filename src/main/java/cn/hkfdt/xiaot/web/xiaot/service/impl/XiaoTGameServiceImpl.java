@@ -227,7 +227,8 @@ public class XiaoTGameServiceImpl implements XiaoTGameService {
 			for (Map<String, Object> som : hiList) {
 				needHistoryList.add(0, som);
 				index++;
-				if(index >= 40){
+				//截取历史行情60根
+				if(index >= 60){
 					break;
 				}
 			}

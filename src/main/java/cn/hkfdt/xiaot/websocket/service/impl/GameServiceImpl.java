@@ -246,7 +246,7 @@ public class GameServiceImpl implements GameService {
 		//
 		List<GameUserExtBean> list = new ArrayList<>(gameRuntimeBean.userNum);
 		gameRuntimeBean.mapUsers.values().forEach(item->{
-			list.add(item);
+			list.add(item.deepCopy());
 		});
 		Collections.sort(list, (item1, item2) -> {
 			return item1.returnRate > item2.returnRate ? -1 : 1;
