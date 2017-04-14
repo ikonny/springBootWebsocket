@@ -2,7 +2,7 @@ package cn.hkfdt.xiaot.websocket.service;
 
 import cn.hkfdt.xiaot.common.beans.ReqCommonBean;
 import cn.hkfdt.xiaot.common.beans.RspCommonBean;
-import cn.hkfdt.xiaot.websocket.Beans.GameRuntimeBean;
+import cn.hkfdt.xiaot.websocket.beans.GameRuntimeBean;
 
 public interface GameService {
 	/**

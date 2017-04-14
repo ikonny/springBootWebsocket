@@ -1,4 +1,4 @@
-package cn.hkfdt.xiaot.websocket.Beans;
+package cn.hkfdt.xiaot.websocket.beans;
 
 import cn.hkfdt.xiaot.common.beans.GameUserBean;
 

@@ -1,6 +1,6 @@
 package common;
 
-import cn.hkfdt.xiaot.websocket.Beans.GameUserExtBean;
+import cn.hkfdt.xiaot.websocket.beans.GameUserExtBean;
 
 /**
  * Created by whyse

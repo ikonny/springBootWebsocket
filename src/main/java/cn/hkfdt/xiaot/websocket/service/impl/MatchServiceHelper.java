@@ -7,8 +7,8 @@ import cn.hkfdt.xiaot.mybatis.model.ltschina.TGameUser;
 import cn.hkfdt.xiaot.util.EmojiUtil;
 import cn.hkfdt.xiaot.web.common.LogUtil;
 import cn.hkfdt.xiaot.web.common.globalinit.GlobalInfo;
-import cn.hkfdt.xiaot.websocket.Beans.GameRuntimeBean;
-import cn.hkfdt.xiaot.websocket.Beans.GameUserExtBean;
+import cn.hkfdt.xiaot.websocket.beans.GameRuntimeBean;
+import cn.hkfdt.xiaot.websocket.beans.GameUserExtBean;
 import cn.hkfdt.xiaot.websocket.service.GameService;
 import cn.hkfdt.xiaot.websocket.topic.XiaoTMatchTopics;
 import com.alibaba.fastjson.JSON;
@@ -67,7 +67,7 @@ public class MatchServiceHelper {
 		};
 		ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
 		// 第二个参数为首次执行的延时时间，第三个参数为定时执行的间隔时间. 注意，万一出错，不捕捉异常是会停止的
-		service.scheduleAtFixedRate(runnable, 10, 500, TimeUnit.MILLISECONDS);
+		service.scheduleAtFixedRate(runnable, 10, 1000, TimeUnit.MILLISECONDS);
 
 		//==========指定超时回收事件处理=========================
 		cacheMapXM.addListener((Object item,String key)->{

@@ -1,4 +1,4 @@
-package cn.hkfdt.xiaot.websocket.Beans;
+package cn.hkfdt.xiaot.websocket.beans;
 
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TGame;
 import cn.hkfdt.xiaot.mybatis.model.ltschina.TQuestionsNew;

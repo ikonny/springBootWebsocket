@@ -1,8 +1,8 @@
 package cn.hkfdt.xiaot.websocket.topic;
 
 import cn.hkfdt.xiaot.common.beans.RspCommonBean;
-import cn.hkfdt.xiaot.websocket.Beans.GameUserExtBean;
-import cn.hkfdt.xiaot.websocket.Beans.GameUserListBean;
+import cn.hkfdt.xiaot.websocket.beans.GameUserExtBean;
+import cn.hkfdt.xiaot.websocket.beans.GameUserListBean;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
